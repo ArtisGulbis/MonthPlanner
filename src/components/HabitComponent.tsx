@@ -33,14 +33,14 @@ const HabitComponent = ({ habit }: Props) => {
         }}
       />
       <p
-        className={`capitalize text-l font-light w-full ${
+        className={`capitalize text-sm font-light w-full ${
           habit.completed && 'line-through'
         }`}
       >
         {habit.habitName}
       </p>
       <button
-        className="ml-auto bg-red-400 p-2 pl-4 pr-4 rounded-r-md hover:bg-red-200"
+        className="ml-auto text-sm bg-red-400 p-1 pl-2 pr-2 rounded-r-md hover:bg-red-200"
         onClick={(e) => {
           reduceCompletedCount(habit);
           reduceHabitCount(habit);

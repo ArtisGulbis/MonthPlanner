@@ -40,4 +40,10 @@ export default class MonthStore {
   setNewMonth = () => {
     this.currentMonth = DateTime.now().monthLong;
   };
+
+  clearCurrentMonth = () => {
+    this.currentMonth = '';
+    this.reset = false;
+    this.init();
+  };
 }

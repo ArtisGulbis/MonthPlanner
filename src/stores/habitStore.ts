@@ -70,13 +70,14 @@ export default class HabitStore {
       const habitIndex = this.days[dayIndex].habits.findIndex(
         (el) => el.id === habitId
       );
-      // const index =
       this.days[dayIndex].habits.splice(habitIndex, 1);
-      // day.habits.splice(index, 1);
-      // this.days = this.days.map((d) =>
-      //   d.id === dayId ? { ...day!, habits: day!.habits } : d
-      // );
       saveToStorage<Day[]>(DAYS, this.days);
     }
+  };
+
+  clearHabits = () => {
+    this.days.splice(0, this.days.length);
+    this.generateDays();
+    saveToStorage<Day[]>(DAYS, this.days);
   };
 }

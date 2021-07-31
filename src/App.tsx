@@ -20,8 +20,8 @@ function App() {
   return (
     <>
       <h1 className="text-9xl text-center">Month name</h1>
-      <div className="container w-11/12 m-auto ">
-        <div className="flex justify-start flex-wrap bg-red-100">
+      <div className="container w-11/12 m-auto">
+        <div className="flex justify-center flex-wrap bg-red-100">
           {days.map((day) => (
             <DayComponent key={day.id} day={day} habits={day.habits} />
           ))}

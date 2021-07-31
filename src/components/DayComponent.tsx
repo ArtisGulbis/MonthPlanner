@@ -15,9 +15,10 @@ interface Props {
 const DayComponent = ({ day, habits }: Props) => {
   const { habitStore, statisticsStore } = useStore();
   const { addHabit } = habitStore;
+  const { addToStats } = statisticsStore;
 
   return (
-    <div className="bg-red-300 m-4 p-2 w-58 h-auto min-height flex flex-col justify-between flex-grow rounded-md shadow-md">
+    <div className="bg-red-300 m-4 p-2 w-56 h-auto min-height flex flex-col justify-between rounded-md shadow-md">
       <h1 className="bg-blue-300 text-center pt-2 pb-2 text-2xl">
         {day.dayNumber}
       </h1>
@@ -36,11 +37,11 @@ const DayComponent = ({ day, habits }: Props) => {
             id: uuidv4(),
           };
           addHabit(day.id, habit);
-          statisticsStore.addToStats(habit);
+          addToStats(habit);
           resetForm();
         }}
       >
-        {({ isSubmitting }) => (
+        {() => (
           <Form className="h-8 text-center self-center w-full flex mt-2">
             <Field
               name="habitName"
@@ -49,7 +50,7 @@ const DayComponent = ({ day, habits }: Props) => {
             <button
               datatype="create"
               type="submit"
-              className="min-width setl-center bg-blue-400 w-auto flex-grow-0 rounded-r-md font-light"
+              className="min-width bg-blue-400 w-auto flex-grow-0 rounded-r-md font-light"
             >
               Create
             </button>

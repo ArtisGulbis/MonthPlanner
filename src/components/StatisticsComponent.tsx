@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../stores/store';
 import { clearLocalStorage } from '../utils/utils';
+import LegendComponent from './LegendComponent';
 
 const StatisticsComponent = () => {
   const { statisticsStore } = useStore();
@@ -13,6 +14,11 @@ const StatisticsComponent = () => {
       >
         Clear
       </button>
+      <div className="flex flex-col">
+        <LegendComponent text="Completed" color="green" />
+        <LegendComponent text="Missed" color="red" />
+        <LegendComponent text="Completion Rate" color="blue" />
+      </div>
       {statisticsStore.habits.map(
         ({ habit: { habitName, id }, toDo, completed }) => (
           <div

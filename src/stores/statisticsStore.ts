@@ -72,9 +72,15 @@ export default class StatisticsStore {
     const index = this.habits.findIndex(
       (el) => el.habit.habitName === habit.habitName
     );
-    if (this.habits[index]) {
+    if (this.habits[index] && this.habits[index].completed) {
       this.habits[index].completed--;
     }
     saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
+  };
+
+  clearStatistics = () => {
+    this.habits.splice(0, this.habits.length);
+    this.loadStatistics();
+    saveToStorage(STATISTICS, { habits: this.habits });
   };
 }
