@@ -13,18 +13,23 @@ interface Props {
 }
 
 const DayComponent = ({ day, habits }: Props) => {
-  const { habitStore, statisticsStore } = useStore();
+  const { habitStore, statisticsStore, monthStore } = useStore();
   const { addHabit } = habitStore;
   const { addToStats } = statisticsStore;
+  const { currentDay } = monthStore;
 
   return (
-    <div className="bg-red-300 m-4 p-2 w-56 h-auto min-height flex flex-col justify-between rounded-md shadow-md">
+    <div
+      className={`bg-red-300 m-4 p-2 w-56 h-auto min-height flex flex-col justify-between rounded-md shadow-md ${
+        currentDay === day.dayNumber && 'bg-yellow-200'
+      } ${day.passed && 'bg-blue-500'}`}
+    >
       <h1 className="bg-blue-300 text-center pt-2 pb-2 text-2xl">
         {day.dayNumber}
       </h1>
       <div className="flex flex-row flex-wrap mb-auto">
         {habits.map((el) => (
-          <HabitComponent key={el.id} habit={el} />
+          <HabitComponent key={el.id} habit={el} passed={day.passed} />
         ))}
       </div>
       <Formik
@@ -46,9 +51,11 @@ const DayComponent = ({ day, habits }: Props) => {
             <Field
               name="habitName"
               className="w-10/12 h-full flex-grow rounded-l-md text-center text-xl font-light focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+              disabled={day.passed}
             />
             <button
               datatype="create"
+              disabled={day.passed}
               type="submit"
               className="min-width bg-blue-400 w-auto flex-grow-0 rounded-r-md font-light"
             >

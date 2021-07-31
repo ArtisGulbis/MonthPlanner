@@ -5,9 +5,10 @@ import { useStore } from '../stores/store';
 
 interface Props {
   habit: Habit;
+  passed: boolean;
 }
 
-const HabitComponent = ({ habit }: Props) => {
+const HabitComponent = ({ habit, passed }: Props) => {
   const {
     habitStore: { removeHabit, completeHabit },
     statisticsStore: {
@@ -22,6 +23,7 @@ const HabitComponent = ({ habit }: Props) => {
         className="mr-2 ml-2"
         type="checkbox"
         checked={habit.completed}
+        disabled={passed}
         onChange={(e) => {
           if (e.target.checked) {
             increaseCompletedCount(habit);
@@ -40,6 +42,7 @@ const HabitComponent = ({ habit }: Props) => {
         {habit.habitName}
       </p>
       <button
+        disabled={passed}
         className="ml-auto text-sm bg-red-400 p-1 pl-2 pr-2 rounded-r-md hover:bg-red-200"
         onClick={(e) => {
           reduceCompletedCount(habit);

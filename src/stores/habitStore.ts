@@ -35,11 +35,12 @@ export default class HabitStore {
 
   createData = () => {
     const daysInMonth = now.daysInMonth;
-    for (let i = 1; i < daysInMonth; i++) {
+    for (let i = 1; i < daysInMonth + 1; i++) {
       this.days.push({
         id: uuidv4(),
         dayNumber: i,
         habits: [],
+        passed: false,
       });
     }
     saveToStorage(DAYS, this.days);
@@ -79,5 +80,12 @@ export default class HabitStore {
     this.days.splice(0, this.days.length);
     this.generateDays();
     saveToStorage<Day[]>(DAYS, this.days);
+  };
+
+  checkPassedDays = () => {
+    for (let i = 0; i < store.monthStore.currentDay - 1; i++) {
+      const day = this.days[i];
+      day.passed = true;
+    }
   };
 }

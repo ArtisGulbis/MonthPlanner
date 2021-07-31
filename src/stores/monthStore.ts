@@ -5,6 +5,7 @@ import { Month } from '../models/month';
 
 export default class MonthStore {
   currentMonth: string = '';
+  currentDay = DateTime.now().day;
   reset = false;
 
   constructor() {

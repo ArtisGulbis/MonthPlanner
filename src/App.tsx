@@ -14,12 +14,13 @@ function App() {
     monthStore.init();
     statisticsStore.loadStatistics();
     habitStore.generateDays();
+    habitStore.checkPassedDays();
     setDays(habitStore.days);
   }, [habitStore, monthStore, statisticsStore]);
 
   return (
     <>
-      <h1 className="text-9xl text-center">Month name</h1>
+      <h1 className="text-9xl text-center mb-8">{monthStore.currentMonth}</h1>
       <div className="container w-11/12 m-auto">
         <div className="flex justify-center flex-wrap bg-red-100">
           {days.map((day) => (

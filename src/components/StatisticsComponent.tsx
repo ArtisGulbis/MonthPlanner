@@ -20,7 +20,7 @@ const StatisticsComponent = () => {
         <LegendComponent text="Completion Rate" color="blue" />
       </div>
       {statisticsStore.habits.map(
-        ({ habit: { habitName, id }, toDo, completed }) => (
+        ({ habit: { habitName, id }, toDo, completed, missed }) => (
           <div
             key={id}
             className="bg-purple-400 m-2 mt-4 text-center rounded-md "
@@ -31,10 +31,10 @@ const StatisticsComponent = () => {
                 {completed}/{toDo}
               </div>
               <div className="bg-red-400 h-full p-2 flex-grow">
-                {completed}/{toDo}
+                {missed}/{toDo}
               </div>
               <div className="bg-blue-300 h-full p-2 flex-grow rounded-br-md">
-                10%
+                {Math.round((completed / toDo) * 100)} %
               </div>
             </div>
           </div>

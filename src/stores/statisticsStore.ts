@@ -30,7 +30,12 @@ export default class StatisticsStore {
   addToStats = (habit: Habit) => {
     const h = this.findHabit(habit);
     if (!h) {
-      this.habits.push({ habit, toDo: 1, completed: 0 });
+      this.habits.push({
+        habit,
+        toDo: 1,
+        completed: 0,
+        missed: 0,
+      });
       saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     } else {
       h.toDo++;
@@ -52,7 +57,6 @@ export default class StatisticsStore {
         );
         saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       } else {
-        //  this.reduceCompletedCount(h);
         saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       }
     }
@@ -72,10 +76,10 @@ export default class StatisticsStore {
     const index = this.habits.findIndex(
       (el) => el.habit.habitName === habit.habitName
     );
-    if (this.habits[index] && this.habits[index].completed) {
+    if (this.habits[index].habit && habit.completed) {
       this.habits[index].completed--;
+      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
-    saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
   };
 
   clearStatistics = () => {
