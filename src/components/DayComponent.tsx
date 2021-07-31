@@ -17,7 +17,7 @@ const DayComponent = ({ day, habits }: Props) => {
   const { addHabit } = habitStore;
 
   return (
-    <div className="bg-red-400 w-auto p-4 m-4 items-center h-auto min-h-full">
+    <div className="">
       <h3>{day.dayNumber}</h3>
       {habits.map((el) => (
         <HabitComponent key={el.id} habit={el} />
