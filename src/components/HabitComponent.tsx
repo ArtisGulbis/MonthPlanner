@@ -17,8 +17,9 @@ const HabitComponent = ({ habit }: Props) => {
     },
   } = useStore();
   return (
-    <div className="bg-blue-300 flex m-4">
+    <div className="w-full flex mt-2 bg-green-100 items-center rounded-r-md rounded-l-md">
       <input
+        className="mr-2 ml-2"
         type="checkbox"
         checked={habit.completed}
         onChange={(e) => {
@@ -31,8 +32,15 @@ const HabitComponent = ({ habit }: Props) => {
           }
         }}
       />
-      <h4 className="mr-4">{habit.habitName}</h4>
+      <p
+        className={`capitalize text-l font-light w-full ${
+          habit.completed && 'line-through'
+        }`}
+      >
+        {habit.habitName}
+      </p>
       <button
+        className="ml-auto bg-red-400 p-2 pl-4 pr-4 rounded-r-md hover:bg-red-200"
         onClick={(e) => {
           reduceCompletedCount(habit);
           reduceHabitCount(habit);

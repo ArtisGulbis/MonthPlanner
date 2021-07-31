@@ -1,9 +1,30 @@
-.container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+.min-width {
+  min-width: 6rem;
 }
 
-.child {
-  width: 80%;
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.min-height {
+  min-height: 15rem;
+}
+
+.container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1.6fr 0.4fr;
+  gap: 0px 1%;
+}
+
+.statistic-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.2fr 1.8fr;
+  grid-auto-rows: 1fr;
+  gap: 10px 18px;
+  grid-auto-flow: column;
+  grid-template-areas:
+    '.'
+    '.';
 }

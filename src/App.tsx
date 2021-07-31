@@ -5,7 +5,6 @@ import DayComponent from './components/DayComponent';
 import StatisticsComponent from './components/StatisticsComponent';
 import { Day } from './models/day';
 import { useStore } from './stores/store';
-import { clearLocalStorage } from './utils/utils';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
@@ -19,21 +18,17 @@ function App() {
   }, [habitStore, monthStore, statisticsStore]);
 
   return (
-    <div>
-      <div className="container">
-        <button onClick={clearLocalStorage}>Clear</button>
-      </div>
-      <div className="container">
-        <div className="child">
+    <>
+      <h1 className="text-9xl text-center">Month name</h1>
+      <div className="container w-11/12 m-auto ">
+        <div className="flex justify-start flex-wrap bg-red-100">
           {days.map((day) => (
             <DayComponent key={day.id} day={day} habits={day.habits} />
           ))}
         </div>
-        <div>
-          <StatisticsComponent />
-        </div>
+        <StatisticsComponent />
       </div>
-    </div>
+    </>
   );
 }
 
