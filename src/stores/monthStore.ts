@@ -4,7 +4,7 @@ import { getFromStorage, MONTH, saveToStorage } from '../utils/utils';
 import { Month } from '../models/month';
 
 export default class MonthStore {
-  currentMonth: string = '';
+  currentMonth = '';
   currentDay = DateTime.now().day;
   reset = false;
 
@@ -29,6 +29,7 @@ export default class MonthStore {
       if (this.checkNewMonth) {
         //set reset flag to create new data
         this.reset = true;
+        this.currentMonth = DateTime.now().monthLong;
       }
     }
   };

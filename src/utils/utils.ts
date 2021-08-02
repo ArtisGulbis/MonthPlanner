@@ -20,7 +20,21 @@ export const clearLocalStorage = () => {
   window.location.reload();
 };
 
-//key/-s for localstorage
+export const shortenText = (text: string) => {
+  const textLength = 10;
+  if (text.length > 10) {
+    const a = text.split('');
+    const b = a.splice(0, textLength);
+    b.push('.');
+    b.push('.');
+    b.push('.');
+    return b;
+  }
+  return text;
+};
+
+//keys for localstorage
 export const DAYS = 'days';
 export const MONTH = 'month';
 export const STATISTICS = 'statistics';
+export const HABITS = 'habits';

@@ -20,8 +20,9 @@ export default class StatisticsStore {
       };
       saveToStorage<Statistics>(STATISTICS, statistics);
       return;
-    } else if (data && store.monthStore.checkNewMonth) {
+    } else if (store.monthStore.checkNewMonth) {
       this.habits = [];
+      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       return;
     }
     this.habits = data.habits;
@@ -82,6 +83,25 @@ export default class StatisticsStore {
     }
   };
 
+  increaseMissedCount = (habit: Habit) => {
+    const index = this.habits.findIndex(
+      (el) => el.habit.habitName === habit.habitName
+    );
+    if (this.habits[index].habit) {
+      this.habits[index].missed++;
+      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
+    }
+  };
+
+  reduceMissedCount = (habit: Habit) => {
+    const index = this.habits.findIndex(
+      (el) => el.habit.habitName === habit.habitName
+    );
+    if (this.habits[index].habit) {
+      this.habits[index].missed--;
+      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
+    }
+  };
   clearStatistics = () => {
     this.habits.splice(0, this.habits.length);
     this.loadStatistics();

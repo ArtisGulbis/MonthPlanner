@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
+import { shortenText } from '../utils/utils';
 
 interface Props {
   habit: Habit;
@@ -18,9 +19,9 @@ const HabitComponent = ({ habit, passed }: Props) => {
     },
   } = useStore();
   return (
-    <div className="w-full flex mt-2 bg-green-100 items-center rounded-r-md rounded-l-md">
+    <div className="w-full flex bg-green-100 items-center rounded-r-md rounded-l-md habit h-8">
       <input
-        className="mr-2 ml-2"
+        className="mr-2 ml-2 h-12 w-6 h-6"
         type="checkbox"
         checked={habit.completed}
         disabled={passed}
@@ -35,15 +36,15 @@ const HabitComponent = ({ habit, passed }: Props) => {
         }}
       />
       <p
-        className={`capitalize text-sm font-light w-full ${
+        className={`capitalize text-xl tracking-wide font-light w-full ${
           habit.completed && 'line-through'
         }`}
       >
-        {habit.habitName}
+        {shortenText(habit.habitName)}
       </p>
       <button
         disabled={passed}
-        className="ml-auto text-sm bg-red-400 p-1 pl-2 pr-2 rounded-r-md hover:bg-red-200"
+        className="ml-auto text-l tracking-widest bg-red-400 pl-2 pr-2 h-full w-1/4 rounded-r-md hover:bg-red-200 min-w-min"
         onClick={(e) => {
           reduceCompletedCount(habit);
           reduceHabitCount(habit);

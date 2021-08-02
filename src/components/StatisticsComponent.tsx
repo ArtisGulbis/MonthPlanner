@@ -1,11 +1,12 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../stores/store';
-import { clearLocalStorage } from '../utils/utils';
+import { clearLocalStorage, shortenText } from '../utils/utils';
 import LegendComponent from './LegendComponent';
 
 const StatisticsComponent = () => {
   const { statisticsStore } = useStore();
+
   return (
     <div className="bg-purple-200 w-full rounded-md">
       <button
@@ -25,7 +26,7 @@ const StatisticsComponent = () => {
             key={id}
             className="bg-purple-400 m-2 mt-4 text-center rounded-md "
           >
-            <p className="p-2 capitalize">{habitName}</p>
+            <p className="p-2 capitalize">{shortenText(habitName)}</p>
             <div className="flex bg-purple-600 justify-around items-center rounded-b-md shadow-md">
               <div className="bg-green-200 p-2 h-full flex-grow rounded-bl-md">
                 {completed}/{toDo}

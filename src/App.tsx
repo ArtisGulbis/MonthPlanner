@@ -8,28 +8,31 @@ import { useStore } from './stores/store';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
-  const { habitStore, monthStore, statisticsStore } = useStore();
+  const { habitStore, monthStore, statisticsStore, createdHabits } = useStore();
 
   useEffect(() => {
     monthStore.init();
+    createdHabits.init();
     statisticsStore.loadStatistics();
     habitStore.generateDays();
     habitStore.checkPassedDays();
     setDays(habitStore.days);
-  }, [habitStore, monthStore, statisticsStore]);
+  }, [habitStore, monthStore, statisticsStore, createdHabits]);
 
   return (
-    <>
-      <h1 className="text-9xl text-center mb-8">{monthStore.currentMonth}</h1>
+    <div className="bg-gray-100">
+      <h1 className="italic tracking-widest text-indigo-700 font-bold text-9xl text-center mb-8">
+        {monthStore.currentMonth}
+      </h1>
       <div className="container w-11/12 m-auto">
-        <div className="flex justify-center flex-wrap bg-red-100">
+        <div className="flex flex-col bg-blue-300 bg-opacity-50 rounded-md">
           {days.map((day) => (
             <DayComponent key={day.id} day={day} habits={day.habits} />
           ))}
         </div>
         <StatisticsComponent />
       </div>
-    </>
+    </div>
   );
 }
 

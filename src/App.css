@@ -4,6 +4,17 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
+  /* background-size: 100% 100%;
+  background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  background-image: radial-gradient(
+      49% 81% at 45% 47%,
+      #03f3ff45 0%,
+      #073aff00 100%
+    ),
+    radial-gradient(113% 91% at 17% -2%, #00e4ffbd 1%, #ff000000 99%),
+    radial-gradient(142% 91% at 83% 7%, #00d0ffb8 1%, #ff000000 99%),
+    radial-gradient(142% 91% at -6% 74%, #0012ffff 2%, #ff000000 99%),
+    radial-gradient(142% 91% at 111% 84%, #0054ffff 0%, #ff0000ff 100%); */
 }
 
 .min-height {
@@ -13,7 +24,18 @@ body {
 .container {
   display: grid;
   grid-auto-flow: column;
-  grid-template-columns: 1.6fr 0.4fr;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: 0px 1%;
+}
+
+.habit:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+.card-container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 0.4fr 1.6fr;
   gap: 0px 1%;
 }
 

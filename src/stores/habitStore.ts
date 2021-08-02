@@ -22,7 +22,7 @@ export default class HabitStore {
     let data = getFromStorage<Day[]>(DAYS);
     if (!data) {
       this.createData();
-    } else if (data && store.monthStore.checkNewMonth) {
+    } else if (store.monthStore.checkNewMonth) {
       //new month started
       this.days = [];
       removeFromStorage(DAYS);
@@ -35,11 +35,13 @@ export default class HabitStore {
 
   createData = () => {
     const daysInMonth = now.daysInMonth;
+    const startOfMonth = DateTime.now().startOf('month');
     for (let i = 1; i < daysInMonth + 1; i++) {
       this.days.push({
         id: uuidv4(),
         dayNumber: i,
         habits: [],
+        weekDay: startOfMonth.plus({ days: i - 1 }).weekdayLong,
         passed: false,
       });
     }
@@ -86,6 +88,9 @@ export default class HabitStore {
     for (let i = 0; i < store.monthStore.currentDay - 1; i++) {
       const day = this.days[i];
       day.passed = true;
+      day.habits.forEach(
+        (el) => !el.completed && store.statisticsStore.increaseMissedCount(el)
+      );
     }
   };
 }
