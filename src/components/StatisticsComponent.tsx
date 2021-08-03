@@ -5,12 +5,13 @@ import { clearLocalStorage, shortenText } from '../utils/utils';
 import LegendComponent from './LegendComponent';
 
 const StatisticsComponent = () => {
-  const { statisticsStore } = useStore();
+  const { statisticsStore, modalStore } = useStore();
+  const { openModal } = modalStore;
 
   return (
-    <div className="bg-purple-200 w-full rounded-md">
+    <div className="bg-purple-200 shadow-inner w-full rounded-md">
       <button
-        onClick={clearLocalStorage}
+        onClick={openModal}
         className="w-full bg-yellow-400 hover:bg-yellow-200 py-4 rounded-t-md"
       >
         Clear

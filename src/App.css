@@ -2,19 +2,12 @@
   min-width: 4rem;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
-  /* background-size: 100% 100%;
-  background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
-  background-image: radial-gradient(
-      49% 81% at 45% 47%,
-      #03f3ff45 0%,
-      #073aff00 100%
-    ),
-    radial-gradient(113% 91% at 17% -2%, #00e4ffbd 1%, #ff000000 99%),
-    radial-gradient(142% 91% at 83% 7%, #00d0ffb8 1%, #ff000000 99%),
-    radial-gradient(142% 91% at -6% 74%, #0012ffff 2%, #ff000000 99%),
-    radial-gradient(142% 91% at 111% 84%, #0054ffff 0%, #ff0000ff 100%); */
 }
 
 .min-height {
@@ -94,9 +87,10 @@ body {
   width: 2rem;
   height: 2rem;
 }
-.checkbox__input input:focus + .checkbox__control {
-  box-shadow: 0 0 0 0.05em #fff, 0 0 0.15em 0.1em currentColor;
-}
+
+/* .checkbox__input input:focus + .checkbox__control { */
+/* box-shadow: 0 0 0 0.05em #fff, 0 0 0.15em 0.1em currentColor; */
+/* } */
 .checkbox__input input:checked + .checkbox__control svg {
   transform: scale(1);
 }

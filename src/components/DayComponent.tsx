@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 import { Day } from '../models/day';
 import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
+import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
+import AddHabitButtonComponent from './AddHabitButtonComponent';
 import HabitComponent from './HabitComponent';
 
 interface Props {
@@ -19,53 +21,42 @@ const DayComponent = ({ day, habits }: Props) => {
   const { addToStats } = statisticsStore;
   const { currentDay } = monthStore;
 
-  const checkAllCompletedHabits = () => {
-    return day.habits.length && day.habits.every((el) => el.completed);
+  const inputOutline = (color: string) => {
+    return `text-${color}-900 placeholder-${color}-900 focus:outline-none focus:ring-2 focus:ring-${color}-600 focus:border-transparent`;
   };
 
-  const checkCompletion = () => {
-    const passedDay = 'bg-blue-300 text-blue-900';
-    const completedDay = 'bg-green-300 text-green-900';
-    const todoDay = 'bg-yellow-300 text-yellow-900';
-    const currentD = 'bg-pink-300 text-pink-900';
-
-    if (day.passed) {
-      return passedDay;
-    }
-    if (currentDay === day.dayNumber) {
-      if (checkAllCompletedHabits()) {
-        return completedDay;
-      }
-      return currentD;
-    } else if (checkAllCompletedHabits()) {
-      return completedDay;
-    }
-    return todoDay;
+  const dayCardMonthStyle = (color: string) => {
+    return `border-r-2 border-${color}-400`;
   };
 
   return (
     <div
-      className={`bg-red-300 m-4 p-4  min-height card-container justify-between rounded-md shadow-md ${checkCompletion()}`}
+      className={`m-4 p-4  min-height card-container justify-between rounded-md shadow-lg ${checkCompletion(
+        day,
+        monthStore.currentDay,
+        false
+      )}`}
+      id={`${day.dayNumber}`}
     >
       <div
         className={`${
-          checkAllCompletedHabits()
-            ? 'border-r-2 border-green-400'
+          checkAllCompletedHabits(day)
+            ? dayCardMonthStyle('green')
             : day.dayNumber === currentDay
-            ? 'border-r-2 border-pink-400'
+            ? dayCardMonthStyle('pink')
             : day.passed
-            ? 'border-r-2 border-blue-400'
-            : 'border-r-2 border-yellow-400'
+            ? dayCardMonthStyle('blue')
+            : dayCardMonthStyle('yellow')
         } flex w-full flex-col items-center justify-center h-full pr-4`}
       >
-        <h1 className="pt-2 pb-2 text-2xl ">{day.weekDay}</h1>
+        <h1 className="pt-2 pb-2 text-4xl filter drop-shadow">{day.weekDay}</h1>
         <h1 className="pt-2 pb-2 text-5xl ">{day.dayNumber}</h1>
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap mb-auto">
           {habits.map((el) => (
             <HabitComponent
-              completed={checkAllCompletedHabits()}
+              completed={checkAllCompletedHabits(day)}
               key={el.id}
               habit={el}
               passed={day.passed}
@@ -76,15 +67,15 @@ const DayComponent = ({ day, habits }: Props) => {
         {!day.passed && (
           <Formik
             enableReinitialize={true}
-            initialValues={{ habitName: '', error: '', habit: '' }}
+            initialValues={{ habitName: '', error: '' }}
             onSubmit={(values, { resetForm, setErrors }) => {
               const habit: Habit = {
                 completed: false,
                 dayId: day.id,
-                habitName: values.habitName || values.habit,
+                habitName: values.habitName,
                 id: uuidv4(),
               };
-              createdHabits.addHabit(habit.habitName || values.habit);
+              createdHabits.addHabit(habit.habitName);
               addHabit(day.id, habit);
               addToStats(habit);
               resetForm();
@@ -94,45 +85,30 @@ const DayComponent = ({ day, habits }: Props) => {
             })}
           >
             {({ handleSubmit }) => (
-              <Form className="h-8 text-center self-center w-full flex mt-2">
+              <Form className="h-10 text-center self-center w-full flex mt-2">
                 <Field
                   name="habitName"
                   className={`h-full flex-grow overflow-visible z-30 ${
                     day.passed && 'rounded-md'
                   } w-1/2 text-center text-l font-light  ml-2 rounded-l-md
                   ${
-                    checkAllCompletedHabits()
-                      ? 'text-green-900 placeholder-pink-900 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent'
+                    checkAllCompletedHabits(day)
+                      ? inputOutline('green')
                       : currentDay === day.dayNumber
-                      ? 'text-pink-900 placeholder-pink-900 focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-transparent'
+                      ? inputOutline('pink')
                       : day.passed
-                      ? 'text-blue-900 placeholder-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent'
-                      : 'text-yellow-900 placeholder-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent'
+                      ? inputOutline('blue')
+                      : inputOutline('yellow')
                   }
                 
                 `}
                   disabled={day.passed}
-                  placeholder="Enter habit/task..."
+                  placeholder="Enter Habit/Task..."
                 />
-                <button
-                  onClick={() => handleSubmit}
-                  datatype="create"
-                  disabled={day.passed}
-                  type="submit"
-                  className={`min-width flex-grow-0 ml-auto rounded-r-md z-0 font-light w-1/4 min-w-min tracking-widest h-full 
-                  ${
-                    checkAllCompletedHabits()
-                      ? 'bg-green-400 hover:bg-green-500'
-                      : currentDay === day.dayNumber
-                      ? 'bg-pink-400 hover:bg-pink-500'
-                      : day.passed
-                      ? 'bg-blue-400 hover:bg-blue-500'
-                      : 'bg-yellow-400 hover:bg-yellow-500'
-                  }
-                  `}
-                >
-                  Create
-                </button>
+                <AddHabitButtonComponent
+                  day={day}
+                  handleSubmit={handleSubmit}
+                />
               </Form>
             )}
           </Formik>
