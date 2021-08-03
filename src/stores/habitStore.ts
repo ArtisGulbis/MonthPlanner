@@ -41,7 +41,7 @@ export default class HabitStore {
         id: uuidv4(),
         dayNumber: i,
         habits: [],
-        weekDay: startOfMonth.plus({ days: i - 1 }).weekdayLong,
+        weekDay: startOfMonth.plus({ days: i - 1 }).weekdayShort,
         passed: false,
       });
     }

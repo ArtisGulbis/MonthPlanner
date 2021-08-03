@@ -20,11 +20,10 @@ export const clearLocalStorage = () => {
   window.location.reload();
 };
 
-export const shortenText = (text: string) => {
-  const textLength = 10;
-  if (text.length > 10) {
+export const shortenText = (text: string, length: number) => {
+  if (text.length > length) {
     const a = text.split('');
-    const b = a.splice(0, textLength);
+    const b = a.splice(0, length);
     b.push('.');
     b.push('.');
     b.push('.');

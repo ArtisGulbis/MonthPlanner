@@ -26,7 +26,7 @@ const StatisticsComponent = () => {
             key={id}
             className="bg-purple-400 m-2 mt-4 text-center rounded-md "
           >
-            <p className="p-2 capitalize">{shortenText(habitName)}</p>
+            <p className="p-2 capitalize">{shortenText(habitName, 15)}</p>
             <div className="flex bg-purple-600 justify-around items-center rounded-b-md shadow-md">
               <div className="bg-green-200 p-2 h-full flex-grow rounded-bl-md">
                 {completed}/{toDo}

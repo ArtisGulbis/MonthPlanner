@@ -4,9 +4,10 @@ export const COMPLETED_DAY = '#16DB93';
 export const PASSED_DAY = '';
 
 export const completedDay = {
-  text: '#F2E8CF',
+  text: '#081C15',
+  habitBackground: 'rgba(82,152,55,0.5)',
   delete: '#BC4749',
-  card: '#386641',
+  card: '#40916C',
   create: '#0eb034',
   month: '#6A994E',
 };
