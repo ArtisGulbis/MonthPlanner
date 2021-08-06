@@ -8,6 +8,9 @@ module.exports = {
         '-20': '-20',
       },
     },
+    fontFamili: {
+      sans: ['"Exo 2"'],
+    },
   },
   variants: {
     extend: {},

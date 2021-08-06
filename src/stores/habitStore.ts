@@ -89,7 +89,10 @@ export default class HabitStore {
       const day = this.days[i];
       day.passed = true;
       day.habits.forEach(
-        (el) => !el.completed && store.statisticsStore.increaseMissedCount(el)
+        (el) =>
+          !el.completed &&
+          !el.missed &&
+          store.statisticsStore.increaseMissedCount(el)
       );
     }
   };

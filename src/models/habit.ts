@@ -3,4 +3,5 @@ export interface Habit {
   dayId: string;
   habitName: string;
   completed: boolean;
+  missed: boolean;
 }

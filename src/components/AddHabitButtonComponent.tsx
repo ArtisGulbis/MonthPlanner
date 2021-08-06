@@ -14,23 +14,24 @@ const AddHabitButtonComponent = ({ day, handleSubmit }: Props) => {
   } = useStore();
 
   const buttonStyles = (color: string) => {
-    return `bg-${color}-400 hover:bg-${color}-200 cursor-pointer`;
+    return `fill-current text-${color}-700 hover:text-${color}-500 cursor-pointer transform hover:scale-150 duration-75`;
   };
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`flex-grow-0 ml-auto rounded-r-md z-0 font-light w-10 h-10 w-1/5 tracking-widest h-full
-                      ${
-                        checkAllCompletedHabits(day)
-                          ? buttonStyles('green')
-                          : currentDay === day.dayNumber
-                          ? buttonStyles('pink')
-                          : buttonStyles('yellow')
-                      }
-                      `}
+      className={`flex-grow-0 rounded-r-md ml-6 mr-2
+    ${
+      checkAllCompletedHabits(day)
+        ? buttonStyles('green')
+        : currentDay === day.dayNumber
+        ? buttonStyles('pink')
+        : buttonStyles('yellow')
+    }
+
+          `}
       viewBox="0 0 20 20"
-      fill="currentColor"
+      // fill="currentColor"
       onClick={() => handleSubmit()}
       type="submit"
     >

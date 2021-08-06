@@ -1,22 +1,23 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../stores/store';
-import { clearLocalStorage, shortenText } from '../utils/utils';
+import { shortenText } from '../utils/utils';
 import LegendComponent from './LegendComponent';
+import StatisticsContentComponent from './StatisticsContentComponent';
 
 const StatisticsComponent = () => {
   const { statisticsStore, modalStore } = useStore();
   const { openModal } = modalStore;
 
   return (
-    <div className="bg-purple-200 shadow-inner w-full rounded-md">
+    <div className="bg-blue-300 bg-opacity-50 shadow-inner w-full rounded-md">
       <button
         onClick={openModal}
-        className="w-full bg-yellow-400 hover:bg-yellow-200 py-4 rounded-t-md"
+        className="w-full bg-red-400 font-light text-red-900 hover:bg-red-300 py-4 rounded-t-md text-xl tracking-widest"
       >
         Clear
       </button>
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-3">
         <LegendComponent text="Completed" color="green" />
         <LegendComponent text="Missed" color="red" />
         <LegendComponent text="Completion Rate" color="blue" />
@@ -25,19 +26,30 @@ const StatisticsComponent = () => {
         ({ habit: { habitName, id }, toDo, completed, missed }) => (
           <div
             key={id}
-            className="bg-purple-400 m-2 mt-4 text-center rounded-md "
+            className={`${
+              toDo === completed ? 'bg-green-300' : 'bg-yellow-300'
+            } text-indigo-800 m-2 mt-4 text-center rounded-md flex flex-col shadow-lg h-28`}
           >
-            <p className="p-2 capitalize">{shortenText(habitName, 15)}</p>
-            <div className="flex bg-purple-600 justify-around items-center rounded-b-md shadow-md">
-              <div className="bg-green-200 p-2 h-full flex-grow rounded-bl-md">
-                {completed}/{toDo}
-              </div>
-              <div className="bg-red-400 h-full p-2 flex-grow">
-                {missed}/{toDo}
-              </div>
-              <div className="bg-blue-300 h-full p-2 flex-grow rounded-br-md">
-                {Math.round((completed / toDo) * 100)} %
-              </div>
+            <div className="flex items-center justify-center flex-grow">
+              <p className="text-2xl font-light tracking-widest capitalize">
+                {shortenText(habitName, 15)}
+              </p>
+            </div>
+            <div className="flex bg-purple-600 mt-auto justify-around items-center rounded-b-md">
+              <StatisticsContentComponent
+                content={`${completed}/${toDo}`}
+                color="green"
+                additionalStyle="rounded-bl-md"
+              />
+              <StatisticsContentComponent
+                content={`${missed}/${toDo}`}
+                color="red"
+              />
+              <StatisticsContentComponent
+                content={`${Math.round((completed / toDo) * 100)} %`}
+                color="blue"
+                additionalStyle="rounded-br-md"
+              />
             </div>
           </div>
         )

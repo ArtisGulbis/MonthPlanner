@@ -1,7 +1,4 @@
-// import { store } from '../stores/store';
-
 import { Day } from '../models/day';
-import { store } from '../stores/store';
 
 export const saveToStorage = <T>(key: string, data: T) => {
   window.localStorage.setItem(key, JSON.stringify(data));
@@ -39,22 +36,30 @@ export const checkAllCompletedHabits = (day: Day) => {
   return day.habits.length && day.habits.every((el) => el.completed);
 };
 
+const completionStyles = (color: string) => {
+  return `bg-${color}-300 text-${color}-700`;
+};
+
+const completionStylesHighlited = (color: string) => {
+  return `hover:bg-${color}-500 hover:text-${color}-200`;
+};
+
 export const checkCompletion = (
   day: Day,
   currentDay: number,
   highlight: boolean
 ) => {
-  const passedDay = `bg-blue-300 text-blue-700 ${
-    highlight && 'hover:bg-blue-500'
+  const passedDay = `${completionStyles('blue')} ${
+    highlight && completionStylesHighlited('blue')
   }`;
-  const completedDay = `bg-green-300 text-green-700 ${
-    highlight && 'hover:bg-green-500'
+  const completedDay = `${completionStyles('green')} ${
+    highlight && completionStylesHighlited('green')
   }`;
-  const todoDay = `bg-yellow-300 text-yellow-700 ${
-    highlight && 'hover:bg-yellow-500'
+  const todoDay = `${completionStyles('yellow')} ${
+    highlight && completionStylesHighlited('yellow')
   }`;
-  const currentD = `bg-pink-300 text-pink-700 ${
-    highlight && 'hover:bg-pink-500'
+  const currentD = `${completionStyles('pink')} ${
+    highlight && completionStylesHighlited('pink')
   }`;
 
   if (day.passed) {

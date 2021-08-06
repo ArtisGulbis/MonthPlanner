@@ -8,8 +8,8 @@ interface Props {
 const LegendComponent = ({ color, text }: Props) => {
   return (
     <div className="flex flex-row items-center m-2 ">
-      <div className={`w-4 h-4 bg-${color}-300 mr-1`}></div>
-      <p>{text}</p>
+      <div className={`w-6 h-6 bg-${color}-300 mr-1`}></div>
+      <p className="text-lg font-light">{text}</p>
     </div>
   );
 };

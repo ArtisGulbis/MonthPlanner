@@ -49,8 +49,10 @@ const DayComponent = ({ day, habits }: Props) => {
             : dayCardMonthStyle('yellow')
         } flex w-full flex-col items-center justify-center h-full pr-4`}
       >
-        <h1 className="pt-2 pb-2 text-4xl filter drop-shadow">{day.weekDay}</h1>
-        <h1 className="pt-2 pb-2 text-5xl ">{day.dayNumber}</h1>
+        <h1 className="pt-2 pb-2 text-4xl filter drop-shadow font-sans">
+          {day.weekDay}
+        </h1>
+        <h1 className="pt-2 pb-2 text-5xl font-sans">{day.dayNumber}</h1>
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap mb-auto">
@@ -74,6 +76,7 @@ const DayComponent = ({ day, habits }: Props) => {
                 dayId: day.id,
                 habitName: values.habitName,
                 id: uuidv4(),
+                missed: false,
               };
               createdHabits.addHabit(habit.habitName);
               addHabit(day.id, habit);
@@ -90,7 +93,7 @@ const DayComponent = ({ day, habits }: Props) => {
                   name="habitName"
                   className={`h-full flex-grow overflow-visible z-30 ${
                     day.passed && 'rounded-md'
-                  } w-1/2 text-center text-l font-light  ml-2 rounded-l-md
+                  } w-1/2 text-center text-l font-light  ml-2 rounded-md
                   ${
                     checkAllCompletedHabits(day)
                       ? inputOutline('green')

@@ -6,10 +6,6 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  font-family: 'Open Sans', sans-serif;
-}
-
 .min-height {
   min-height: 15rem;
 }
@@ -96,4 +92,13 @@ body {
 }
 .checkbox__input input:disabled + .checkbox__control {
   color: var(--disabled);
+}
+
+.indicator {
+  top: -5px;
+  right: -5px;
+}
+
+.hideButton {
+  top: -4rem;
 }

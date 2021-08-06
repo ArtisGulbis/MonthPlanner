@@ -4,7 +4,7 @@ const BackToTopComponent = () => {
   return (
     <a
       href="#top"
-      className="fixed bottom-5 right-5 bg-red-600 w-min-w h-min-h p-4 rounded-full "
+      className="fixed bottom-10 right-10 bg-indigo-600 w-min-w h-min-h p-4 rounded-full transform hover:scale-125 duration-75 hover:bg-indigo-400"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
