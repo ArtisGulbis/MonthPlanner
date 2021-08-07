@@ -20,7 +20,7 @@ const AddHabitButton = ({ day, handleSubmit }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`flex-grow-0 rounded-r-md ml-6 mr-2
+      className={`flex-grow-0 rounded-r-md ml-4 mr-2
     ${
       checkAllCompletedHabits(day)
         ? buttonStyles('green')

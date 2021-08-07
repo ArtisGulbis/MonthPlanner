@@ -13,16 +13,17 @@ import { useStore } from './stores/store';
 function App() {
   const [days, setDays] = useState<Day[]>([]);
   const [hidden, setHidden] = useState(true);
-  const { dayStore, monthStore, statisticsStore, createdHabits } = useStore();
+  const { dayStore, monthStore, statisticsStore, createdHabitsStore } =
+    useStore();
 
   useEffect(() => {
     monthStore.init();
-    createdHabits.init();
+    createdHabitsStore.init();
     statisticsStore.loadStatistics();
     dayStore.generateDays();
     dayStore.checkPassedDays();
     setDays(dayStore.days);
-  }, [dayStore, monthStore, statisticsStore, createdHabits]);
+  }, [dayStore, monthStore, statisticsStore, createdHabitsStore]);
 
   return (
     <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">

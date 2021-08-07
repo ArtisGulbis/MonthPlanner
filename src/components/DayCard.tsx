@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,7 +16,8 @@ interface Props {
 }
 
 const DayCard = ({ day, habits }: Props) => {
-  const { dayStore, statisticsStore, monthStore, createdHabits } = useStore();
+  const { dayStore, statisticsStore, monthStore, createdHabitsStore } =
+    useStore();
   const { addHabit } = dayStore;
   const { addToStats } = statisticsStore;
   const { currentDay } = monthStore;
@@ -80,17 +81,20 @@ const DayCard = ({ day, habits }: Props) => {
                 id: uuidv4(),
                 missed: false,
               };
-              createdHabits.addHabit(habit.habitName);
+              createdHabitsStore.addHabit(habit.habitName);
               addHabit(day.id, habit);
               addToStats(habit);
               resetForm();
             }}
             validationSchema={Yup.object({
-              habitName: Yup.string().required(),
+              habitName: Yup.string().required('Please enter a Habit/Task'),
             })}
           >
             {({ handleSubmit }) => (
-              <Form className="h-10 text-center self-center w-full flex mt-2">
+              <Form className="h-10 text-center self-center w-full flex mt-12 relative">
+                <div className="absolute bottom-12 left-2 text-red-700">
+                  <ErrorMessage name="habitName" />
+                </div>
                 <Field
                   name="habitName"
                   className={`h-full flex-grow overflow-visible z-30 ${

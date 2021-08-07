@@ -9,7 +9,7 @@ interface Store {
   dayStore: DayStore;
   monthStore: MonthStore;
   statisticsStore: StatisticsStore;
-  createdHabits: CreatedHabitsStore;
+  createdHabitsStore: CreatedHabitsStore;
   modalStore: ModalStore;
 }
 
@@ -17,7 +17,7 @@ export const store: Store = {
   dayStore: new DayStore(),
   monthStore: new MonthStore(),
   statisticsStore: new StatisticsStore(),
-  createdHabits: new CreatedHabitsStore(),
+  createdHabitsStore: new CreatedHabitsStore(),
   modalStore: new ModalStore(),
 };
 
