@@ -9,6 +9,9 @@ import HideDaysButton from './components/HideDaysButton';
 import Statistics from './components/Statistics';
 import { Day } from './models/day';
 import { useStore } from './stores/store';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import CreatedHabitsContainer from './components/CreatedHabitsContainer';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
@@ -26,28 +29,31 @@ function App() {
   }, [dayStore, monthStore, statisticsStore, createdHabitsStore]);
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
-      <ClearDataMotal />
-      <h1
-        id="top"
-        className="font-sans italic tracking-widest text-indigo-700 font-normal underline text-9xl text-center mb-12"
-      >
-        {monthStore.currentMonth}
-      </h1>
-      <CalendarHeader days={days} />
-      <div className="container w-full">
-        <div className="flex relative flex-col bg-blue-300 shadow-inner bg-opacity-50 rounded-md p-2 p-8">
-          <HideDaysButton hidden={hidden} setHidden={setHidden} />
-          {days.map((day) =>
-            hidden && day.passed ? null : (
-              <DayCard key={day.id} day={day} habits={day.habits} />
-            )
-          )}
+    <DndProvider backend={HTML5Backend}>
+      <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
+        <ClearDataMotal />
+        <h1
+          id="top"
+          className="font-sans italic tracking-widest text-indigo-700 font-normal underline text-9xl text-center mb-12"
+        >
+          {monthStore.currentMonth}
+        </h1>
+        <CalendarHeader days={days} />
+        <div className="container w-full">
+          <div className="flex relative flex-col bg-blue-300 shadow-inner bg-opacity-50 rounded-md p-2 p-8">
+            <CreatedHabitsContainer />
+            <HideDaysButton hidden={hidden} setHidden={setHidden} />
+            {days.map((day) =>
+              hidden && day.passed ? null : (
+                <DayCard key={day.id} day={day} habits={day.habits} />
+              )
+            )}
+          </div>
+          <Statistics />
         </div>
-        <Statistics />
+        <BackToTop />
       </div>
-      <BackToTop />
-    </div>
+    </DndProvider>
   );
 }
 

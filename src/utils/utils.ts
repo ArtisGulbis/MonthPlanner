@@ -18,6 +18,7 @@ export const clearLocalStorage = () => {
   store.dayStore.clearHabits();
   store.statisticsStore.clearStatistics();
   store.monthStore.clearCurrentMonth();
+  store.createdHabitsStore.clearHabits();
   // window.location.reload();
 };
 
@@ -41,6 +42,10 @@ const completionStyles = (color: string) => {
   return `bg-${color}-300 text-${color}-700`;
 };
 
+const refStyles = (color: string) => {
+  return `bg-${color}-200`;
+};
+
 const completionStylesHighlited = (color: string) => {
   return `hover:bg-${color}-500 hover:text-${color}-200`;
 };
@@ -48,20 +53,21 @@ const completionStylesHighlited = (color: string) => {
 export const checkCompletion = (
   day: Day,
   currentDay: number,
-  highlight: boolean
+  highlight: boolean,
+  ref?: boolean
 ) => {
   const passedDay = `${completionStyles('blue')} ${
     highlight && completionStylesHighlited('blue')
-  }`;
+  } ${ref && refStyles('blue')}`;
   const completedDay = `${completionStyles('green')} ${
     highlight && completionStylesHighlited('green')
-  }`;
+  } ${ref && refStyles('green')}`;
   const todoDay = `${completionStyles('yellow')} ${
     highlight && completionStylesHighlited('yellow')
-  }`;
+  } ${ref && refStyles('yellow')}`;
   const currentD = `${completionStyles('pink')} ${
     highlight && completionStylesHighlited('pink')
-  }`;
+  } ${ref && refStyles('pink')}`;
 
   if (day.passed && checkAllCompletedHabits(day)) {
     return completedDay;

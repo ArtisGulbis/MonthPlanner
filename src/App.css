@@ -19,6 +19,18 @@ html {
   margin: auto;
 }
 
+.created-habit:not(:first-child) {
+  margin-left: 1rem;
+}
+
+.created-habit {
+  margin: 0.5rem;
+}
+
+.created-habit:first-child {
+  margin-top: 0.5rem;
+}
+
 .habit:not(:first-child) {
   margin-top: 0.5rem;
 }

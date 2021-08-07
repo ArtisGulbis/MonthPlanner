@@ -1,6 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import { useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from 'yup';
 import { Day } from '../models/day';
@@ -16,6 +17,25 @@ interface Props {
 }
 
 const DayCard = ({ day, habits }: Props) => {
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: 'habit',
+    drop: (item: { name: string }) => {
+      const habit: Habit = {
+        completed: false,
+        dayId: day.id,
+        habitName: item.name,
+        id: uuidv4(),
+        missed: false,
+      };
+      createdHabitsStore.addHabit(habit.habitName);
+      addHabit(day.id, habit);
+      addToStats(habit);
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
+
   const { dayStore, statisticsStore, monthStore, createdHabitsStore } =
     useStore();
   const { addHabit } = dayStore;
@@ -30,9 +50,25 @@ const DayCard = ({ day, habits }: Props) => {
     return `border-r-2 border-${color}-400`;
   };
 
+  const backgroundStyles = () => {
+    if (checkAllCompletedHabits(day)) {
+      return dayCardMonthStyle('green');
+    } else if (day.dayNumber === currentDay) {
+      return dayCardMonthStyle('pink');
+    } else if (day.passed && checkAllCompletedHabits(day)) {
+      return dayCardMonthStyle('green');
+    } else if (day.passed) {
+      return dayCardMonthStyle('blue');
+    }
+    return dayCardMonthStyle('yellow');
+  };
+
   return (
     <div
-      className={`m-4 p-4  min-height card-container justify-between rounded-md shadow-lg ${checkCompletion(
+      ref={!day.passed ? drop : undefined}
+      className={`${
+        isOver && 'filter brightness-110'
+      } m-4 p-4 min-height card-container justify-between rounded-md shadow-lg ${checkCompletion(
         day,
         monthStore.currentDay,
         false
@@ -40,17 +76,7 @@ const DayCard = ({ day, habits }: Props) => {
       id={`${day.dayNumber}`}
     >
       <div
-        className={`${
-          checkAllCompletedHabits(day)
-            ? dayCardMonthStyle('green')
-            : day.dayNumber === currentDay
-            ? dayCardMonthStyle('pink')
-            : day.passed && checkAllCompletedHabits(day)
-            ? dayCardMonthStyle('green')
-            : day.passed
-            ? dayCardMonthStyle('blue')
-            : dayCardMonthStyle('yellow')
-        } flex w-full flex-col items-center justify-center h-full pr-4`}
+        className={`${backgroundStyles()}  flex w-full flex-col items-center justify-center h-full pr-4`}
       >
         <h1 className="pt-2 pb-2 text-4xl filter drop-shadow font-sans">
           {day.weekDay}
@@ -73,7 +99,7 @@ const DayCard = ({ day, habits }: Props) => {
           <Formik
             enableReinitialize={true}
             initialValues={{ habitName: '', error: '' }}
-            onSubmit={(values, { resetForm, setErrors }) => {
+            onSubmit={(values, { resetForm }) => {
               const habit: Habit = {
                 completed: false,
                 dayId: day.id,
