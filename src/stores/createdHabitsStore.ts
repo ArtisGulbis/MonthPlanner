@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import { Habits } from '../models/habits';
 import { getFromStorage, HABITS, saveToStorage } from '../utils/utils';
 
-export class CreatedHabits {
+export class CreatedHabitsStore {
   habits: string[] = [];
   constructor() {
     makeAutoObservable(this);

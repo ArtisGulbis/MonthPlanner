@@ -2,10 +2,10 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../stores/store';
 import { shortenText } from '../utils/utils';
-import LegendComponent from './LegendComponent';
-import StatisticsContentComponent from './StatisticsContentComponent';
+import StatisticsContent from './StatisticsContent';
+import StatisticsLegend from './StatisticsLegend';
 
-const StatisticsComponent = () => {
+const Statistics = () => {
   const { statisticsStore, modalStore } = useStore();
   const { openModal } = modalStore;
 
@@ -18,17 +18,15 @@ const StatisticsComponent = () => {
         Clear
       </button>
       <div className="flex flex-col mt-3">
-        <LegendComponent text="Completed" color="green" />
-        <LegendComponent text="Missed" color="red" />
-        <LegendComponent text="Completion Rate" color="blue" />
+        <StatisticsLegend text="Completed" color="green" />
+        <StatisticsLegend text="Missed" color="red" />
+        <StatisticsLegend text="Completion Rate" color="blue" />
       </div>
       {statisticsStore.habits.map(
         ({ habit: { habitName, id }, toDo, completed, missed }) => (
           <div
             key={id}
-            className={`${
-              toDo === completed ? 'bg-green-300' : 'bg-yellow-300'
-            } text-indigo-800 m-2 mt-4 text-center rounded-md flex flex-col shadow-lg h-28`}
+            className={`bg-indigo-300 text-indigo-800 m-2 mt-4 text-center rounded-md flex flex-col shadow-lg h-28`}
           >
             <div className="flex items-center justify-center flex-grow">
               <p className="text-2xl font-light tracking-widest capitalize">
@@ -36,16 +34,13 @@ const StatisticsComponent = () => {
               </p>
             </div>
             <div className="flex bg-purple-600 mt-auto justify-around items-center rounded-b-md">
-              <StatisticsContentComponent
+              <StatisticsContent
                 content={`${completed}/${toDo}`}
                 color="green"
                 additionalStyle="rounded-bl-md"
               />
-              <StatisticsContentComponent
-                content={`${missed}/${toDo}`}
-                color="red"
-              />
-              <StatisticsContentComponent
+              <StatisticsContent content={`${missed}/${toDo}`} color="red" />
+              <StatisticsContent
                 content={`${Math.round((completed / toDo) * 100)} %`}
                 color="blue"
                 additionalStyle="rounded-br-md"
@@ -58,4 +53,4 @@ const StatisticsComponent = () => {
   );
 };
 
-export default observer(StatisticsComponent);
+export default observer(Statistics);

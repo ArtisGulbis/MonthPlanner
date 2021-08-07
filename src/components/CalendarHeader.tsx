@@ -2,13 +2,13 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Day } from '../models/day';
 import { useStore } from '../stores/store';
-import { checkCompletion } from '../utils/utils';
+import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
 
 interface Props {
   days: Day[];
 }
 
-const CalendarHeaderComponent = ({ days }: Props) => {
+const CalendarHeader = ({ days }: Props) => {
   const { monthStore } = useStore();
 
   const borderAroundCurrentDay = (day: Day) => {
@@ -25,7 +25,9 @@ const CalendarHeaderComponent = ({ days }: Props) => {
 
   return (
     <div
-      className={'text-center my-20 flex flex-wrap justify-center items-center'}
+      className={
+        'text-center my-20 flex flex-wrap justify-center items-center w-10/12 m-auto'
+      }
     >
       {days.map((day) => (
         <a
@@ -41,8 +43,12 @@ const CalendarHeaderComponent = ({ days }: Props) => {
             className={`${
               day.habits.length &&
               `w-4 h-4 ${
-                day.habits.every((el) => el.completed)
+                checkAllCompletedHabits(day)
                   ? 'bg-green-500'
+                  : day.passed && checkAllCompletedHabits(day)
+                  ? 'bg-green-500'
+                  : day.passed
+                  ? 'bg-blue-500'
                   : 'bg-red-500'
               } absolute indicator rounded-full`
             }`}
@@ -54,4 +60,4 @@ const CalendarHeaderComponent = ({ days }: Props) => {
   );
 };
 
-export default observer(CalendarHeaderComponent);
+export default observer(CalendarHeader);

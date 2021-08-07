@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BackToTopComponent = () => {
+const BackToTop = () => {
   return (
     <a
       href="#top"
@@ -22,4 +22,4 @@ const BackToTopComponent = () => {
   );
 };
 
-export default BackToTopComponent;
+export default BackToTop;

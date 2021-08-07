@@ -7,9 +7,9 @@ interface Props {
   passed: boolean;
 }
 
-const CheckboxComponent = ({ habit, passed }: Props) => {
+const Checkbox = ({ habit, passed }: Props) => {
   const {
-    habitStore: { completeHabit },
+    dayStore: { completeHabit },
     statisticsStore: { reduceCompletedCount, increaseCompletedCount },
   } = useStore();
   return (
@@ -50,4 +50,4 @@ const CheckboxComponent = ({ habit, passed }: Props) => {
   );
 };
 
-export default CheckboxComponent;
+export default Checkbox;

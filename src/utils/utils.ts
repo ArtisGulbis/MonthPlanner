@@ -1,4 +1,5 @@
 import { Day } from '../models/day';
+import { store } from '../stores/store';
 
 export const saveToStorage = <T>(key: string, data: T) => {
   window.localStorage.setItem(key, JSON.stringify(data));
@@ -13,11 +14,11 @@ export const removeFromStorage = (key: string) => {
 };
 
 export const clearLocalStorage = () => {
-  window.localStorage.clear();
-  // store.habitStore.clearHabits();
-  // store.statisticsStore.clearStatistics();
-  // store.monthStore.clearCurrentMonth();
-  window.location.reload();
+  // window.localStorage.clear();
+  store.dayStore.clearHabits();
+  store.statisticsStore.clearStatistics();
+  store.monthStore.clearCurrentMonth();
+  // window.location.reload();
 };
 
 export const shortenText = (text: string, length: number) => {
@@ -62,7 +63,9 @@ export const checkCompletion = (
     highlight && completionStylesHighlited('pink')
   }`;
 
-  if (day.passed) {
+  if (day.passed && checkAllCompletedHabits(day)) {
+    return completedDay;
+  } else if (day.passed) {
     return passedDay;
   }
   if (currentDay === day.dayNumber) {

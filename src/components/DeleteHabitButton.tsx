@@ -8,9 +8,9 @@ interface Props {
   habit: Habit;
 }
 
-const DeleteButtonComponent = ({ completed, dayNumber, habit }: Props) => {
+const DeleteHabitButton = ({ completed, dayNumber, habit }: Props) => {
   const {
-    habitStore: { removeHabit },
+    dayStore: { removeHabit },
     statisticsStore: { reduceHabitCount, reduceCompletedCount },
     monthStore: { currentDay },
   } = useStore();
@@ -46,4 +46,4 @@ const DeleteButtonComponent = ({ completed, dayNumber, habit }: Props) => {
   );
 };
 
-export default DeleteButtonComponent;
+export default DeleteHabitButton;

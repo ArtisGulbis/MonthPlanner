@@ -3,8 +3,8 @@ import React from 'react';
 import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
 import { shortenText } from '../utils/utils';
-import CheckboxComponent from './CheckboxComponent';
-import DeleteButtonComponent from './DeleteButtonComponent';
+import Checkbox from './Checkbox';
+import DeleteHabitButton from './DeleteHabitButton';
 
 interface Props {
   habit: Habit;
@@ -13,7 +13,7 @@ interface Props {
   dayNumber: number;
 }
 
-const HabitComponent = ({ habit, passed, completed, dayNumber }: Props) => {
+const HabitEntry = ({ habit, passed, completed, dayNumber }: Props) => {
   const {
     monthStore: { currentDay },
   } = useStore();
@@ -30,16 +30,16 @@ const HabitComponent = ({ habit, passed, completed, dayNumber }: Props) => {
           : 'bg-yellow-200'
       }`}
     >
-      <CheckboxComponent passed={passed} habit={habit} />
+      <Checkbox passed={passed} habit={habit} />
       <p
         className={`capitalize text-base tracking-wide w-full ${
           habit.completed && 'line-through'
         }`}
       >
-        {shortenText(habit.habitName, 30)}
+        {shortenText(habit.habitName, 50)}
       </p>
       {!passed && (
-        <DeleteButtonComponent
+        <DeleteHabitButton
           completed={completed}
           dayNumber={dayNumber}
           habit={habit}
@@ -49,4 +49,4 @@ const HabitComponent = ({ habit, passed, completed, dayNumber }: Props) => {
   );
 };
 
-export default observer(HabitComponent);
+export default observer(HabitEntry);

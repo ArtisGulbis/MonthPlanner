@@ -103,8 +103,8 @@ export default class StatisticsStore {
     }
   };
   clearStatistics = () => {
-    this.habits.splice(0, this.habits.length);
-    this.loadStatistics();
+    this.habits = [];
+    // this.loadStatistics();
     saveToStorage(STATISTICS, { habits: this.habits });
   };
 }

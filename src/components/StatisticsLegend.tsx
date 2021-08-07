@@ -5,7 +5,7 @@ interface Props {
   text: string;
 }
 
-const LegendComponent = ({ color, text }: Props) => {
+const StatisticsLegend = ({ color, text }: Props) => {
   return (
     <div className="flex flex-row items-center m-2 ">
       <div className={`w-6 h-6 bg-${color}-300 mr-1`}></div>
@@ -14,4 +14,4 @@ const LegendComponent = ({ color, text }: Props) => {
   );
 };
 
-export default LegendComponent;
+export default StatisticsLegend;

@@ -12,7 +12,7 @@ import { Habit } from '../models/habit';
 import { store } from './store';
 const now = DateTime.now();
 
-export default class HabitStore {
+export default class DayStore {
   days: Day[] = [];
   constructor() {
     makeAutoObservable(this);
@@ -79,8 +79,9 @@ export default class HabitStore {
   };
 
   clearHabits = () => {
-    this.days.splice(0, this.days.length);
-    this.generateDays();
+    // this.days.splice(0, this.days.length);
+    // this.generateDays();
+    this.days.forEach((day) => (day.habits = []));
     saveToStorage<Day[]>(DAYS, this.days);
   };
 

@@ -1,23 +1,23 @@
 import { createContext, useContext } from 'react';
-import { CreatedHabits } from './createdHabits';
-import HabitStore from './habitStore';
+import { CreatedHabitsStore } from './createdHabitsStore';
+import DayStore from './dayStore';
 import ModalStore from './modalStore';
 import MonthStore from './monthStore';
 import StatisticsStore from './statisticsStore';
 
 interface Store {
-  habitStore: HabitStore;
+  dayStore: DayStore;
   monthStore: MonthStore;
   statisticsStore: StatisticsStore;
-  createdHabits: CreatedHabits;
+  createdHabits: CreatedHabitsStore;
   modalStore: ModalStore;
 }
 
 export const store: Store = {
-  habitStore: new HabitStore(),
+  dayStore: new DayStore(),
   monthStore: new MonthStore(),
   statisticsStore: new StatisticsStore(),
-  createdHabits: new CreatedHabits(),
+  createdHabits: new CreatedHabitsStore(),
   modalStore: new ModalStore(),
 };
 

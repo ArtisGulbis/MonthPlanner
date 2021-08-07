@@ -8,7 +8,7 @@ interface Props {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
 }
 
-const AddHabitButtonComponent = ({ day, handleSubmit }: Props) => {
+const AddHabitButton = ({ day, handleSubmit }: Props) => {
   const {
     monthStore: { currentDay },
   } = useStore();
@@ -31,7 +31,6 @@ const AddHabitButtonComponent = ({ day, handleSubmit }: Props) => {
 
           `}
       viewBox="0 0 20 20"
-      // fill="currentColor"
       onClick={() => handleSubmit()}
       type="submit"
     >
@@ -44,4 +43,4 @@ const AddHabitButtonComponent = ({ day, handleSubmit }: Props) => {
   );
 };
 
-export default AddHabitButtonComponent;
+export default AddHabitButton;

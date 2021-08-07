@@ -44,8 +44,11 @@ export default class MonthStore {
   };
 
   clearCurrentMonth = () => {
-    this.currentMonth = '';
+    this.currentMonth = DateTime.now().monthLong;
     this.reset = false;
-    this.init();
+    saveToStorage<Month>(MONTH, {
+      currentMonth: this.currentMonth,
+      reset: this.reset,
+    });
   };
 }

@@ -7,17 +7,17 @@ import { Day } from '../models/day';
 import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
 import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
-import AddHabitButtonComponent from './AddHabitButtonComponent';
-import HabitComponent from './HabitComponent';
+import AddHabitButton from './AddHabitButton';
+import HabitEntry from './HabitEntry';
 
 interface Props {
   day: Day;
   habits: Habit[];
 }
 
-const DayComponent = ({ day, habits }: Props) => {
-  const { habitStore, statisticsStore, monthStore, createdHabits } = useStore();
-  const { addHabit } = habitStore;
+const DayCard = ({ day, habits }: Props) => {
+  const { dayStore, statisticsStore, monthStore, createdHabits } = useStore();
+  const { addHabit } = dayStore;
   const { addToStats } = statisticsStore;
   const { currentDay } = monthStore;
 
@@ -44,6 +44,8 @@ const DayComponent = ({ day, habits }: Props) => {
             ? dayCardMonthStyle('green')
             : day.dayNumber === currentDay
             ? dayCardMonthStyle('pink')
+            : day.passed && checkAllCompletedHabits(day)
+            ? dayCardMonthStyle('green')
             : day.passed
             ? dayCardMonthStyle('blue')
             : dayCardMonthStyle('yellow')
@@ -57,7 +59,7 @@ const DayComponent = ({ day, habits }: Props) => {
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap mb-auto">
           {habits.map((el) => (
-            <HabitComponent
+            <HabitEntry
               completed={checkAllCompletedHabits(day)}
               key={el.id}
               habit={el}
@@ -105,13 +107,9 @@ const DayComponent = ({ day, habits }: Props) => {
                   }
                 
                 `}
-                  disabled={day.passed}
                   placeholder="Enter Habit/Task..."
                 />
-                <AddHabitButtonComponent
-                  day={day}
-                  handleSubmit={handleSubmit}
-                />
+                <AddHabitButton day={day} handleSubmit={handleSubmit} />
               </Form>
             )}
           </Formik>
@@ -121,4 +119,4 @@ const DayComponent = ({ day, habits }: Props) => {
   );
 };
 
-export default observer(DayComponent);
+export default observer(DayCard);
