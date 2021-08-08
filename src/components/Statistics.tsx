@@ -13,7 +13,7 @@ const Statistics = () => {
     <div className="bg-blue-300 bg-opacity-50 shadow-inner w-full rounded-md">
       <button
         onClick={openModal}
-        className="w-full bg-red-400 font-light text-red-900 hover:bg-red-300 py-4 rounded-t-md text-xl tracking-widest"
+        className="w-full font-light py-4 rounded-t-md text-xl tracking-widest bg-red-300 text-red-800 hover:bg-red-600 hover:text-red-200 text-lg"
       >
         Clear
       </button>

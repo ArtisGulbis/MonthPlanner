@@ -1,14 +1,11 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
-import * as Yup from 'yup';
 import { Day } from '../models/day';
 import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
 import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
-import AddHabitButton from './AddHabitButton';
 import HabitEntry from './HabitEntry';
 
 interface Props {
@@ -41,11 +38,6 @@ const DayCard = ({ day, habits }: Props) => {
   const { addHabit } = dayStore;
   const { addToStats } = statisticsStore;
   const { currentDay } = monthStore;
-
-  const inputOutline = (color: string) => {
-    return `text-${color}-900 placeholder-${color}-900 focus:outline-none focus:ring-2 focus:ring-${color}-600 focus:border-transparent`;
-  };
-
   const dayCardMonthStyle = (color: string) => {
     return `border-r-2 border-${color}-400`;
   };
@@ -95,55 +87,6 @@ const DayCard = ({ day, habits }: Props) => {
             />
           ))}
         </div>
-        {!day.passed && (
-          <Formik
-            enableReinitialize={true}
-            initialValues={{ habitName: '', error: '' }}
-            onSubmit={(values, { resetForm }) => {
-              const habit: Habit = {
-                completed: false,
-                dayId: day.id,
-                habitName: values.habitName,
-                id: uuidv4(),
-                missed: false,
-              };
-              createdHabitsStore.addHabit(habit.habitName);
-              addHabit(day.id, habit);
-              addToStats(habit);
-              resetForm();
-            }}
-            validationSchema={Yup.object({
-              habitName: Yup.string().required('Please enter a Habit/Task'),
-            })}
-          >
-            {({ handleSubmit }) => (
-              <Form className="h-10 text-center self-center w-full flex mt-12 relative">
-                <div className="absolute bottom-12 left-2 text-red-700">
-                  <ErrorMessage name="habitName" />
-                </div>
-                <Field
-                  name="habitName"
-                  className={`h-full flex-grow overflow-visible z-30 ${
-                    day.passed && 'rounded-md'
-                  } w-1/2 text-center text-l font-light  ml-2 rounded-md
-                  ${
-                    checkAllCompletedHabits(day)
-                      ? inputOutline('green')
-                      : currentDay === day.dayNumber
-                      ? inputOutline('pink')
-                      : day.passed
-                      ? inputOutline('blue')
-                      : inputOutline('yellow')
-                  }
-                
-                `}
-                  placeholder="Enter Habit/Task..."
-                />
-                <AddHabitButton day={day} handleSubmit={handleSubmit} />
-              </Form>
-            )}
-          </Formik>
-        )}
       </div>
     </div>
   );

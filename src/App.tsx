@@ -1,18 +1,19 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import './App.css';
+import AddHabitForm from './components/AddHabitForm';
 import BackToTop from './components/BackToTop';
 import CalendarHeader from './components/CalendarHeader';
+import CreatedHabitsContainer from './components/CreatedHabitsContainer';
 import DayCard from './components/DayCard';
 import HideDaysButton from './components/HideDaysButton';
+import Modal from './components/Modal';
 import Statistics from './components/Statistics';
 import { Day } from './models/day';
 import { useStore } from './stores/store';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import CreatedHabitsContainer from './components/CreatedHabitsContainer';
 import { clearLocalStorage } from './utils/utils';
-import Modal from './components/Modal';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
@@ -72,6 +73,7 @@ function App() {
         <CalendarHeader days={days} />
         <div className="container w-full">
           <div className="flex relative flex-col bg-blue-300 shadow-inner bg-opacity-50 rounded-md p-2 p-8">
+            <AddHabitForm />
             <CreatedHabitsContainer />
             <HideDaysButton hidden={hidden} setHidden={setHidden} />
             {days.map((day) =>

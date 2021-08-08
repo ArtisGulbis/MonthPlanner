@@ -10,6 +10,10 @@ html {
   min-height: 15rem;
 }
 
+.min-h {
+  min-height: 6rem;
+}
+
 .container {
   display: grid;
   grid-auto-flow: column;
@@ -17,6 +21,10 @@ html {
   gap: 0px 1%;
   max-width: 90%;
   margin: auto;
+}
+
+.cursor-hand {
+  cursor: grab;
 }
 
 .created-habit:not(:first-child) {
@@ -30,6 +38,11 @@ html {
 .chdb {
   top: -6px;
   right: -6px;
+  visibility: hidden;
+}
+
+.chdb-hover:hover .chdb {
+  visibility: visible;
 }
 
 .sticky {

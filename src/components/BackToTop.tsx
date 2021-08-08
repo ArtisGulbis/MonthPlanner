@@ -4,11 +4,11 @@ const BackToTop = () => {
   return (
     <a
       href="#top"
-      className="fixed bottom-10 right-10 bg-indigo-600 w-min-w h-min-h p-4 rounded-full transform hover:scale-125 duration-75 hover:bg-indigo-400"
+      className="fixed fill-current border-2 border-blue-900 text-blue-900 bottom-10 right-10 bg-transparent w-min-w h-min-h p-4 rounded-full transform hover:scale-125 duration-75 hover:bg-blue-900 hover:text-blue-200"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-7 w-7"
+        className="h-10 w-10"
         viewBox="0 0 20 20"
         fill="currentColor"
       >

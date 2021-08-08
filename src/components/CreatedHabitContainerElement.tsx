@@ -23,7 +23,7 @@ const CreatedHabitContainerElement = ({ habit }: Props) => {
     <div
       ref={drag}
       className={`
-       pl-8 pr-8 bg-blue-400 relative text-blue-900 bg-opacity-50 rounded-full shadow text-center m-2 cursor-move hover:bg-blue-300 transform hover:scale-110 duration-100`}
+       pl-8 pr-8 bg-blue-400 relative text-blue-900 bg-opacity-50 rounded-full shadow text-center m-2  cursor-hand hover:bg-blue-300 transform hover:scale-110 duration-100 chdb-hover`}
     >
       <p className={`capitalize text-lg p-2`}>{habit}</p>
       <DeleteButton
