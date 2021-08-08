@@ -79,10 +79,15 @@ export default class DayStore {
   };
 
   clearHabits = () => {
-    // this.days.splice(0, this.days.length);
-    // this.generateDays();
     this.days.forEach((day) => (day.habits = []));
     saveToStorage<Day[]>(DAYS, this.days);
+  };
+
+  clearDaysOfHabit = (habitName: string) => {
+    for (let i = 0; i < this.days.length; i++) {
+      const day = this.days[i];
+      day.habits = day.habits.filter((habit) => habit.habitName !== habitName);
+    }
   };
 
   checkPassedDays = () => {

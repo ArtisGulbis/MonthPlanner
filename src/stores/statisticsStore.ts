@@ -56,7 +56,7 @@ export default class StatisticsStore {
         this.habits = this.habits.filter(
           (el) => el.habit.habitName !== h.habit.habitName
         );
-        saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
+        // saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       } else {
         saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       }
@@ -102,6 +102,7 @@ export default class StatisticsStore {
       saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
   };
+
   clearStatistics = () => {
     this.habits = [];
     // this.loadStatistics();

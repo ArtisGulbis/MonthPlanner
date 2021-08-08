@@ -32,6 +32,7 @@ export class CreatedHabitsStore {
     this.habits.splice(index, 1);
     saveToStorage<Habits>(HABITS, { habits: this.habits });
   };
+
   clearHabits = () => {
     this.habits = [];
     saveToStorage<Habits>(HABITS, { habits: this.habits });

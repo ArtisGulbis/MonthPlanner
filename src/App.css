@@ -27,6 +27,19 @@ html {
   margin: 0.5rem;
 }
 
+.chdb {
+  top: -6px;
+  right: -6px;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
 .created-habit:first-child {
   margin-top: 0.5rem;
 }

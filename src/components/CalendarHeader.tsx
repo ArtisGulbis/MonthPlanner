@@ -14,7 +14,7 @@ const CalendarHeader = ({ days }: Props) => {
       }
     >
       {days.map((day) => (
-        <CalendarHeaderDayCard day={day} />
+        <CalendarHeaderDayCard key={day.id} day={day} />
       ))}
     </div>
   );
