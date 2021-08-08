@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import BackToTop from './components/BackToTop';
 import CalendarHeader from './components/CalendarHeader';
-import ClearDataMotal from './components/ClearDataMotal';
 import DayCard from './components/DayCard';
 import HideDaysButton from './components/HideDaysButton';
 import Statistics from './components/Statistics';
@@ -13,6 +12,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CreatedHabitsContainer from './components/CreatedHabitsContainer';
 import { clearLocalStorage } from './utils/utils';
+import Modal from './components/Modal';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
@@ -34,15 +34,35 @@ function App() {
     setDays(dayStore.days);
   }, [dayStore, monthStore, statisticsStore, createdHabitsStore]);
 
-  const onYes = () => {
+  const onYesClearData = () => {
     modalStore.closeModal();
     clearLocalStorage();
+  };
+
+  const handleClick = (habit: string) => {
+    dayStore.clearDaysOfHabit(habit);
+    statisticsStore.removeHabit(habit);
+    createdHabitsStore.removeHabit(habit);
+    createdHabitsStore.closeModal();
   };
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
-        <ClearDataMotal onYes={onYes} text="Do you want to clear all data?" />
+        <Modal
+          onYes={onYesClearData}
+          text="Do you want to clear all data?"
+          onNo={() => modalStore.closeModal()}
+          onClose={() => modalStore.closeModal()}
+          open={modalStore.open}
+        />
+        <Modal
+          open={createdHabitsStore.open}
+          text={`Clear all instances of ${createdHabitsStore.currentlySelectedHabit}`}
+          onYes={() => handleClick(createdHabitsStore.currentlySelectedHabit)}
+          onClose={() => createdHabitsStore.closeModal()}
+          onNo={() => createdHabitsStore.closeModal()}
+        />
         <h1
           id="top"
           className="font-sans italic tracking-widest text-indigo-700 font-normal underline text-9xl text-center mb-12"

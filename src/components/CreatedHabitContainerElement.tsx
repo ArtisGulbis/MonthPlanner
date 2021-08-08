@@ -9,7 +9,7 @@ interface Props {
 }
 
 const CreatedHabitContainerElement = ({ habit }: Props) => {
-  const { dayStore, statisticsStore, createdHabitsStore } = useStore();
+  const { createdHabitsStore } = useStore();
 
   const [, drag] = useDrag(() => ({
     type: 'habit',
@@ -18,12 +18,6 @@ const CreatedHabitContainerElement = ({ habit }: Props) => {
       isDragging: !!monitor.isDragging(),
     }),
   }));
-
-  const handleClick = (habit: string) => {
-    dayStore.clearDaysOfHabit(habit);
-    statisticsStore.removeHabit(habit);
-    createdHabitsStore.removeHabit(habit);
-  };
 
   return (
     <div
@@ -34,7 +28,7 @@ const CreatedHabitContainerElement = ({ habit }: Props) => {
       <p className={`capitalize text-lg p-2`}>{habit}</p>
       <DeleteButton
         styling={`h-6 w-6 absolute chdb hover:text-blue-500 cursor-pointer transform hover:scale-125 duration-75`}
-        onClick={() => handleClick(habit)}
+        onClick={() => createdHabitsStore.openModal(habit)}
       />
     </div>
   );

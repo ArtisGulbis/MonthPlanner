@@ -4,9 +4,21 @@ import { getFromStorage, HABITS, saveToStorage } from '../utils/utils';
 
 export class CreatedHabitsStore {
   habits: string[] = [];
+  currentlySelectedHabit = '';
+  open = false;
   constructor() {
     makeAutoObservable(this);
   }
+
+  openModal = (habit: string) => {
+    this.open = true;
+    this.currentlySelectedHabit = habit;
+  };
+
+  closeModal = () => {
+    this.open = false;
+    this.currentlySelectedHabit = '';
+  };
 
   init = () => {
     const data = getFromStorage<Habits>(HABITS);
@@ -28,8 +40,6 @@ export class CreatedHabitsStore {
   };
 
   removeHabit = (habit: string) => {
-    // const index = this.habits.findIndex((el) => el === habit);
-    // this.habits.splice(index, 1);
     this.habits = this.habits.filter((el) => el !== habit);
     saveToStorage<Habits>(HABITS, { habits: this.habits });
   };

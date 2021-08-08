@@ -5,7 +5,7 @@ import ModalStore from './modalStore';
 import MonthStore from './monthStore';
 import StatisticsStore from './statisticsStore';
 
-interface Store {
+export interface Store {
   dayStore: DayStore;
   monthStore: MonthStore;
   statisticsStore: StatisticsStore;
