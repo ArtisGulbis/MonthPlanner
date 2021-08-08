@@ -8,7 +8,15 @@ export class CreatedHabitsStore {
   open = false;
   constructor() {
     makeAutoObservable(this);
+    // reaction(
+    //   () => this.habits,
+    //   (habits) => (this.habits = habits.sort())
+    // );
   }
+
+  sort = () => {
+    this.habits.sort();
+  };
 
   openModal = (habit: string) => {
     this.open = true;
@@ -47,5 +55,19 @@ export class CreatedHabitsStore {
   clearHabits = () => {
     this.habits = [];
     saveToStorage<Habits>(HABITS, { habits: this.habits });
+  };
+
+  renameHabit = (habit: string, newName: string) => {
+    if (!this.habits.includes(newName)) {
+      this.habits = this.habits.map((el) => (el === habit ? newName : el));
+      saveToStorage<Habits>(HABITS, { habits: this.habits });
+    }
+  };
+
+  checkExistance = (newName: string) => {
+    if (this.habits.includes(newName)) {
+      return true;
+    }
+    return false;
   };
 }

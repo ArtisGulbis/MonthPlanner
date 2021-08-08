@@ -14,12 +14,10 @@ export const removeFromStorage = (key: string) => {
 };
 
 export const clearLocalStorage = () => {
-  // window.localStorage.clear();
   store.dayStore.clearHabits();
   store.statisticsStore.clearStatistics();
   store.monthStore.clearCurrentMonth();
   store.createdHabitsStore.clearHabits();
-  // window.location.reload();
 };
 
 export const shortenText = (text: string, length: number) => {
@@ -48,6 +46,13 @@ const refStyles = (color: string) => {
 
 const completionStylesHighlited = (color: string) => {
   return `hover:bg-${color}-500 hover:text-${color}-200`;
+};
+
+export const buttonStyles = () => {
+  return `fill-current text-blue-700 hover:text-blue-500 cursor-pointer transform hover:scale-125 duration-75`;
+};
+export const inputOutline = () => {
+  return `text-blue-600 placeholder-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent`;
 };
 
 export const checkCompletion = (

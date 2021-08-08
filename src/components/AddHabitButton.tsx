@@ -1,13 +1,14 @@
 import React from 'react';
+import { buttonStyles } from '../utils/utils';
 
 interface Props {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
 }
 
 const AddHabitButton = ({ handleSubmit }: Props) => {
-  const buttonStyles = () => {
-    return `fill-current text-blue-700 hover:text-blue-500 cursor-pointer transform hover:scale-125 duration-75`;
-  };
+  // const buttonStyles = () => {
+  //   return `fill-current text-blue-700 hover:text-blue-500 cursor-pointer transform hover:scale-125 duration-75`;
+  // };
 
   return (
     // <svg

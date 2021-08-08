@@ -113,4 +113,22 @@ export default class StatisticsStore {
     // this.loadStatistics();
     saveToStorage(STATISTICS, { habits: this.habits });
   };
+
+  renameHabit = (habit: string, newName: string) => {
+    if (!this.habits.find((el) => el.habit.habitName === newName)) {
+      this.habits = this.habits.map((el) =>
+        el.habit.habitName === habit
+          ? { ...el, habit: { ...el.habit, habitName: newName } }
+          : el
+      );
+      saveToStorage(STATISTICS, { habits: this.habits });
+    }
+  };
+
+  checkExistance = (newName: string) => {
+    if (this.habits.find((el) => el.habit.habitName === newName)) {
+      return true;
+    }
+    return false;
+  };
 }
