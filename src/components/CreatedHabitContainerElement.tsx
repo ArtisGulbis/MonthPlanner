@@ -9,7 +9,7 @@ interface Props {
 }
 
 const CreatedHabitContainerElement = ({ habit }: Props) => {
-  const { dayStore, statisticsStore } = useStore();
+  const { dayStore, statisticsStore, createdHabitsStore } = useStore();
 
   const [, drag] = useDrag(() => ({
     type: 'habit',
@@ -21,6 +21,8 @@ const CreatedHabitContainerElement = ({ habit }: Props) => {
 
   const handleClick = (habit: string) => {
     dayStore.clearDaysOfHabit(habit);
+    statisticsStore.removeHabit(habit);
+    createdHabitsStore.removeHabit(habit);
   };
 
   return (

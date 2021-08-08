@@ -1,10 +1,20 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, ButtonProps } from 'semantic-ui-react';
 import { useStore } from '../stores/store';
 import { clearLocalStorage } from '../utils/utils';
 
-const ClearDataMotal = () => {
+interface Props {
+  text: string;
+  onYes:
+    | ((
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+        data: ButtonProps
+      ) => void)
+    | undefined;
+}
+
+const ClearDataMotal = ({ text, onYes }: Props) => {
   const { modalStore } = useStore();
   return (
     <Modal
@@ -13,17 +23,10 @@ const ClearDataMotal = () => {
       onClose={() => modalStore.closeModal()}
     >
       <Modal.Header>
-        <p>Do you want to clear all data?</p>
+        <p>{text}</p>
       </Modal.Header>
       <Modal.Actions>
-        <Button
-          color="red"
-          inverted
-          onClick={() => {
-            modalStore.closeModal();
-            clearLocalStorage();
-          }}
-        >
+        <Button color="red" inverted onClick={onYes}>
           Yes
         </Button>
         <Button color="blue" inverted onClick={() => modalStore.closeModal()}>

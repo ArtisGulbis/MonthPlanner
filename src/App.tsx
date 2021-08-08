@@ -12,12 +12,18 @@ import { useStore } from './stores/store';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CreatedHabitsContainer from './components/CreatedHabitsContainer';
+import { clearLocalStorage } from './utils/utils';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
   const [hidden, setHidden] = useState(true);
-  const { dayStore, monthStore, statisticsStore, createdHabitsStore } =
-    useStore();
+  const {
+    dayStore,
+    modalStore,
+    monthStore,
+    statisticsStore,
+    createdHabitsStore,
+  } = useStore();
 
   useEffect(() => {
     monthStore.init();
@@ -28,10 +34,15 @@ function App() {
     setDays(dayStore.days);
   }, [dayStore, monthStore, statisticsStore, createdHabitsStore]);
 
+  const onYes = () => {
+    modalStore.closeModal();
+    clearLocalStorage();
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
-        <ClearDataMotal />
+        <ClearDataMotal onYes={onYes} text="Do you want to clear all data?" />
         <h1
           id="top"
           className="font-sans italic tracking-widest text-indigo-700 font-normal underline text-9xl text-center mb-12"

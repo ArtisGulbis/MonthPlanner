@@ -88,6 +88,7 @@ export default class DayStore {
       const day = this.days[i];
       day.habits = day.habits.filter((habit) => habit.habitName !== habitName);
     }
+    saveToStorage<Day[]>(DAYS, this.days);
   };
 
   checkPassedDays = () => {

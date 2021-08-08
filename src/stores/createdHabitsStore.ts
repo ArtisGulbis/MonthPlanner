@@ -28,8 +28,9 @@ export class CreatedHabitsStore {
   };
 
   removeHabit = (habit: string) => {
-    const index = this.habits.findIndex((el) => el === habit);
-    this.habits.splice(index, 1);
+    // const index = this.habits.findIndex((el) => el === habit);
+    // this.habits.splice(index, 1);
+    this.habits = this.habits.filter((el) => el !== habit);
     saveToStorage<Habits>(HABITS, { habits: this.habits });
   };
 

@@ -87,7 +87,7 @@ export default class StatisticsStore {
     const index = this.habits.findIndex(
       (el) => el.habit.habitName === habit.habitName
     );
-    if (this.habits[index].habit) {
+    if (this.habits[index].habit && !this.habits[index].completed) {
       this.habits[index].missed++;
       saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
@@ -101,6 +101,11 @@ export default class StatisticsStore {
       this.habits[index].missed--;
       saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
+  };
+
+  removeHabit = (habit: string) => {
+    this.habits = this.habits.filter((el) => el.habit.habitName !== habit);
+    saveToStorage(STATISTICS, { habits: this.habits });
   };
 
   clearStatistics = () => {
