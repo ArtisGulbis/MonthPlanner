@@ -74,6 +74,10 @@ export const checkCompletion = (
     highlight && completionStylesHighlited('pink')
   } ${ref && refStyles('pink')}`;
 
+  const weekend = `${completionStyles('red')} ${
+    highlight && completionStylesHighlited('red')
+  }`;
+
   if (day.passed && checkAllCompletedHabits(day)) {
     return completedDay;
   } else if (day.passed) {
@@ -86,6 +90,8 @@ export const checkCompletion = (
     return currentD;
   } else if (checkAllCompletedHabits(day)) {
     return completedDay;
+  } else if (day.weekDay === 'Sat' || day.weekDay === 'Sun') {
+    return weekend;
   }
   return todoDay;
 };

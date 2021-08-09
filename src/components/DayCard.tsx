@@ -51,6 +51,8 @@ const DayCard = ({ day, habits }: Props) => {
       return dayCardMonthStyle('green');
     } else if (day.passed) {
       return dayCardMonthStyle('blue');
+    } else if (day.weekDay === 'Sun' || day.weekDay === 'Sat') {
+      return dayCardMonthStyle('red');
     }
     return dayCardMonthStyle('yellow');
   };
@@ -71,7 +73,7 @@ const DayCard = ({ day, habits }: Props) => {
       id={`${day.dayNumber}`}
     >
       <div
-        className={`${backgroundStyles()} flex w-24 flex-col items-center justify-center h-full pr-4 `}
+        className={`${backgroundStyles()} flex w-full day-card-header flex-col items-center justify-center h-full pr-4 `}
       >
         <h1 className={cardNumberStyles}>{day.weekDay}</h1>
         <h1 className={cardNumberStyles}>{day.dayNumber}</h1>
@@ -85,6 +87,7 @@ const DayCard = ({ day, habits }: Props) => {
               habit={el}
               passed={day.passed}
               dayNumber={day.dayNumber}
+              weekday={day.weekDay}
             />
           ))}
         </div>

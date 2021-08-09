@@ -73,8 +73,12 @@ html {
 .card-container {
   display: grid;
   grid-auto-flow: column;
-  grid-template-columns: 0.4fr 1.6fr;
+  grid-template-columns: 0.2fr 1.6fr;
   gap: 0px 1%;
+}
+
+.day-card-header {
+  min-width: 6rem;
 }
 
 @media (max-width: 768px) {

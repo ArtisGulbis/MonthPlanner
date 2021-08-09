@@ -11,9 +11,16 @@ interface Props {
   passed: boolean;
   completed: boolean | 0;
   dayNumber: number;
+  weekday: string;
 }
 
-const HabitEntry = ({ habit, passed, completed, dayNumber }: Props) => {
+const HabitEntry = ({
+  habit,
+  passed,
+  completed,
+  dayNumber,
+  weekday,
+}: Props) => {
   const {
     monthStore: { currentDay },
   } = useStore();
@@ -27,6 +34,8 @@ const HabitEntry = ({ habit, passed, completed, dayNumber }: Props) => {
           ? 'bg-pink-200'
           : passed
           ? 'bg-blue-200'
+          : weekday === 'Sat' || weekday === 'Sun'
+          ? 'bg-red-200'
           : 'bg-yellow-200'
       }`}
     >
@@ -36,7 +45,7 @@ const HabitEntry = ({ habit, passed, completed, dayNumber }: Props) => {
           habit.completed && 'line-through'
         }`}
       >
-        {shortenText(habit.habitName, 50)}
+        {shortenText(habit.habitName, 15)}
       </p>
       {!passed && (
         <DeleteHabitButton

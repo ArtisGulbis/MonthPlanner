@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { useStore } from '../stores/store';
-import { buttonStyles } from '../utils/utils';
+import { buttonStyles, shortenText } from '../utils/utils';
 import DeleteButton from './DeleteButton';
 import EditCreatedHabitForm from './EditCreatedHabitForm';
 
@@ -42,7 +42,7 @@ const CreatedHabitContainerElement = ({ habit }: Props) => {
           onDoubleClick={changeEditMode}
           className={`capitalize text-lg p-2 text-blue-800`}
         >
-          {habit}
+          {shortenText(habit, 10)}
         </p>
       )}
       <DeleteButton
