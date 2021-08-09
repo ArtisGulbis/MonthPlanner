@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 import './App.css';
 import AddHabitForm from './components/AddHabitForm';
 import BackToTop from './components/BackToTop';
@@ -14,6 +15,7 @@ import Statistics from './components/Statistics';
 import { Day } from './models/day';
 import { useStore } from './stores/store';
 import { clearLocalStorage } from './utils/utils';
+import { isMobile } from 'react-device-detect';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
@@ -48,7 +50,7 @@ function App() {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
         <Modal
           onYes={onYesClearData}
