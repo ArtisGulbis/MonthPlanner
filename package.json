@@ -1,5 +1,4 @@
 {
-  "homepage": "https://ArtisGulbis.github.io/MonthPlanner",
   "name": "habittracker",
   "version": "0.1.0",
   "private": true,
@@ -36,8 +35,6 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "predeploy": "craco build",
-    "deploy": "gh-pages -d build",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
