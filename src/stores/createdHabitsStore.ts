@@ -8,15 +8,7 @@ export class CreatedHabitsStore {
   open = false;
   constructor() {
     makeAutoObservable(this);
-    // reaction(
-    //   () => this.habits,
-    //   (habits) => (this.habits = habits.sort())
-    // );
   }
-
-  sort = () => {
-    this.habits.sort();
-  };
 
   openModal = (habit: string) => {
     this.open = true;

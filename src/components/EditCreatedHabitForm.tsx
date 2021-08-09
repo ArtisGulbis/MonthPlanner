@@ -26,7 +26,6 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
           createdHabitsStore.checkExistance(newName) ||
           statisticsStore.checkExistance(newName)
         ) {
-          console.log('heeeyy');
           setErrors({ error: 'Name already exists' });
           return;
         }
@@ -46,11 +45,15 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
           <div className="absolute edit-mode flex flex-row">
             <div className="flex flex-row justify-center items-center ">
               <Checkmark
-                styling={`h-6 w-6 mr-2 cursor-pointer  bg-blue-400 text-blue-800 hover:bg-blue-200 transform duration-75 hover:scale-105 rounded-md ${buttonStyles()}`}
+                styling={`h-6 w-6 mr-2 cursor-pointer  bg-green-300 hover:bg-green-600 transform duration-75 hover:scale-105 rounded-md ${buttonStyles(
+                  'green'
+                )}`}
                 onClick={() => handleSubmit()}
               />
               <DeleteButton
-                styling={`w-6 h-6 cursor-pointer bg-blue-400 text-blue-800 hover:bg-blue-200 transform duration-75 hover:scale-105 rounded-md ${buttonStyles()} `}
+                styling={`w-6 h-6 cursor-pointer bg-red-300 hover:bg-red-600 transform duration-75 hover:scale-105 rounded-md ${buttonStyles(
+                  'red'
+                )} `}
                 onClick={changeEditMode}
               />
             </div>

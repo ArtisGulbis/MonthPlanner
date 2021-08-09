@@ -3,30 +3,14 @@ import { buttonStyles } from '../utils/utils';
 
 interface Props {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  styling?: string;
 }
 
-const AddHabitButton = ({ handleSubmit }: Props) => {
-  // const buttonStyles = () => {
-  //   return `fill-current text-blue-700 hover:text-blue-500 cursor-pointer transform hover:scale-125 duration-75`;
-  // };
-
+const AddHabitButton = ({ handleSubmit, styling }: Props) => {
   return (
-    // <svg
-    //   xmlns="http://www.w3.org/2000/svg"
-    //   className={`flex-grow-0 rounded-r-md ml-2 mr-2 ${buttonStyles()}`}
-    //   viewBox="0 0 20 20"
-    //   onClick={() => handleSubmit()}
-    //   type="submit"
-    // >
-    //   <path
-    //     fillRule="evenodd"
-    //     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-    //     clipRule="evenodd"
-    //   />
-    // </svg>
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`flex-grow-0 rounded-r-md ml-2 mr-2 ${buttonStyles()}`}
+      className={`rounded-r-md ${buttonStyles('blue')} ${styling}`}
       viewBox="0 0 20 20"
       fill="currentColor"
       onClick={() => handleSubmit()}

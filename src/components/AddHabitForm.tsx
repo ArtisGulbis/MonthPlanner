@@ -22,17 +22,20 @@ const AddHabitForm = () => {
       })}
     >
       {({ handleSubmit }) => (
-        <Form className="h-10 mr-auto ml-4 text-center flex mt-4 relative">
+        <Form className="h-10 w-full mr-auto ml-4 text-center flex flex-row mt-4 justify-start relative ">
           <Field
             name="habitName"
-            className={`${inputOutline()} h-full w-1/2 overflow-visible z-30 text-center text-l font-light rounded-md
+            className={`${inputOutline()} w-1/2 z-30 text-center text-l font-light rounded-md
                 `}
             placeholder="Enter Habit/Task..."
           />
-          <AddHabitButton handleSubmit={handleSubmit} />
+          <AddHabitButton
+            handleSubmit={handleSubmit}
+            styling={`w-10 h-10 ml-2`}
+          />
           <Info
             content="Enter habit or Task, then drag and drop it onto a day either below or above."
-            styling={`w-9 h-9 ml-auto mr-8`}
+            styling={`w-9 h-9 ml-auto mr-12`}
           />
         </Form>
       )}

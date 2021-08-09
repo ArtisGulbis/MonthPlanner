@@ -66,13 +66,13 @@ function App() {
         />
         <h1
           id="top"
-          className="font-sans italic tracking-widest text-indigo-700 font-normal underline text-9xl text-center mb-12"
+          className="font-sans italic tracking-widest text-indigo-700 font-normal underline text-7xl pt-10 text-center md:mb-10 md:pt-10 md:text-9xl"
         >
           {monthStore.currentMonth}
         </h1>
         <CalendarHeader days={days} />
         <div className="container w-full">
-          <div className="flex relative flex-col bg-blue-300 shadow-inner bg-opacity-50 rounded-md p-2 p-8">
+          <div className="flex relative flex-col bg-blue-300 w-full ms:w-auto shadow-inner bg-opacity-50 rounded-md p-1 md:p-8 small-screens">
             <AddHabitForm />
             <CreatedHabitsContainer />
             <HideDaysButton hidden={hidden} setHidden={setHidden} />

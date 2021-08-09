@@ -55,12 +55,15 @@ const DayCard = ({ day, habits }: Props) => {
     return dayCardMonthStyle('yellow');
   };
 
+  const cardNumberStyles =
+    'p-2  md:text-4xl text-3xl filter drop-shadow font-sans';
+
   return (
     <div
       ref={!day.passed ? drop : undefined}
       className={`${
         isOver && 'filter brightness-110'
-      } m-4 p-4 min-height card-container justify-between rounded-md shadow-lg ${checkCompletion(
+      } md:m-4 md:p-4 p-4 m-2  min-height card-container justify-between rounded-md shadow-lg ${checkCompletion(
         day,
         monthStore.currentDay,
         false
@@ -68,12 +71,10 @@ const DayCard = ({ day, habits }: Props) => {
       id={`${day.dayNumber}`}
     >
       <div
-        className={`${backgroundStyles()}  flex w-full flex-col items-center justify-center h-full pr-4`}
+        className={`${backgroundStyles()} flex w-24 flex-col items-center justify-center h-full pr-4 `}
       >
-        <h1 className="pt-2 pb-2 text-4xl filter drop-shadow font-sans">
-          {day.weekDay}
-        </h1>
-        <h1 className="pt-2 pb-2 text-5xl font-sans">{day.dayNumber}</h1>
+        <h1 className={cardNumberStyles}>{day.weekDay}</h1>
+        <h1 className={cardNumberStyles}>{day.dayNumber}</h1>
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap mb-auto">

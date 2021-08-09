@@ -16,12 +16,7 @@ const CreatedHabitsContainer = () => {
         setSticky('');
       }
     });
-    createdHabitsStore.sort();
-  }, [
-    createdHabitsStore.habits.length,
-    createdHabitsStore.habits,
-    createdHabitsStore,
-  ]);
+  }, [createdHabitsStore.habits.length, createdHabitsStore.habits]);
 
   return (
     <div
@@ -30,10 +25,12 @@ const CreatedHabitsContainer = () => {
       {createdHabitsStore.habits.map((el) => (
         <CreatedHabitContainerElement key={el} habit={el} />
       ))}
-      <Info
-        content="Double click on title to edit."
-        styling={`absolute bottom-2 right-0 w-9 h-9`}
-      />
+      {createdHabitsStore.habits.length > 0 && (
+        <Info
+          content="Double click on title to edit."
+          styling={`absolute bottom-2 right-0 w-9 h-9`}
+        />
+      )}
     </div>
   );
 };
