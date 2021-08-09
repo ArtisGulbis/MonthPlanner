@@ -56,7 +56,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
         ref={!day.passed ? drop : undefined}
         className={`${
           isOver && 'filter brightness-110 transform scale-150'
-        } w-min-min w-12 p-2 m-2 text-xl transform duration-100 hover:scale-110 hover:-translate-y-0.5 rounded-md shadow-md ${checkCompletion(
+        } w-min-min w-14 p-2 m-2 text-xl flex flex-col items-center justify-center transform duration-100 hover:scale-110 hover:-translate-y-0.5 rounded-md shadow-md ${checkCompletion(
           day,
           monthStore.currentDay,
           true,
@@ -78,6 +78,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
             } absolute indicator rounded-full`
           }`}
         ></div>
+        <p className="text-sm">{day.weekDay}</p>
         {day.dayNumber}
       </a>
     </>

@@ -51,7 +51,6 @@ function App() {
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <p>I am on {isMobile ? 'Mobile' : 'Desktop'}</p>
       <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
         <Modal
           onYes={onYesClearData}
