@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/MonthPlanner/static/css/main.62679cdb.chunk.css",
-    "main.js": "/MonthPlanner/static/js/main.b9cdc9c5.chunk.js",
-    "main.js.map": "/MonthPlanner/static/js/main.b9cdc9c5.chunk.js.map",
+    "main.css": "/MonthPlanner/static/css/main.8f8c4fc9.chunk.css",
+    "main.js": "/MonthPlanner/static/js/main.bbb9d8d9.chunk.js",
+    "main.js.map": "/MonthPlanner/static/js/main.bbb9d8d9.chunk.js.map",
     "runtime-main.js": "/MonthPlanner/static/js/runtime-main.90a5cc84.js",
     "runtime-main.js.map": "/MonthPlanner/static/js/runtime-main.90a5cc84.js.map",
     "static/css/2.442c844a.chunk.css": "/MonthPlanner/static/css/2.442c844a.chunk.css",
@@ -12,7 +12,7 @@
     "static/js/3.077e1fdd.chunk.js.map": "/MonthPlanner/static/js/3.077e1fdd.chunk.js.map",
     "index.html": "/MonthPlanner/index.html",
     "static/css/2.442c844a.chunk.css.map": "/MonthPlanner/static/css/2.442c844a.chunk.css.map",
-    "static/css/main.62679cdb.chunk.css.map": "/MonthPlanner/static/css/main.62679cdb.chunk.css.map",
+    "static/css/main.8f8c4fc9.chunk.css.map": "/MonthPlanner/static/css/main.8f8c4fc9.chunk.css.map",
     "static/js/2.d3b2dfa9.chunk.js.LICENSE.txt": "/MonthPlanner/static/js/2.d3b2dfa9.chunk.js.LICENSE.txt",
     "static/media/semantic.min.css": "/MonthPlanner/static/media/outline-icons.ddae9b1b.woff"
   },
@@ -20,7 +20,7 @@
     "static/js/runtime-main.90a5cc84.js",
     "static/css/2.442c844a.chunk.css",
     "static/js/2.d3b2dfa9.chunk.js",
-    "static/css/main.62679cdb.chunk.css",
-    "static/js/main.b9cdc9c5.chunk.js"
+    "static/css/main.8f8c4fc9.chunk.css",
+    "static/js/main.bbb9d8d9.chunk.js"
   ]
 }
