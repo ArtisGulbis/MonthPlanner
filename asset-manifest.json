@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/MonthPlanner/static/css/main.8f8c4fc9.chunk.css",
-    "main.js": "/MonthPlanner/static/js/main.bbb9d8d9.chunk.js",
-    "main.js.map": "/MonthPlanner/static/js/main.bbb9d8d9.chunk.js.map",
+    "main.js": "/MonthPlanner/static/js/main.02a0e242.chunk.js",
+    "main.js.map": "/MonthPlanner/static/js/main.02a0e242.chunk.js.map",
     "runtime-main.js": "/MonthPlanner/static/js/runtime-main.90a5cc84.js",
     "runtime-main.js.map": "/MonthPlanner/static/js/runtime-main.90a5cc84.js.map",
     "static/css/2.442c844a.chunk.css": "/MonthPlanner/static/css/2.442c844a.chunk.css",
@@ -21,6 +21,6 @@
     "static/css/2.442c844a.chunk.css",
     "static/js/2.d3b2dfa9.chunk.js",
     "static/css/main.8f8c4fc9.chunk.css",
-    "static/js/main.bbb9d8d9.chunk.js"
+    "static/js/main.02a0e242.chunk.js"
   ]
 }
