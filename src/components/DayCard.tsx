@@ -82,6 +82,17 @@ const DayCard = ({ day, habits }: Props) => {
         <div className="flex flex-row flex-wrap mb-auto">
           {habits.map((el) => (
             <HabitEntry
+              styling={`w-full flex items-center shadow-inner rounded-r-md rounded-l-md habit h-10 ml-2 ${
+                checkAllCompletedHabits(day)
+                  ? 'bg-green-200'
+                  : currentDay === day.dayNumber
+                  ? 'bg-pink-200'
+                  : day.passed
+                  ? 'bg-blue-200'
+                  : day.weekDay === 'Sat' || day.weekDay === 'Sun'
+                  ? 'bg-red-200'
+                  : 'bg-yellow-200'
+              }`}
               completed={checkAllCompletedHabits(day)}
               key={el.id}
               habit={el}

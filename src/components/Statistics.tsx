@@ -29,7 +29,7 @@ const Statistics = () => {
             className={`bg-indigo-300 text-indigo-800 m-6 mt-4 text-center rounded-md flex flex-col shadow-lg h-28`}
           >
             <div className="flex items-center justify-center flex-grow">
-              <p className="text-2xl font-light tracking-widest capitalize">
+              <p className="text-xl font-light tracking-widest capitalize">
                 {shortenText(habitName, 15)}
               </p>
             </div>
