@@ -70,6 +70,10 @@ html {
   margin-top: 0.5rem;
 }
 
+.bounce-pos {
+  top: -20px;
+}
+
 .card-container {
   display: grid;
   grid-auto-flow: column;

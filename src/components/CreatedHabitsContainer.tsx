@@ -26,10 +26,13 @@ const CreatedHabitsContainer = () => {
         <CreatedHabitContainerElement key={el} habit={el} />
       ))}
       {createdHabitsStore.habits.length > 0 && (
-        <Info
-          content="Double click on title to edit."
-          styling={`absolute bottom-2 right-0 w-9 h-9`}
-        />
+        <div className="absolute bottom-2 right-0 w-20 h-12 flex flex-col items-center justify-center">
+          <Info
+            tutName="edit habit"
+            content="Double click on title to edit."
+            styling={` w-9 h-9`}
+          />
+        </div>
       )}
     </div>
   );

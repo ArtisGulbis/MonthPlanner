@@ -57,9 +57,6 @@ export class CreatedHabitsStore {
   };
 
   checkExistance = (newName: string) => {
-    if (this.habits.includes(newName)) {
-      return true;
-    }
-    return false;
+    return this.habits.includes(newName);
   };
 }

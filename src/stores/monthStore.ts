@@ -35,7 +35,6 @@ export class MonthStore {
   };
 
   get checkNewMonth() {
-    // check if current month equals the actual current month (now)
     return this.currentMonth !== DateTime.now().monthLong;
   }
 

@@ -101,3 +101,4 @@ export const DAYS = 'days';
 export const MONTH = 'month';
 export const STATISTICS = 'statistics';
 export const HABITS = 'habits';
+export const TUTORIALS = 'tutorials';

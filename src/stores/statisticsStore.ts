@@ -56,7 +56,7 @@ export default class StatisticsStore {
         this.habits = this.habits.filter(
           (el) => el.habit.habitName !== h.habit.habitName
         );
-        // saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
+        saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       } else {
         saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       }
@@ -87,8 +87,10 @@ export default class StatisticsStore {
     const index = this.habits.findIndex(
       (el) => el.habit.habitName === habit.habitName
     );
-    if (this.habits[index].habit && !this.habits[index].completed) {
+    const foundHabit = this.habits[index].habit;
+    if (foundHabit && !foundHabit.completed && !foundHabit.missed) {
       this.habits[index].missed++;
+      foundHabit.missed = true;
       saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
   };
@@ -110,7 +112,6 @@ export default class StatisticsStore {
 
   clearStatistics = () => {
     this.habits = [];
-    // this.loadStatistics();
     saveToStorage(STATISTICS, { habits: this.habits });
   };
 
@@ -126,9 +127,6 @@ export default class StatisticsStore {
   };
 
   checkExistance = (newName: string) => {
-    if (this.habits.find((el) => el.habit.habitName === newName)) {
-      return true;
-    }
-    return false;
+    return this.habits.find((el) => el.habit.habitName === newName);
   };
 }

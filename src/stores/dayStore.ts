@@ -95,12 +95,11 @@ export default class DayStore {
     for (let i = 0; i < store.monthStore.currentDay - 1; i++) {
       const day = this.days[i];
       day.passed = true;
-      day.habits.forEach(
-        (el) =>
-          !el.completed &&
-          !el.missed &&
-          store.statisticsStore.increaseMissedCount(el)
-      );
+      day.habits.forEach((el) => {
+        if (!el.completed && !el.missed) {
+          store.statisticsStore.increaseMissedCount(el);
+        }
+      });
     }
     saveToStorage<Day[]>(DAYS, this.days);
   };
@@ -122,13 +121,8 @@ export default class DayStore {
   };
 
   checkExistance = (newName: string) => {
-    if (
-      this.days.every((day) =>
-        day.habits.find((el) => el.habitName === newName)
-      )
-    ) {
-      return true;
-    }
-    return false;
+    return this.days.every((day) =>
+      day.habits.find((el) => el.habitName === newName)
+    );
   };
 }

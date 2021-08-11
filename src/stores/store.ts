@@ -4,6 +4,7 @@ import DayStore from './dayStore';
 import ModalStore from './modalStore';
 import { MonthStore } from './monthStore';
 import StatisticsStore from './statisticsStore';
+import { TutorialStore } from './tutorialStore';
 
 export interface Store {
   dayStore: DayStore;
@@ -11,6 +12,7 @@ export interface Store {
   statisticsStore: StatisticsStore;
   createdHabitsStore: CreatedHabitsStore;
   modalStore: ModalStore;
+  tutorialStore: TutorialStore;
 }
 
 export const store: Store = {
@@ -19,6 +21,7 @@ export const store: Store = {
   statisticsStore: new StatisticsStore(),
   createdHabitsStore: new CreatedHabitsStore(),
   modalStore: new ModalStore(),
+  tutorialStore: new TutorialStore(),
 };
 
 export const StoreContext = createContext(store);

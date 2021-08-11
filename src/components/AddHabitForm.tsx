@@ -22,10 +22,10 @@ const AddHabitForm = () => {
       })}
     >
       {({ handleSubmit }) => (
-        <Form className="h-10 w-full mr-auto ml-4 text-center flex flex-row mt-4 justify-start relative ">
+        <Form className="h-14 ml-4 mr-4 text-center flex flex-row mt-4 justify-start items-center relative ">
           <Field
             name="habitName"
-            className={`${inputOutline()} w-1/2 z-30 text-center text-l font-light rounded-md
+            className={`${inputOutline()} w-1/2 z-30 text-center text-l h-10 font-light rounded-md
                 `}
             placeholder="Enter Habit/Task..."
           />
@@ -33,10 +33,13 @@ const AddHabitForm = () => {
             handleSubmit={handleSubmit}
             styling={`w-10 h-10 ml-2`}
           />
-          <Info
-            content="Enter habit or Task, then drag and drop it onto a day either below or above."
-            styling={`w-9 h-9 ml-auto mr-12`}
-          />
+          <div className="ml-auto flex flex-col h-20 w-20 items-center justify-center">
+            <Info
+              tutName="add habit"
+              content="Enter habit or Task, then drag and drop it onto a day either below or above."
+              styling={`w-9 h-9`}
+            />
+          </div>
         </Form>
       )}
     </Formik>
