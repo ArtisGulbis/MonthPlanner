@@ -54,7 +54,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
 
   const trigger = () => {
     return (
-      <a
+      <div
         key={day.id}
         ref={!day.passed ? drop : undefined}
         className={`${
@@ -65,7 +65,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
           true,
           false
         )} ${borderAroundCurrentDay(day)}`}
-        href={`#${day.dayNumber}`}
+        onDoubleClick={() => (window.location.href = `#${day.dayNumber}`)}
       >
         <div
           className={`${
@@ -83,7 +83,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
         ></div>
         <p className="text-sm">{day.weekDay}</p>
         {day.dayNumber}
-      </a>
+      </div>
     );
   };
 
@@ -92,6 +92,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
       {day.habits.length > 0 ? (
         <Popup
           hoverable
+          on="click"
           basic
           style={{
             backgroundColor: `${

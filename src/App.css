@@ -74,6 +74,11 @@ html {
   top: -20px;
 }
 
+.info-header {
+  bottom: -30px;
+  right: -60px;
+}
+
 .card-container {
   display: grid;
   grid-auto-flow: column;

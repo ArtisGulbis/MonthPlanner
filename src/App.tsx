@@ -16,6 +16,7 @@ import { Day } from './models/day';
 import { useStore } from './stores/store';
 import { clearLocalStorage } from './utils/utils';
 import { isMobile } from 'react-device-detect';
+import GitHubIcon from './components/GitHubIcon';
 
 function App() {
   const [days, setDays] = useState<Day[]>([]);
@@ -52,6 +53,7 @@ function App() {
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
+        <GitHubIcon />
         <Modal
           onYes={onYesClearData}
           text="Do you want to clear all data?"
@@ -72,12 +74,13 @@ function App() {
         >
           {monthStore.currentMonth}
         </h1>
+        {/* <div className="flex flex-col relative justify-center item-center w-11/12 m-auto"> */}
         <CalendarHeader days={days} />
         <div className="container w-full">
           <div className="flex relative flex-col bg-blue-300 w-full ms:w-auto shadow-inner bg-opacity-50 rounded-md p-1 md:p-8 small-screens">
+            <HideDaysButton hidden={hidden} setHidden={setHidden} />
             <AddHabitForm />
             <CreatedHabitsContainer />
-            <HideDaysButton hidden={hidden} setHidden={setHidden} />
             {days.map((day) =>
               hidden && day.passed ? null : (
                 <DayCard key={day.id} day={day} habits={day.habits} />
@@ -85,6 +88,7 @@ function App() {
             )}
           </div>
           <Statistics />
+          {/* </div> */}
         </div>
         <BackToTop />
       </div>

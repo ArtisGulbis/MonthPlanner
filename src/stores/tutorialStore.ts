@@ -18,7 +18,6 @@ export class TutorialStore {
 
   addTutorial = (name: string) => {
     if (!this.tutorials.find((el) => el.name === name)) {
-      console.log('hellooo');
       this.tutorials.push({
         name,
         checked: false,

@@ -7,7 +7,7 @@ interface Props {
 
 const HideDaysButton = ({ hidden, setHidden }: Props) => {
   return (
-    <div className="absolute left-0 hideButton">
+    <div className="hideButton absolute left-0">
       <button
         onClick={() => setHidden(!hidden)}
         className="bg-red-300 text-red-800 hover:bg-red-600 hover:text-red-200 p-3 rounded-md text-lg transform duration-75 hover:scale-105"
