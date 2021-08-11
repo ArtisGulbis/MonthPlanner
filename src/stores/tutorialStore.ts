@@ -30,7 +30,6 @@ export class TutorialStore {
     const item = this.tutorials.find((el) => el.name === name);
 
     if (item) {
-      console.log('hello');
       item.checked = true;
     }
     saveToStorage<Tutorial[]>(TUTORIALS, this.tutorials);

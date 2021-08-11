@@ -16,7 +16,7 @@ const CalendarHeader = ({ days }: Props) => {
     >
       <div className="order-last relative flex flex-col items-center w-20">
         <Info
-          content="Double click on a day to jump to it"
+          content="Click once on a day to edit its habits/tasks. Double click on a day to jump to it."
           tutName="calendar header"
           styling={`w-8 h-8`}
         />
