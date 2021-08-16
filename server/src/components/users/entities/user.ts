@@ -20,10 +20,6 @@ export class User {
   username: string;
 
   @Column()
-  @Field()
-  email: string;
-
-  @Column()
   password: string;
 
   @OneToOne(() => Month, (month) => month.user)

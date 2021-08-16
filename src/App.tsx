@@ -1,98 +1,20 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { TouchBackend } from 'react-dnd-touch-backend';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
-import AddHabitForm from './components/AddHabitForm';
-import BackToTop from './components/BackToTop';
-import CalendarHeader from './components/CalendarHeader';
-import CreatedHabitsContainer from './components/CreatedHabitsContainer';
-import DayCard from './components/DayCard';
-import HideDaysButton from './components/HideDaysButton';
-import Modal from './components/Modal';
-import Statistics from './components/Statistics';
-import { Day } from './models/day';
-import { useStore } from './stores/store';
-import { clearLocalStorage } from './utils/utils';
-import { isMobile } from 'react-device-detect';
-import GitHubIcon from './components/GitHubIcon';
+import LoginPage from './components/LoginPage';
+import MainPage from './components/MainPage';
+import RegisterPage from './components/RegisterPage';
 
 function App() {
-  const [days, setDays] = useState<Day[]>([]);
-  const [hidden, setHidden] = useState(true);
-  const {
-    dayStore,
-    modalStore,
-    monthStore,
-    statisticsStore,
-    createdHabitsStore,
-  } = useStore();
-
-  useEffect(() => {
-    monthStore.init();
-    createdHabitsStore.init();
-    statisticsStore.loadStatistics();
-    dayStore.generateDays();
-    dayStore.checkPassedDays();
-    setDays(dayStore.days);
-  }, [dayStore, monthStore, statisticsStore, createdHabitsStore]);
-
-  const onYesClearData = () => {
-    modalStore.closeModal();
-    clearLocalStorage();
-  };
-
-  const handleClick = (habit: string) => {
-    dayStore.clearDaysOfHabit(habit);
-    statisticsStore.removeHabit(habit);
-    createdHabitsStore.removeHabit(habit);
-    createdHabitsStore.closeModal();
-  };
-
   return (
-    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
-        <GitHubIcon />
-        <Modal
-          onYes={onYesClearData}
-          text="Do you want to clear all data?"
-          onNo={() => modalStore.closeModal()}
-          onClose={() => modalStore.closeModal()}
-          open={modalStore.open}
-        />
-        <Modal
-          open={createdHabitsStore.open}
-          text={`Clear all instances of ${createdHabitsStore.currentlySelectedHabit}`}
-          onYes={() => handleClick(createdHabitsStore.currentlySelectedHabit)}
-          onClose={() => createdHabitsStore.closeModal()}
-          onNo={() => createdHabitsStore.closeModal()}
-        />
-        <h1
-          id="top"
-          className="font-sans italic tracking-widest text-indigo-700 font-normal underline text-7xl pt-10 text-center md:mb-10 md:pt-10 md:text-9xl"
-        >
-          {monthStore.currentMonth}
-        </h1>
-        {/* <div className="flex flex-col relative justify-center item-center w-11/12 m-auto"> */}
-        <CalendarHeader days={days} />
-        <div className="container w-full">
-          <div className="flex relative flex-col bg-blue-300 w-full ms:w-auto shadow-inner bg-opacity-50 rounded-md p-1 md:p-8 small-screens">
-            <HideDaysButton hidden={hidden} setHidden={setHidden} />
-            <AddHabitForm />
-            <CreatedHabitsContainer />
-            {days.map((day) =>
-              hidden && day.passed ? null : (
-                <DayCard key={day.id} day={day} habits={day.habits} />
-              )
-            )}
-          </div>
-          <Statistics />
-          {/* </div> */}
-        </div>
-        <BackToTop />
-      </div>
-    </DndProvider>
+    <>
+      <Switch>
+        <Route exact path="/" component={MainPage} />
+        <Route exact path="/register" component={RegisterPage} />
+        <Route exact path="/login" component={LoginPage} />
+      </Switch>
+    </>
   );
 }
 

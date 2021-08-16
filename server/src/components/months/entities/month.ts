@@ -24,7 +24,7 @@ export class Month {
   @OneToOne(() => User, (user) => user.month, {
     onDelete: 'CASCADE',
   })
-  @Field()
+  @Field(() => User)
   user: User;
 
   @OneToMany(() => Day, (day) => day.month)

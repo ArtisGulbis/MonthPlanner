@@ -1,0 +1,15 @@
+mutation Register($username: String!, $password: String!) {
+  register(registerInput: { username: $username, password: $password }) {
+    username
+    id
+    month {
+      id
+      name
+      days {
+        dayNumber
+        weekday
+        id
+      }
+    }
+  }
+}

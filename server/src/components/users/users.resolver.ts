@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -6,6 +7,8 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { Month } from '../months/entities/Month';
 import { RegisterInput } from './dto/register.input';
 import { User } from './entities/user';
@@ -25,6 +28,17 @@ export class UsersResolver {
   @Query((_) => User)
   public async getUser(@Args('id') id: string): Promise<User> {
     return await this.usersService.findOne(id).catch((err) => {
+      throw err;
+    });
+  }
+
+  @Mutation((_) => User)
+  @UseGuards(JwtAuthGuard)
+  public async login(
+    @Args('username') username: string,
+    @Args('password') password: string,
+  ): Promise<User> {
+    return await this.usersService.findOne(username).catch((err) => {
       throw err;
     });
   }

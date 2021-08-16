@@ -1,0 +1,17 @@
+query GetMonth($id: String!) {
+  getMonth(id: $id) {
+    id
+    name
+    days {
+      id
+      dayNumber
+      weekday
+      habits {
+        id
+        habitName
+        completed
+        missed
+      }
+    }
+  }
+}

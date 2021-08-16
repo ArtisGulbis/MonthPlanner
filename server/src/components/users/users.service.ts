@@ -6,11 +6,11 @@ import { RegisterInput } from './dto/register.input';
 import { User } from './entities/user';
 import { DateTime } from 'luxon';
 import { Day } from '../days/entities/day';
-import { v4 as uuidv4 } from 'uuid';
 import { MonthsService } from '../months/months.service';
+import { hash } from 'bcrypt';
 
 const now = DateTime.now();
-
+const saltRounds = 10;
 @Injectable()
 export class UsersService {
   constructor(
@@ -29,9 +29,12 @@ export class UsersService {
       });
   }
 
-  public async findOne(id: string): Promise<User> {
+  public async findOne(username: string): Promise<User> | null {
     return await this.userRepository
-      .findOne({ where: { id }, relations: ['month', 'month.days'] })
+      .findOneOrFail({
+        where: { username },
+        relations: ['month', 'month.days'],
+      })
       .catch((err) => {
         console.log(err);
         throw new InternalServerErrorException();
@@ -39,7 +42,13 @@ export class UsersService {
   }
 
   public async register(registerInput: RegisterInput): Promise<User> {
-    const user = this.userRepository.create(registerInput);
+    const hashedPassword = await hash(registerInput.password, saltRounds);
+
+    const user = this.userRepository.create({
+      username: registerInput.username,
+      password: hashedPassword,
+    });
+
     const month = this.monthRepository.create({
       name: 'August',
     });
