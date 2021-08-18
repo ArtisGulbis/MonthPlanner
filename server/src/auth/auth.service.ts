@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string): Promise<User> {
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findOneByUsername(username);
     if (user && (await compare(password, user.password))) {
       return user;
     }
@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const foundUser = await this.userService.findOne(user.username);
+    const foundUser = await this.userService.findOne(user.id);
     if (foundUser) {
       const payload = {
         name: foundUser.username,
@@ -40,7 +40,7 @@ export class AuthService {
       secret: 'SECRET',
     });
 
-    const user = await this.userService.findOne(decoded.name);
+    const user = await this.userService.findOne(decoded.id);
 
     if (!user) {
       throw new UnauthorizedException();

@@ -7,4 +7,7 @@ export class NewHabitInput {
 
   @Field()
   dayId: string;
+
+  @Field()
+  userId: string;
 }

@@ -1,14 +1,6 @@
 import { UseGuards } from '@nestjs/common';
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { Habit } from '../habits/entities/habit';
 import { JwtResponse } from '../jwtResponse';
 import { Month } from '../months/entities/Month';
@@ -27,8 +19,9 @@ export class UsersResolver {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query((_) => [Habit])
-  public async getUserHabits(userId: string): Promise<Habit[]> {
+  public async getUserHabits(@Args('userId') userId: string): Promise<Habit[]> {
     return this.usersService.getUserHabits(userId).catch((err) => {
       throw err;
     });

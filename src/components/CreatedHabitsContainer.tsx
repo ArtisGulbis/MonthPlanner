@@ -10,13 +10,6 @@ const CreatedHabitsContainer = () => {
   // const [sticky, setSticky] = useState('');
 
   useEffect(() => {
-    createdHabitService.getUserHabits(userStore.userData!.id).then((res) => {
-      if (res?.getUserHabits) {
-        res.getUserHabits.forEach((el) =>
-          createdHabitsStore.addHabit(el.name as string)
-        );
-      }
-    });
     // window.addEventListener('scroll', () => {
     //   if (window.pageYOffset > 400 && createdHabitsStore.habits.length) {
     //     setSticky('sticky');

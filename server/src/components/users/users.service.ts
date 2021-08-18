@@ -27,6 +27,7 @@ export class UsersService {
     @InjectRepository(Month) private monthRepository: Repository<Month>,
     @InjectRepository(Day) private dayRepository: Repository<Day>,
     private monthsService: MonthsService,
+    @Inject(forwardRef(() => HabitsService))
     private habitsService: HabitsService,
     @Inject(forwardRef(() => AuthService)) private authService: AuthService,
   ) {}
@@ -40,10 +41,22 @@ export class UsersService {
       });
   }
 
-  public async findOne(username: string): Promise<User> | null {
+  public async findOneByUsername(username: string): Promise<User> | null {
     return await this.userRepository
       .findOneOrFail({
         where: { username },
+        relations: ['month', 'month.days', 'month.days.habits'],
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new InternalServerErrorException();
+      });
+  }
+
+  public async findOne(id: string): Promise<User> | null {
+    return await this.userRepository
+      .findOneOrFail({
+        where: { id },
         relations: ['month', 'month.days', 'month.days.habits'],
       })
       .catch((err) => {
@@ -104,7 +117,7 @@ export class UsersService {
       throw new InternalServerErrorException();
     });
 
-    return this.authService.login(user);
+    return await this.authService.login(user);
   }
 
   public async getMonth(monthId: string): Promise<Month> {
