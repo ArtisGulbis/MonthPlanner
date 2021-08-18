@@ -26,18 +26,15 @@ export class Day {
   @Field()
   weekday: string;
 
-  @Column()
-  @Field()
+  @Column({ type: 'bool', default: false })
+  @Field(() => Boolean)
   passed: boolean;
 
-  @OneToMany(() => Habit, (habit) => habit.day, {
-    cascade: ['update'],
-  })
+  @OneToMany(() => Habit, (habit) => habit.day)
   @Field(() => [Habit], { nullable: true })
   habits: Habit[];
 
   @ManyToOne(() => Month, (month) => month.days)
   @JoinColumn()
-  @Field(() => Month)
   month: Month;
 }

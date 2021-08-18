@@ -34,10 +34,7 @@ export class UsersResolver {
 
   @Mutation((_) => User)
   @UseGuards(JwtAuthGuard)
-  public async login(
-    @Args('username') username: string,
-    @Args('password') password: string,
-  ): Promise<User> {
+  public async login(@Args('username') username: string): Promise<User> {
     return await this.usersService.findOne(username).catch((err) => {
       throw err;
     });

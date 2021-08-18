@@ -33,7 +33,7 @@ export class UsersService {
     return await this.userRepository
       .findOneOrFail({
         where: { username },
-        relations: ['month', 'month.days'],
+        relations: ['month', 'month.days', 'month.days.habits'],
       })
       .catch((err) => {
         console.log(err);
@@ -65,6 +65,11 @@ export class UsersService {
       days.push(day);
     }
 
+    for (let i = 0; i < DateTime.now().day - 1; i++) {
+      const day = days[i];
+      day.passed = true;
+    }
+
     month.days = [...days];
     month.user = user;
     user.month = month;
@@ -87,5 +92,9 @@ export class UsersService {
 
   public async getMonth(monthId: string): Promise<Month> {
     return await this.monthService.findOne(monthId);
+  }
+
+  public async saveUser(user: User): Promise<User> {
+    return await this.userRepository.save(user);
   }
 }

@@ -1,4 +1,6 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { NewHabitInput } from '../days/dto/new-habit.input';
 import { Habit } from './entities/habit';
 import { HabitsService } from './habits.service';
@@ -7,6 +9,7 @@ import { HabitsService } from './habits.service';
 export class HabitsResolver {
   constructor(private habitsService: HabitsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Mutation((_) => Habit)
   public async addHabit(
     @Args('newHabitInput') newHabitInput: NewHabitInput,
@@ -16,6 +19,7 @@ export class HabitsResolver {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation((_) => Habit)
   public async deleteHabit(@Args('habitId') habitId: string): Promise<Habit> {
     return await this.habitsService.deleteHabit(habitId).catch((err) => {
@@ -35,6 +39,7 @@ export class HabitsResolver {
       });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation((_) => Boolean)
   public async updateHabitCompletion(
     @Args('habitId') habitId: string,

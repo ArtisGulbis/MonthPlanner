@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { getFromStorage, MONTH, saveToStorage } from '../utils/utils';
 import { Month } from '../models/month';
 
-export class MonthStore {
+export default class MonthStore {
   currentMonth = '';
   currentDay = DateTime.now().day;
   reset = false;
@@ -34,6 +34,10 @@ export class MonthStore {
     }
   };
 
+  setMonth = (name: string) => {
+    this.currentMonth = name;
+  };
+
   get checkNewMonth() {
     return this.currentMonth !== DateTime.now().monthLong;
   }
@@ -51,5 +55,3 @@ export class MonthStore {
     });
   };
 }
-
-export default MonthStore;

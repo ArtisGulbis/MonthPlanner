@@ -1,9 +1,4 @@
-import {
-  GetMonthDocument,
-  Month,
-  RegisterDocument,
-  User,
-} from '../../generated/graphql';
+import { RegisterDocument, User } from '../../generated/graphql';
 import { apolloClient } from '../../utils/graphql';
 
 class UserService {
@@ -24,22 +19,6 @@ class UserService {
       return response.data;
     }
 
-    return null;
-  }
-
-  public async getMonth(id: string): Promise<Month | null> {
-    const response = await apolloClient
-      .query({
-        query: GetMonthDocument,
-        variables: { id },
-      })
-      .catch((err) => {
-        throw err;
-      });
-
-    if (response && response.data) {
-      console.log(response.data);
-    }
     return null;
   }
 }

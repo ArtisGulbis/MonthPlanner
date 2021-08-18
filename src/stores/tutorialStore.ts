@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { Tutorial } from '../models/tutorial';
-import { getFromStorage, saveToStorage, TUTORIALS } from '../utils/utils';
+import { saveToStorage, TUTORIALS } from '../utils/utils';
 
 export class TutorialStore {
   tutorials: Tutorial[] = [];
@@ -9,12 +9,12 @@ export class TutorialStore {
     makeAutoObservable(this);
   }
 
-  init = () => {
-    const data = getFromStorage<Tutorial[]>(TUTORIALS);
-    if (data) {
-      this.tutorials = data;
-    }
-  };
+  // init = () => {
+  //   const data = getFromStorage<Tutorial[]>(TUTORIALS);
+  //   if (data) {
+  //     this.tutorials = data;
+  //   }
+  // };
 
   addTutorial = (name: string) => {
     if (!this.tutorials.find((el) => el.name === name)) {

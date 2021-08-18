@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Popup } from 'semantic-ui-react';
 import { useStore } from '../stores/store';
 import BouncyText from './BouncyText';
@@ -13,10 +13,10 @@ interface Props {
 const Info = ({ content, styling, tutName }: Props) => {
   const { tutorialStore } = useStore();
 
-  useEffect(() => {
-    tutorialStore.init();
-    tutorialStore.addTutorial(tutName);
-  }, [tutorialStore, tutName]);
+  // useEffect(() => {
+  //    tutorialStore.init();
+  //    tutorialStore.addTutorial(tutName);
+  // }, [tutorialStore, tutName]);
   return (
     <>
       {!tutorialStore.tutorials.find((el) => el.name === tutName)?.checked && (

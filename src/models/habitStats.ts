@@ -1,5 +1,4 @@
-import { Habit } from './habit';
-
+import { Habit } from '../generated/graphql';
 export interface HabitStats {
   habit: Habit;
   toDo: number;

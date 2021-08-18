@@ -1,6 +1,5 @@
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
-import { useStore } from '../stores/store';
 import { buttonStyles, inputOutline } from '../utils/utils';
 import Checkmark from './Checkmark';
 import DeleteButton from './DeleteButton';
@@ -11,27 +10,26 @@ interface Props {
 }
 
 const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
-  const { createdHabitsStore, dayStore, statisticsStore } = useStore();
   return (
     <Formik
       initialValues={{ newName: habit, error: '' }}
-      onSubmit={(values, { setErrors }) => {
+      onSubmit={(values) => {
         const { newName } = values;
         if (habit === newName) {
           changeEditMode();
           return;
         }
-        if (
-          dayStore.checkExistance(newName) ||
-          createdHabitsStore.checkExistance(newName) ||
-          statisticsStore.checkExistance(newName)
-        ) {
-          setErrors({ error: 'Name already exists' });
-          return;
-        }
-        dayStore.renameHabit(habit, newName);
-        createdHabitsStore.renameHabit(habit, newName);
-        statisticsStore.renameHabit(habit, newName);
+        // if (
+        //   // dayStore.checkExistance(newName) ||
+        //   // createdHabitsStore.checkExistance(newName) ||
+        //   // statisticsStore.checkExistance(newName)
+        // ) {
+        //   setErrors({ error: 'Name already exists' });
+        //   return;
+        // }
+        // dayStore.renameHabit(habit, newName);
+        // createdHabitsStore.renameHabit(habit, newName);
+        // statisticsStore.renameHabit(habit, newName);
       }}
     >
       {({ handleSubmit, errors }) => (

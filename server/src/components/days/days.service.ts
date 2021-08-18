@@ -37,6 +37,16 @@ export class DaysService {
     return habit;
   }
 
+  public async findOne(dayId: string): Promise<Day> {
+    return await this.daysRepository.findOneOrFail(dayId, {
+      relations: ['habits'],
+    });
+  }
+
+  public async update(day: Day): Promise<Day> {
+    return await this.daysRepository.save(day);
+  }
+
   public async getHabits(dayId: string): Promise<Day> {
     return await this.daysRepository
       .findOne(dayId, { relations: ['habits'] })

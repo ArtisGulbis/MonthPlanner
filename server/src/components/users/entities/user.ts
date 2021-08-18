@@ -1,8 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { UserHabit } from 'src/components/user-habits/entities/userHabits';
 import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -26,4 +28,8 @@ export class User {
   @JoinColumn()
   @Field(() => Month)
   month: Month;
+
+  @OneToMany(() => UserHabit, (userHabits) => userHabits.user)
+  // @Field(() => [UserHabit], { nullable: true })
+  createdHabits: UserHabit[];
 }

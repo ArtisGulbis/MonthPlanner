@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { Habit } from '../models/habit';
+import { Habit } from '../generated/graphql';
 import { HabitStats } from '../models/habitStats';
 import { Statistics } from '../models/statistics';
 import { getFromStorage, saveToStorage, STATISTICS } from '../utils/utils';

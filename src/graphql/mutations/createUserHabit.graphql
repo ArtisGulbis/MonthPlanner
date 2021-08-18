@@ -1,0 +1,10 @@
+mutation CreateUserHabit($username: String!, $habitName: String!) {
+  createUserHabit(username: $username, habitName: $habitName) {
+    data {
+      id
+      name
+      userId
+    }
+    errors
+  }
+}

@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import { CreatedHabitsStore } from './createdHabitsStore';
 import DayStore from './dayStore';
 import ModalStore from './modalStore';
-import { MonthStore } from './monthStore';
+import MonthStore from './monthStore';
 import StatisticsStore from './statisticsStore';
 import { TutorialStore } from './tutorialStore';
 import UserStore from './userStore';

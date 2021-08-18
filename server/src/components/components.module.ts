@@ -6,8 +6,9 @@ import { HabitsModule } from './habits/habits.module';
 import { MonthsModule } from './months/months.module';
 import { User } from './users/entities/user';
 import { UsersModule } from './users/users.module';
+import { UserHabitsModule } from './user-habits/user-habits.module';
 
 @Module({
-  imports: [MonthsModule, UsersModule, DaysModule, HabitsModule, AuthModule],
+  imports: [MonthsModule, UsersModule, DaysModule, HabitsModule, AuthModule, UserHabitsModule],
 })
 export class ComponentsModule {}

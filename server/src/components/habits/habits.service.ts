@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
+import { DaysService } from '../days/days.service';
 import { NewHabitInput } from '../days/dto/new-habit.input';
 import { Day } from '../days/entities/day';
 import { Habit } from '../habits/entities/habit';
@@ -9,14 +10,12 @@ import { Habit } from '../habits/entities/habit';
 export class HabitsService {
   constructor(
     @InjectRepository(Habit) private habitsRepository: Repository<Habit>,
-    @InjectRepository(Day) private daysRepository: Repository<Day>,
+    private dayService: DaysService,
   ) {}
 
   public async addHabit(newHabitInput: NewHabitInput): Promise<Habit> {
     const { dayId, habitName } = newHabitInput;
-    const day = await this.daysRepository.findOne(dayId, {
-      relations: ['habits'],
-    });
+    const day = await this.dayService.findOne(dayId);
 
     const habit = this.habitsRepository.create({
       completed: false,
@@ -27,16 +26,8 @@ export class HabitsService {
 
     day.habits.push(habit);
 
-    await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(Habit)
-      .values(habit)
-      .execute();
-
-    await this.daysRepository.save(day).catch((err) => {
-      throw new InternalServerErrorException();
-    });
+    await this.habitsRepository.save(habit);
+    await this.dayService.update(day);
 
     return habit;
   }

@@ -6,6 +6,7 @@ query GetMonth($id: String!) {
       id
       dayNumber
       weekday
+      passed
       habits {
         id
         habitName

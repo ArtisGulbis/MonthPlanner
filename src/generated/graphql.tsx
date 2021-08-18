@@ -25,7 +25,6 @@ export type Day = {
   weekday: Scalars['String'];
   passed: Scalars['Boolean'];
   habits?: Maybe<Array<Habit>>;
-  month: Month;
 };
 
 export type Habit = {
@@ -34,7 +33,12 @@ export type Habit = {
   habitName: Scalars['String'];
   completed: Scalars['Boolean'];
   missed: Scalars['Boolean'];
-  day: Day;
+};
+
+export type HabitsResponse = {
+  __typename?: 'HabitsResponse';
+  data?: Maybe<UserHabit>;
+  errors?: Maybe<Array<Scalars['String']>>;
 };
 
 export type Month = {
@@ -55,6 +59,8 @@ export type Mutation = {
   editHabitText: Scalars['Boolean'];
   updateHabitCompletion: Scalars['Boolean'];
   updateHabitMissed: Scalars['Boolean'];
+  createUserHabit: HabitsResponse;
+  deleteOneCreatedHabit: Scalars['Boolean'];
 };
 
 export type MutationAddNewMonthArgs = {
@@ -62,7 +68,6 @@ export type MutationAddNewMonthArgs = {
 };
 
 export type MutationLoginArgs = {
-  password: Scalars['String'];
   username: Scalars['String'];
 };
 
@@ -93,6 +98,15 @@ export type MutationUpdateHabitMissedArgs = {
   habitId: Scalars['String'];
 };
 
+export type MutationCreateUserHabitArgs = {
+  habitName: Scalars['String'];
+  username: Scalars['String'];
+};
+
+export type MutationDeleteOneCreatedHabitArgs = {
+  habitId: Scalars['String'];
+};
+
 export type NewHabitInput = {
   habitName: Scalars['String'];
   dayId: Scalars['String'];
@@ -110,6 +124,7 @@ export type Query = {
   getUser: User;
   month: Month;
   getDay: Day;
+  getUserHabits: Array<UserHabit>;
 };
 
 export type QueryGetMonthArgs = {
@@ -128,6 +143,10 @@ export type QueryGetDayArgs = {
   dayId: Scalars['String'];
 };
 
+export type QueryGetUserHabitsArgs = {
+  userId: Scalars['String'];
+};
+
 export type RegisterInput = {
   username: Scalars['String'];
   password: Scalars['String'];
@@ -138,6 +157,64 @@ export type User = {
   id: Scalars['String'];
   username: Scalars['String'];
   month: Month;
+};
+
+export type UserHabit = {
+  __typename?: 'UserHabit';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+};
+
+export type AddHabitMutationVariables = Exact<{
+  habitName: Scalars['String'];
+  dayId: Scalars['String'];
+}>;
+
+export type AddHabitMutation = {
+  __typename?: 'Mutation';
+  addHabit: {
+    __typename?: 'Habit';
+    id: string;
+    habitName: string;
+    completed: boolean;
+    missed: boolean;
+  };
+};
+
+export type CreateUserHabitMutationVariables = Exact<{
+  username: Scalars['String'];
+  habitName: Scalars['String'];
+}>;
+
+export type CreateUserHabitMutation = {
+  __typename?: 'Mutation';
+  createUserHabit: {
+    __typename?: 'HabitsResponse';
+    errors?: Maybe<Array<string>>;
+    data?: Maybe<{
+      __typename?: 'UserHabit';
+      id?: Maybe<string>;
+      name?: Maybe<string>;
+      userId?: Maybe<string>;
+    }>;
+  };
+};
+
+export type DeleteHabitMutationVariables = Exact<{
+  habitId: Scalars['String'];
+}>;
+
+export type DeleteHabitMutation = {
+  __typename?: 'Mutation';
+  deleteHabit: {
+    __typename?: 'Habit';
+    id: string;
+    habitName: string;
+    completed: boolean;
+    missed: boolean;
+  };
 };
 
 export type RegisterMutationVariables = Exact<{
@@ -165,6 +242,30 @@ export type RegisterMutation = {
   };
 };
 
+export type UpdateHabitCompletionMutationVariables = Exact<{
+  value: Scalars['Boolean'];
+  habitId: Scalars['String'];
+}>;
+
+export type UpdateHabitCompletionMutation = {
+  __typename?: 'Mutation';
+  updateHabitCompletion: boolean;
+};
+
+export type GetUserHabitsQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+export type GetUserHabitsQuery = {
+  __typename?: 'Query';
+  getUserHabits: Array<{
+    __typename?: 'UserHabit';
+    id?: Maybe<string>;
+    name?: Maybe<string>;
+    userId?: Maybe<string>;
+  }>;
+};
+
 export type GetMonthQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -180,6 +281,7 @@ export type GetMonthQuery = {
       id: string;
       dayNumber: number;
       weekday: string;
+      passed: boolean;
       habits?: Maybe<
         Array<{
           __typename?: 'Habit';
@@ -193,6 +295,166 @@ export type GetMonthQuery = {
   };
 };
 
+export const AddHabitDocument = gql`
+  mutation AddHabit($habitName: String!, $dayId: String!) {
+    addHabit(newHabitInput: { habitName: $habitName, dayId: $dayId }) {
+      id
+      habitName
+      completed
+      missed
+    }
+  }
+`;
+export type AddHabitMutationFn = Apollo.MutationFunction<
+  AddHabitMutation,
+  AddHabitMutationVariables
+>;
+
+/**
+ * __useAddHabitMutation__
+ *
+ * To run a mutation, you first call `useAddHabitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddHabitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addHabitMutation, { data, loading, error }] = useAddHabitMutation({
+ *   variables: {
+ *      habitName: // value for 'habitName'
+ *      dayId: // value for 'dayId'
+ *   },
+ * });
+ */
+export function useAddHabitMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddHabitMutation,
+    AddHabitMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddHabitMutation, AddHabitMutationVariables>(
+    AddHabitDocument,
+    options
+  );
+}
+export type AddHabitMutationHookResult = ReturnType<typeof useAddHabitMutation>;
+export type AddHabitMutationResult = Apollo.MutationResult<AddHabitMutation>;
+export type AddHabitMutationOptions = Apollo.BaseMutationOptions<
+  AddHabitMutation,
+  AddHabitMutationVariables
+>;
+export const CreateUserHabitDocument = gql`
+  mutation CreateUserHabit($username: String!, $habitName: String!) {
+    createUserHabit(username: $username, habitName: $habitName) {
+      data {
+        id
+        name
+        userId
+      }
+      errors
+    }
+  }
+`;
+export type CreateUserHabitMutationFn = Apollo.MutationFunction<
+  CreateUserHabitMutation,
+  CreateUserHabitMutationVariables
+>;
+
+/**
+ * __useCreateUserHabitMutation__
+ *
+ * To run a mutation, you first call `useCreateUserHabitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserHabitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserHabitMutation, { data, loading, error }] = useCreateUserHabitMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      habitName: // value for 'habitName'
+ *   },
+ * });
+ */
+export function useCreateUserHabitMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateUserHabitMutation,
+    CreateUserHabitMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateUserHabitMutation,
+    CreateUserHabitMutationVariables
+  >(CreateUserHabitDocument, options);
+}
+export type CreateUserHabitMutationHookResult = ReturnType<
+  typeof useCreateUserHabitMutation
+>;
+export type CreateUserHabitMutationResult =
+  Apollo.MutationResult<CreateUserHabitMutation>;
+export type CreateUserHabitMutationOptions = Apollo.BaseMutationOptions<
+  CreateUserHabitMutation,
+  CreateUserHabitMutationVariables
+>;
+export const DeleteHabitDocument = gql`
+  mutation DeleteHabit($habitId: String!) {
+    deleteHabit(habitId: $habitId) {
+      id
+      habitName
+      completed
+      missed
+    }
+  }
+`;
+export type DeleteHabitMutationFn = Apollo.MutationFunction<
+  DeleteHabitMutation,
+  DeleteHabitMutationVariables
+>;
+
+/**
+ * __useDeleteHabitMutation__
+ *
+ * To run a mutation, you first call `useDeleteHabitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteHabitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteHabitMutation, { data, loading, error }] = useDeleteHabitMutation({
+ *   variables: {
+ *      habitId: // value for 'habitId'
+ *   },
+ * });
+ */
+export function useDeleteHabitMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteHabitMutation,
+    DeleteHabitMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteHabitMutation, DeleteHabitMutationVariables>(
+    DeleteHabitDocument,
+    options
+  );
+}
+export type DeleteHabitMutationHookResult = ReturnType<
+  typeof useDeleteHabitMutation
+>;
+export type DeleteHabitMutationResult =
+  Apollo.MutationResult<DeleteHabitMutation>;
+export type DeleteHabitMutationOptions = Apollo.BaseMutationOptions<
+  DeleteHabitMutation,
+  DeleteHabitMutationVariables
+>;
 export const RegisterDocument = gql`
   mutation Register($username: String!, $password: String!) {
     register(registerInput: { username: $username, password: $password }) {
@@ -251,6 +513,115 @@ export type RegisterMutationOptions = Apollo.BaseMutationOptions<
   RegisterMutation,
   RegisterMutationVariables
 >;
+export const UpdateHabitCompletionDocument = gql`
+  mutation UpdateHabitCompletion($value: Boolean!, $habitId: String!) {
+    updateHabitCompletion(value: $value, habitId: $habitId)
+  }
+`;
+export type UpdateHabitCompletionMutationFn = Apollo.MutationFunction<
+  UpdateHabitCompletionMutation,
+  UpdateHabitCompletionMutationVariables
+>;
+
+/**
+ * __useUpdateHabitCompletionMutation__
+ *
+ * To run a mutation, you first call `useUpdateHabitCompletionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateHabitCompletionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateHabitCompletionMutation, { data, loading, error }] = useUpdateHabitCompletionMutation({
+ *   variables: {
+ *      value: // value for 'value'
+ *      habitId: // value for 'habitId'
+ *   },
+ * });
+ */
+export function useUpdateHabitCompletionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateHabitCompletionMutation,
+    UpdateHabitCompletionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateHabitCompletionMutation,
+    UpdateHabitCompletionMutationVariables
+  >(UpdateHabitCompletionDocument, options);
+}
+export type UpdateHabitCompletionMutationHookResult = ReturnType<
+  typeof useUpdateHabitCompletionMutation
+>;
+export type UpdateHabitCompletionMutationResult =
+  Apollo.MutationResult<UpdateHabitCompletionMutation>;
+export type UpdateHabitCompletionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateHabitCompletionMutation,
+  UpdateHabitCompletionMutationVariables
+>;
+export const GetUserHabitsDocument = gql`
+  query GetUserHabits($userId: String!) {
+    getUserHabits(userId: $userId) {
+      id
+      name
+      userId
+    }
+  }
+`;
+
+/**
+ * __useGetUserHabitsQuery__
+ *
+ * To run a query within a React component, call `useGetUserHabitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserHabitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserHabitsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserHabitsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetUserHabitsQuery,
+    GetUserHabitsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserHabitsQuery, GetUserHabitsQueryVariables>(
+    GetUserHabitsDocument,
+    options
+  );
+}
+export function useGetUserHabitsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUserHabitsQuery,
+    GetUserHabitsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserHabitsQuery, GetUserHabitsQueryVariables>(
+    GetUserHabitsDocument,
+    options
+  );
+}
+export type GetUserHabitsQueryHookResult = ReturnType<
+  typeof useGetUserHabitsQuery
+>;
+export type GetUserHabitsLazyQueryHookResult = ReturnType<
+  typeof useGetUserHabitsLazyQuery
+>;
+export type GetUserHabitsQueryResult = Apollo.QueryResult<
+  GetUserHabitsQuery,
+  GetUserHabitsQueryVariables
+>;
 export const GetMonthDocument = gql`
   query GetMonth($id: String!) {
     getMonth(id: $id) {
@@ -260,6 +631,7 @@ export const GetMonthDocument = gql`
         id
         dayNumber
         weekday
+        passed
         habits {
           id
           habitName

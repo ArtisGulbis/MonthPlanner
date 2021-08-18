@@ -4,8 +4,7 @@ import { useStore } from '../stores/store';
 import { clearLocalStorage } from '../utils/utils';
 
 const ModalContainer = () => {
-  const { dayStore, modalStore, statisticsStore, createdHabitsStore } =
-    useStore();
+  const { modalStore, statisticsStore, createdHabitsStore } = useStore();
 
   const onYesClearData = () => {
     modalStore.closeModal();
@@ -13,7 +12,7 @@ const ModalContainer = () => {
   };
 
   const handleClick = (habit: string) => {
-    dayStore.clearDaysOfHabit(habit);
+    // dayStore.clearDaysOfHabit(habit);
     statisticsStore.removeHabit(habit);
     createdHabitsStore.removeHabit(habit);
     createdHabitsStore.closeModal();

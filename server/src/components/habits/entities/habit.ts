@@ -27,8 +27,7 @@ export class Habit {
   @Field()
   missed: boolean;
 
-  @ManyToOne(() => Day, (day) => day.habits, { eager: true })
+  @ManyToOne(() => Day, (day) => day.habits)
   @JoinColumn()
-  @Field(() => Day)
   day: Day;
 }

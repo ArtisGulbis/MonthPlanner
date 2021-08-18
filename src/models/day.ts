@@ -4,6 +4,6 @@ export interface Day {
   id: string;
   dayNumber: number;
   weekDay: string;
-  habits: Habit[];
+  habits?: Habit[];
   passed: boolean;
 }

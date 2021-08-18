@@ -13,7 +13,7 @@ import { UserController } from 'src/components/users/user.controller';
     UsersModule,
     JwtModule.register({
       secret: 'SECRET',
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '36000s' },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
