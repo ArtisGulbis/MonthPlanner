@@ -1,11 +1,11 @@
-import { RegisterDocument, User } from '../../generated/graphql';
+import { RegisterDocument, RegisterMutation } from '../../generated/graphql';
 import { apolloClient } from '../../utils/graphql';
 
 class UserService {
   public async register(
     username: string,
     password: string
-  ): Promise<User | null> {
+  ): Promise<RegisterMutation | null> {
     const response = await apolloClient
       .mutate({
         mutation: RegisterDocument,

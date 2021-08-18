@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
-import createdHabitService from '../services/createdHabitService/createdHabitService';
+import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 import CreatedHabitContainerElement from './CreatedHabitContainerElement';
 import Info from './Info';
@@ -10,6 +10,15 @@ const CreatedHabitsContainer = () => {
   // const [sticky, setSticky] = useState('');
 
   useEffect(() => {
+    if (userStore.userData?.id) {
+      habitService.getHabits(userStore.userData.id).then((res) => {
+        if (res?.getUserHabits) {
+          res.getUserHabits.forEach((el) =>
+            createdHabitsStore.addHabit(el.habitName)
+          );
+        }
+      });
+    }
     // window.addEventListener('scroll', () => {
     //   if (window.pageYOffset > 400 && createdHabitsStore.habits.length) {
     //     setSticky('sticky');

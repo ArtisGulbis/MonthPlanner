@@ -4,6 +4,8 @@ import {
   AddHabitMutationVariables,
   DeleteHabitDocument,
   DeleteHabitMutation,
+  GetUserHabitsDocument,
+  GetUserHabitsQuery,
   UpdateHabitCompletionDocument,
   UpdateHabitCompletionMutation,
 } from '../../generated/graphql';
@@ -19,6 +21,7 @@ class HabitService {
         variables: {
           habitName: values.habitName,
           dayId: values.dayId,
+          userId: values.userId,
         },
       })
       .catch((err) => {
@@ -67,8 +70,24 @@ class HabitService {
         throw err;
       });
 
-    console.log(response);
-    console.log(response.data);
+    if (response && response.data) {
+      return response.data;
+    }
+    return null;
+  }
+
+  public async getHabits(userId: string): Promise<GetUserHabitsQuery | null> {
+    const response = await apolloClient
+      .query({
+        query: GetUserHabitsDocument,
+        variables: {
+          userId,
+        },
+      })
+      .catch((err) => {
+        throw err;
+      });
+
     if (response && response.data) {
       return response.data;
     }

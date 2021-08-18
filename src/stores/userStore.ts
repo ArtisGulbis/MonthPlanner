@@ -9,13 +9,13 @@ import {
   saveToStorage,
   USERDATA,
 } from '../utils/utils';
+import { JwtResponse } from '../generated/graphql';
+import { store } from './store';
 
 export const MONTHID = 'monthId';
 export const TOKEN = 'token';
 export default class UserStore {
   userData: UserData | null = getFromStorage<UserData>(USERDATA);
-  // monthId: string | null = window.localStorage.getItem(MONTHID);
-  // username: string | null = window.localStorage.getItem('username');
   token: string | null = window.localStorage.getItem(TOKEN);
 
   constructor() {
@@ -30,26 +30,6 @@ export default class UserStore {
         }
       }
     );
-    // reaction(
-    //   () => this.monthId,
-    //   (monthId) => {
-    //     if (monthId) {
-    //       window.localStorage.setItem(MONTHID, monthId);
-    //     } else {
-    //       window.localStorage.removeItem(MONTHID);
-    //     }
-    //   }
-    // );
-    // reaction(
-    //   () => this.username,
-    //   (username) => {
-    //     if (username) {
-    //       window.localStorage.setItem('username', username);
-    //     } else {
-    //       window.localStorage.removeItem('username');
-    //     }
-    //   }
-    // );
   }
 
   setToken = (token: string | null) => {
@@ -60,18 +40,28 @@ export default class UserStore {
     this.userData = userData;
   };
 
-  // setUsername = (username: string | null) => {
-  //   this.username = username;
-  // };
-
-  // setMonthId = (monthId: string | null) => {
-  //   this.monthId = monthId;
-  // };
+  setData = (jwtResponse: JwtResponse) => {
+    const { access_token, id, monthId, username } = jwtResponse;
+    this.setToken(access_token);
+    this.setUserData({
+      id: id,
+      monthId: monthId,
+      username: username,
+    });
+    saveToStorage(TOKEN, this.token);
+    saveToStorage<UserData>(USERDATA, {
+      ...this.userData,
+    });
+    window.localStorage.setItem(TOKEN, JSON.stringify(this.token));
+    history.push('/planner');
+  };
 
   register = async (username: string, password: string) => {
-    const user = await userService.register(username, password);
-    if (user) {
-      this.userData!.monthId = user.month.id;
+    const res = await userService.register(username, password);
+    if (res?.register) {
+      runInAction(() => {
+        this.setData(res?.register);
+      });
     }
   };
 
@@ -80,43 +70,26 @@ export default class UserStore {
   }
 
   login = async (username: string, password: string) => {
-    const res = await axios.post('http://localhost:5000/auth/login', {
-      username,
-      password,
-    });
+    const res = await axios.post<JwtResponse>(
+      'http://localhost:5000/auth/login',
+      {
+        username,
+        password,
+      }
+    );
     if (res.data) {
-      console.log(res.data);
       runInAction(() => {
-        this.setToken(res.data.access_token);
-        this.setUserData({
-          id: res.data.id,
-          monthId: res.data.monthId,
-          username: res.data.username,
-        });
-        // this.setMonthId(res.data.monthId);
-        // this.setUsername(res.data.username);
-        // window.localStorage.setItem(MONTHID, JSON.stringify(this.monthId));
-        saveToStorage(TOKEN, this.token);
-        saveToStorage<UserData>(USERDATA, {
-          ...this.userData,
-        });
-        // window.localStorage.setItem(TOKEN, JSON.stringify(this.token));
-        window.localStorage.setItem(TOKEN, JSON.stringify(this.token));
-        // window.localStorage.setItem('username', JSON.stringify(this.username));
-        history.push('/planner');
+        this.setData(res.data);
       });
     }
   };
 
-  logout = async () => {
+  logout = () => {
     removeFromStorage(TOKEN);
     removeFromStorage(USERDATA);
-    // window.localStorage.removeItem(MONTHID);
-    // window.localStorage.removeItem('username');
     this.token = null;
     this.userData = null;
-    // this.monthId = null;
-    // this.username = null;
-    history.push('/login');
+    store.dayStore.clearDays();
+    history.push('/');
   };
 }

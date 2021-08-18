@@ -26,7 +26,6 @@ export default class DayStore {
       const habitIndex = this.days[dayIndex].habits!.findIndex(
         (el) => el.id === habitId
       );
-      console.log(state);
       this.days[dayIndex].habits![habitIndex].completed = state;
     }
   };
@@ -42,6 +41,10 @@ export default class DayStore {
 
   clearHabits = () => {
     this.days.forEach((day) => (day.habits = []));
+  };
+
+  clearDays = () => {
+    this.days = [];
   };
 
   // clearDaysOfHabit = (habitName: string) => {

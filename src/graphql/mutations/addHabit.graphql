@@ -1,5 +1,7 @@
-mutation AddHabit($habitName: String!, $dayId: String!) {
-  addHabit(newHabitInput: { habitName: $habitName, dayId: $dayId }) {
+mutation AddHabit($habitName: String!, $dayId: String!, $userId: String!) {
+  addHabit(
+    newHabitInput: { habitName: $habitName, dayId: $dayId, userId: $userId }
+  ) {
     id
     habitName
     completed
