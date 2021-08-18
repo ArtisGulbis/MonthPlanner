@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const foundUser = await this.userService.findOne(user.id);
+    const foundUser = await this.userService.findOneById(user.id);
     if (foundUser) {
       const payload = {
         name: foundUser.username,
@@ -40,7 +40,7 @@ export class AuthService {
       secret: 'SECRET',
     });
 
-    const user = await this.userService.findOne(decoded.id);
+    const user = await this.userService.findOneById(decoded.id);
 
     if (!user) {
       throw new UnauthorizedException();

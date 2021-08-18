@@ -22,7 +22,7 @@ export class HabitsService {
 
   public async addHabit(newHabitInput: NewHabitInput): Promise<Habit> {
     const { dayId, habitName, userId } = newHabitInput;
-    const user = await this.usersService.findOne(userId);
+    const user = await this.usersService.findOneById(userId);
     const day = await this.daysService.findOne(dayId);
 
     const habit = this.habitsRepository.create({
@@ -42,15 +42,12 @@ export class HabitsService {
   }
 
   public async getHabits(userId: string): Promise<Habit[]> {
-    console.log(userId);
-    const res = await getConnection()
+    return await getConnection()
       .getRepository(Habit)
-      .createQueryBuilder('habits')
-      .select('habitName')
+      .createQueryBuilder()
+      .select('DISTINCT habitName')
       .where('userId = :userId', { userId })
-      .getMany();
-    console.log(res);
-    return res;
+      .getRawMany();
   }
 
   public async deleteHabit(habitId: string): Promise<Habit | null> {

@@ -53,7 +53,7 @@ export class UsersService {
       });
   }
 
-  public async findOne(id: string): Promise<User> | null {
+  public async findOneById(id: string): Promise<User> | null {
     return await this.userRepository
       .findOneOrFail({
         where: { id },

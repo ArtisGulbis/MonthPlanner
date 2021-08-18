@@ -29,7 +29,7 @@ export class UsersResolver {
 
   @Query((_) => User)
   public async getUser(@Args('id') id: string): Promise<User> {
-    return await this.usersService.findOne(id).catch((err) => {
+    return await this.usersService.findOneById(id).catch((err) => {
       throw err;
     });
   }
@@ -37,7 +37,7 @@ export class UsersResolver {
   @Mutation((_) => User)
   @UseGuards(JwtAuthGuard)
   public async login(@Args('username') username: string): Promise<User> {
-    return await this.usersService.findOne(username).catch((err) => {
+    return await this.usersService.findOneByUsername(username).catch((err) => {
       throw err;
     });
   }
