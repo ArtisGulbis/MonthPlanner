@@ -87,7 +87,8 @@ export type MutationDeleteHabitArgs = {
 
 export type MutationEditHabitTextArgs = {
   newText: Scalars['String'];
-  habitId: Scalars['String'];
+  userId: Scalars['String'];
+  habitName: Scalars['String'];
 };
 
 
@@ -175,6 +176,15 @@ export type DeleteHabitMutationVariables = Exact<{
 
 
 export type DeleteHabitMutation = { __typename?: 'Mutation', deleteHabit: { __typename?: 'Habit', id: string, habitName: string, completed: boolean, missed: boolean } };
+
+export type EditHabitTextMutationVariables = Exact<{
+  newText: Scalars['String'];
+  userId: Scalars['String'];
+  habitName: Scalars['String'];
+}>;
+
+
+export type EditHabitTextMutation = { __typename?: 'Mutation', editHabitText: boolean };
 
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
@@ -281,6 +291,39 @@ export function useDeleteHabitMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteHabitMutationHookResult = ReturnType<typeof useDeleteHabitMutation>;
 export type DeleteHabitMutationResult = Apollo.MutationResult<DeleteHabitMutation>;
 export type DeleteHabitMutationOptions = Apollo.BaseMutationOptions<DeleteHabitMutation, DeleteHabitMutationVariables>;
+export const EditHabitTextDocument = gql`
+    mutation EditHabitText($newText: String!, $userId: String!, $habitName: String!) {
+  editHabitText(newText: $newText, userId: $userId, habitName: $habitName)
+}
+    `;
+export type EditHabitTextMutationFn = Apollo.MutationFunction<EditHabitTextMutation, EditHabitTextMutationVariables>;
+
+/**
+ * __useEditHabitTextMutation__
+ *
+ * To run a mutation, you first call `useEditHabitTextMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditHabitTextMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editHabitTextMutation, { data, loading, error }] = useEditHabitTextMutation({
+ *   variables: {
+ *      newText: // value for 'newText'
+ *      userId: // value for 'userId'
+ *      habitName: // value for 'habitName'
+ *   },
+ * });
+ */
+export function useEditHabitTextMutation(baseOptions?: Apollo.MutationHookOptions<EditHabitTextMutation, EditHabitTextMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditHabitTextMutation, EditHabitTextMutationVariables>(EditHabitTextDocument, options);
+      }
+export type EditHabitTextMutationHookResult = ReturnType<typeof useEditHabitTextMutation>;
+export type EditHabitTextMutationResult = Apollo.MutationResult<EditHabitTextMutation>;
+export type EditHabitTextMutationOptions = Apollo.BaseMutationOptions<EditHabitTextMutation, EditHabitTextMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!) {
   register(registerInput: {username: $username, password: $password}) {

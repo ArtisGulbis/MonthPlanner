@@ -67,21 +67,20 @@ export default class DayStore {
     }
   };
 
-  // renameHabit = (habit: string, newName: string) => {
-  //   if (
-  //     this.days.every(
-  //       (day) => !day.habits.find((el) => el.habitName === newName)
-  //     )
-  //   ) {
-  //     for (let i = 0; i < this.days.length; i++) {
-  //       const day = this.days[i];
-  //       day.habits = day.habits.map((el) =>
-  //         el.habitName === habit ? { ...el, habitName: newName } : el
-  //       );
-  //     }
-  //     saveToStorage<Day[]>(DAYS, this.days);
-  //   }
-  // };
+  renameHabit = (habit: string, newName: string) => {
+    if (
+      this.days.every(
+        (day) => !day.habits!.find((el) => el.habitName === newName)
+      )
+    ) {
+      for (let i = 0; i < this.days.length; i++) {
+        const day = this.days[i];
+        day.habits = day.habits!.map((el) =>
+          el.habitName === habit ? { ...el, habitName: newName } : el
+        );
+      }
+    }
+  };
 
   // checkExistance = (newName: string) => {
   //   return this.days.every((day) =>

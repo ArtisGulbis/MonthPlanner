@@ -4,6 +4,9 @@ import {
   AddHabitMutationVariables,
   DeleteHabitDocument,
   DeleteHabitMutation,
+  EditHabitTextDocument,
+  EditHabitTextMutation,
+  EditHabitTextMutationVariables,
   GetUserHabitsDocument,
   GetUserHabitsQuery,
   UpdateHabitCompletionDocument,
@@ -82,6 +85,28 @@ class HabitService {
         query: GetUserHabitsDocument,
         variables: {
           userId,
+        },
+      })
+      .catch((err) => {
+        throw err;
+      });
+
+    if (response && response.data) {
+      return response.data;
+    }
+    return null;
+  }
+
+  public async updateHabitName(
+    values: EditHabitTextMutationVariables
+  ): Promise<EditHabitTextMutation | null> {
+    const response = await apolloClient
+      .mutate({
+        mutation: EditHabitTextDocument,
+        variables: {
+          userId: values.userId,
+          newText: values.newText,
+          habitName: values.habitName,
         },
       })
       .catch((err) => {

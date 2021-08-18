@@ -1,5 +1,8 @@
 import { Field, Form, Formik } from 'formik';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
+import habitService from '../services/habitService/habitService';
+import { useStore } from '../stores/store';
 import { buttonStyles, inputOutline } from '../utils/utils';
 import Checkmark from './Checkmark';
 import DeleteButton from './DeleteButton';
@@ -10,15 +13,25 @@ interface Props {
 }
 
 const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
+  const { userStore, createdHabitsStore, dayStore } = useStore();
+
   return (
     <Formik
       initialValues={{ newName: habit, error: '' }}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         const { newName } = values;
         if (habit === newName) {
           changeEditMode();
           return;
         }
+        if (userStore.userData?.id) {
+          await habitService.updateHabitName({
+            habitName: habit,
+            newText: newName,
+            userId: userStore.userData.id,
+          });
+        }
+        createdHabitsStore.renameHabit(habit, newName);
         // if (
         //   // dayStore.checkExistance(newName) ||
         //   // createdHabitsStore.checkExistance(newName) ||
@@ -27,7 +40,7 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
         //   setErrors({ error: 'Name already exists' });
         //   return;
         // }
-        // dayStore.renameHabit(habit, newName);
+        dayStore.renameHabit(habit, newName);
         // createdHabitsStore.renameHabit(habit, newName);
         // statisticsStore.renameHabit(habit, newName);
       }}
@@ -62,4 +75,4 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
   );
 };
 
-export default EditCreatedHabitForm;
+export default observer(EditCreatedHabitForm);

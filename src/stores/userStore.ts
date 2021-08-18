@@ -90,6 +90,7 @@ export default class UserStore {
     this.token = null;
     this.userData = null;
     store.dayStore.clearDays();
+    store.createdHabitsStore.clearHabits();
     history.push('/');
   };
 }

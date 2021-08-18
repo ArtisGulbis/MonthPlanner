@@ -29,11 +29,12 @@ export class HabitsResolver {
 
   @Mutation((_) => Boolean)
   public async editHabitText(
-    @Args('habitId') habitId: string,
+    @Args('habitName') habitId: string,
+    @Args('userId') userId: string,
     @Args('newText') newText: string,
   ): Promise<boolean> {
     return await this.habitsService
-      .editHabitText(habitId, newText)
+      .editHabitName(habitId, userId, newText)
       .catch((err) => {
         throw err;
       });

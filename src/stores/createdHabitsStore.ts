@@ -38,7 +38,8 @@ export class CreatedHabitsStore {
 
   renameHabit = (habit: string, newName: string) => {
     if (!this.habits.includes(newName)) {
-      this.habits = this.habits.map((el) => (el === habit ? newName : el));
+      const i = this.habits.findIndex((el) => el === habit);
+      this.habits[i] = newName;
     }
   };
 

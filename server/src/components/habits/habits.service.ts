@@ -63,15 +63,19 @@ export class HabitsService {
     return habit;
   }
 
-  public async editHabitText(
-    habitId: string,
+  public async editHabitName(
+    habitName: string,
+    userId: string,
     newText: string,
   ): Promise<boolean> {
     const result = await getConnection()
       .createQueryBuilder()
       .update(Habit)
       .set({ habitName: newText })
-      .where('id = :id', { id: habitId })
+      .where('habitName = :habitName AND userId = :userId', {
+        habitName,
+        userId,
+      })
       .execute();
 
     if (result.affected) {
