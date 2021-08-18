@@ -32,6 +32,17 @@ export class HabitsService {
     return habit;
   }
 
+  public async getHabits(userId: string): Promise<Habit[]> {
+    const res = await getConnection()
+      .getRepository(Habit)
+      .createQueryBuilder('habits')
+      .select('name')
+      .where('userId = :userId', { userId })
+      .getMany();
+    console.log(res);
+    return res;
+  }
+
   public async deleteHabit(habitId: string): Promise<Habit | null> {
     const habit = await this.habitsRepository.findOne(habitId);
 

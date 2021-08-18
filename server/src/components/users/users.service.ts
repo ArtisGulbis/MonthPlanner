@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
 import { Month } from '../months/entities/Month';
@@ -8,6 +13,10 @@ import { DateTime } from 'luxon';
 import { Day } from '../days/entities/day';
 import { MonthsService } from '../months/months.service';
 import { hash } from 'bcrypt';
+import { Habit } from '../habits/entities/habit';
+import { HabitsService } from '../habits/habits.service';
+import { JwtResponse } from '../jwtResponse';
+import { AuthService } from 'src/auth/auth.service';
 
 const now = DateTime.now();
 const saltRounds = 10;
@@ -17,7 +26,9 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Month) private monthRepository: Repository<Month>,
     @InjectRepository(Day) private dayRepository: Repository<Day>,
-    private monthService: MonthsService,
+    private monthsService: MonthsService,
+    private habitsService: HabitsService,
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
   ) {}
 
   public async findAll(): Promise<User[]> {
@@ -41,7 +52,11 @@ export class UsersService {
       });
   }
 
-  public async register(registerInput: RegisterInput): Promise<User> {
+  public async getUserHabits(userId: string): Promise<Habit[]> {
+    return await this.habitsService.getHabits(userId);
+  }
+
+  public async register(registerInput: RegisterInput): Promise<JwtResponse> {
     const hashedPassword = await hash(registerInput.password, saltRounds);
 
     const user = this.userRepository.create({
@@ -85,13 +100,15 @@ export class UsersService {
       .values([...days])
       .execute();
 
-    return await this.userRepository.save(user).catch((err) => {
+    await this.userRepository.save(user).catch((err) => {
       throw new InternalServerErrorException();
     });
+
+    return this.authService.login(user);
   }
 
   public async getMonth(monthId: string): Promise<Month> {
-    return await this.monthService.findOne(monthId);
+    return await this.monthsService.findOne(monthId);
   }
 
   public async saveUser(user: User): Promise<User> {

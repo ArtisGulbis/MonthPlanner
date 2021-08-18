@@ -1,10 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Day } from 'src/components/days/entities/day';
+import { User } from 'src/components/users/entities/user';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -30,4 +32,8 @@ export class Habit {
   @ManyToOne(() => Day, (day) => day.habits)
   @JoinColumn()
   day: Day;
+
+  @ManyToOne(() => User, (user) => user.habits)
+  @JoinColumn()
+  user: User;
 }

@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import { DaysModule } from '../days/days.module';
 import { Day } from '../days/entities/day';
+import { HabitsModule } from '../habits/habits.module';
 import { Month } from '../months/entities/Month';
 import { MonthsModule } from '../months/months.module';
 import { User } from './entities/user';
@@ -16,6 +17,7 @@ import { UsersService } from './users.service';
     MonthsModule,
     DaysModule,
     forwardRef(() => AuthModule),
+    HabitsModule,
   ],
   providers: [UsersService, UsersResolver],
   exports: [UsersService],

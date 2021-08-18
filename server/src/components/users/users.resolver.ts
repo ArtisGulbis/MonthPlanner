@@ -9,6 +9,8 @@ import {
 } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { Habit } from '../habits/entities/habit';
+import { JwtResponse } from '../jwtResponse';
 import { Month } from '../months/entities/Month';
 import { RegisterInput } from './dto/register.input';
 import { User } from './entities/user';
@@ -21,6 +23,13 @@ export class UsersResolver {
   @Query((_) => [User])
   public async getUsers(): Promise<User[]> {
     return this.usersService.findAll().catch((err) => {
+      throw err;
+    });
+  }
+
+  @Query((_) => [Habit])
+  public async getUserHabits(userId: string): Promise<Habit[]> {
+    return this.usersService.getUserHabits(userId).catch((err) => {
       throw err;
     });
   }
@@ -40,10 +49,10 @@ export class UsersResolver {
     });
   }
 
-  @Mutation((_) => User)
+  @Mutation((_) => JwtResponse)
   public async register(
     @Args('registerInput') registerInput: RegisterInput,
-  ): Promise<User> {
+  ): Promise<JwtResponse> {
     return await this.usersService.register(registerInput).catch((err) => {
       throw err;
     });
