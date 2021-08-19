@@ -29,15 +29,25 @@ export class HabitsResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation((_) => Boolean)
-  public async deleteHabits(
+  public async deleteHabitsByName(
     @Args('habitName') habitId: string,
     @Args('userId') userId: string,
   ): Promise<boolean> {
     return await this.habitsService
-      .deleteHabits(habitId, userId)
+      .deleteHabitsByName(habitId, userId)
       .catch((err) => {
         throw err;
       });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation((_) => Boolean)
+  public async deleteAllHabits(
+    @Args('userId') userId: string,
+  ): Promise<boolean> {
+    return await this.habitsService.deleteAllHabits(userId).catch((err) => {
+      throw err;
+    });
   }
 
   @UseGuards(JwtAuthGuard)

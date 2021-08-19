@@ -14,4 +14,13 @@ export class DaysResolver {
       throw err;
     });
   }
+
+  @Mutation((_) => Boolean)
+  public async setDayPassed(
+    @Args('dayIds', { type: () => [String] }) dayIds: string[],
+  ): Promise<boolean> {
+    return await this.daysService.setDayPassed(dayIds).catch((err) => {
+      throw err;
+    });
+  }
 }

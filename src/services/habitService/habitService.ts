@@ -2,11 +2,14 @@ import {
   AddHabitDocument,
   AddHabitMutation,
   AddHabitMutationVariables,
+  DeleteAllHabitsDocument,
+  DeleteAllHabitsMutation,
+  DeleteAllHabitsMutationVariables,
   DeleteHabitDocument,
   DeleteHabitMutation,
-  DeleteHabitsDocument,
-  DeleteHabitsMutation,
-  DeleteHabitsMutationVariables,
+  DeleteHabitsByNameDocument,
+  DeleteHabitsByNameMutation,
+  DeleteHabitsByNameMutationVariables,
   EditHabitTextDocument,
   EditHabitTextMutation,
   EditHabitTextMutationVariables,
@@ -123,14 +126,34 @@ class HabitService {
   }
 
   public async deleteHabits(
-    values: DeleteHabitsMutationVariables
-  ): Promise<DeleteHabitsMutation | null> {
+    values: DeleteHabitsByNameMutationVariables
+  ): Promise<DeleteHabitsByNameMutation | null> {
     const response = await apolloClient
       .mutate({
-        mutation: DeleteHabitsDocument,
+        mutation: DeleteHabitsByNameDocument,
         variables: {
           userId: values.userId,
           habitName: values.habitName,
+        },
+      })
+      .catch((err) => {
+        throw err;
+      });
+
+    if (response && response.data) {
+      return response.data;
+    }
+    return null;
+  }
+
+  public async deleteAllHabits(
+    values: DeleteAllHabitsMutationVariables
+  ): Promise<DeleteAllHabitsMutation | null> {
+    const response = await apolloClient
+      .mutate({
+        mutation: DeleteAllHabitsDocument,
+        variables: {
+          userId: values.userId,
         },
       })
       .catch((err) => {

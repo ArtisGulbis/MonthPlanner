@@ -1,0 +1,3 @@
+mutation SetDayPassed($dayIds: [String!]!) {
+  setDayPassed(dayIds: $dayIds)
+}

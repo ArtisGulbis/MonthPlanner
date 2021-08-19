@@ -116,7 +116,7 @@ export class HabitsService {
     return false;
   }
 
-  public async deleteHabits(
+  public async deleteHabitsByName(
     habitName: string,
     userId: string,
   ): Promise<boolean> {
@@ -127,6 +127,21 @@ export class HabitsService {
       .where('userId = :userId AND habitName = :habitName', {
         userId,
         habitName,
+      })
+      .execute();
+    if (result.affected > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  public async deleteAllHabits(userId: string): Promise<boolean> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(Habit)
+      .where('userId = :userId', {
+        userId,
       })
       .execute();
     if (result.affected > 0) {

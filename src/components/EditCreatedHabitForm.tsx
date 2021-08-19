@@ -13,7 +13,8 @@ interface Props {
 }
 
 const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
-  const { userStore, createdHabitsStore, dayStore } = useStore();
+  const { userStore, statisticsStore, createdHabitsStore, dayStore } =
+    useStore();
 
   return (
     <Formik
@@ -32,17 +33,8 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
           });
         }
         createdHabitsStore.renameHabit(habit, newName);
-        // if (
-        //   // dayStore.checkExistance(newName) ||
-        //   // createdHabitsStore.checkExistance(newName) ||
-        //   // statisticsStore.checkExistance(newName)
-        // ) {
-        //   setErrors({ error: 'Name already exists' });
-        //   return;
-        // }
         dayStore.renameHabit(habit, newName);
-        // createdHabitsStore.renameHabit(habit, newName);
-        // statisticsStore.renameHabit(habit, newName);
+        statisticsStore.renameHabit(habit, newName);
       }}
     >
       {({ handleSubmit, errors }) => (

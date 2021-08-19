@@ -1,9 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { Habit } from '../generated/graphql';
 import { HabitStats } from '../models/habitStats';
-import { Statistics } from '../models/statistics';
-import { getFromStorage, saveToStorage, STATISTICS } from '../utils/utils';
-import { store } from './store';
 
 export default class StatisticsStore {
   habits: HabitStats[] = [];
@@ -12,20 +9,31 @@ export default class StatisticsStore {
     makeAutoObservable(this);
   }
 
-  loadStatistics = () => {
-    const data = getFromStorage<Statistics>(STATISTICS);
-    if (!data) {
-      const statistics: Statistics = {
-        habits: this.habits,
-      };
-      saveToStorage<Statistics>(STATISTICS, statistics);
-      return;
-    } else if (store.monthStore.checkNewMonth) {
-      this.habits = [];
-      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
-      return;
-    }
-    this.habits = data.habits;
+  createStatistics = (habits: Habit[]) => {
+    habits.forEach((el) => {
+      let habitStat = this.habits.find(
+        (habitStat) => habitStat.habit.habitName === el.habitName
+      );
+
+      if (habitStat) {
+        habitStat.toDo++;
+        habitStat.missed += el.missed ? 1 : 0;
+        habitStat.completed += el.completed ? 1 : 0;
+      } else {
+        let habitStats: HabitStats = {
+          completed: el.completed ? 1 : 0,
+          habit: {
+            completed: el.completed,
+            habitName: el.habitName,
+            id: el.id,
+            missed: el.missed,
+          },
+          missed: el.missed ? 1 : 0,
+          toDo: 1,
+        };
+        this.habits.push(habitStats);
+      }
+    });
   };
 
   addToStats = (habit: Habit) => {
@@ -34,13 +42,11 @@ export default class StatisticsStore {
       this.habits.push({
         habit,
         toDo: 1,
-        completed: 0,
-        missed: 0,
+        completed: habit.completed ? 1 : 0,
+        missed: habit.missed ? 1 : 0,
       });
-      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     } else {
       h.toDo++;
-      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
   };
 
@@ -56,30 +62,21 @@ export default class StatisticsStore {
         this.habits = this.habits.filter(
           (el) => el.habit.habitName !== h.habit.habitName
         );
-        saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
-      } else {
-        saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
       }
     }
   };
 
   increaseCompletedCount = (habit: Habit) => {
-    const index = this.habits.findIndex(
-      (el) => el.habit.habitName === habit.habitName
-    );
-    if (index === 0 || index) {
-      this.habits[index].completed++;
-      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
+    const foundHabit = this.findHabit(habit);
+    if (foundHabit) {
+      foundHabit.completed++;
     }
   };
 
   reduceCompletedCount = (habit: Habit) => {
-    const index = this.habits.findIndex(
-      (el) => el.habit.habitName === habit.habitName
-    );
-    if (this.habits[index].habit && habit.completed) {
-      this.habits[index].completed--;
-      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
+    const foundHabit = this.findHabit(habit);
+    if (foundHabit && habit.completed) {
+      foundHabit.completed--;
     }
   };
 
@@ -91,7 +88,6 @@ export default class StatisticsStore {
     if (foundHabit && !foundHabit.completed && !foundHabit.missed) {
       this.habits[index].missed++;
       foundHabit.missed = true;
-      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
   };
 
@@ -101,32 +97,29 @@ export default class StatisticsStore {
     );
     if (this.habits[index].habit) {
       this.habits[index].missed--;
-      saveToStorage<Statistics>(STATISTICS, { habits: this.habits });
     }
   };
 
   removeHabit = (habit: string) => {
     this.habits = this.habits.filter((el) => el.habit.habitName !== habit);
-    saveToStorage(STATISTICS, { habits: this.habits });
   };
 
   clearStatistics = () => {
     this.habits = [];
-    saveToStorage(STATISTICS, { habits: this.habits });
   };
 
   renameHabit = (habit: string, newName: string) => {
-    if (!this.habits.find((el) => el.habit.habitName === newName)) {
+    const foundHabit = this.habits.find((el) => el.habit.habitName === habit);
+    if (foundHabit) {
       this.habits = this.habits.map((el) =>
-        el.habit.habitName === habit
+        el.habit.habitName === foundHabit.habit.habitName
           ? { ...el, habit: { ...el.habit, habitName: newName } }
           : el
       );
-      saveToStorage(STATISTICS, { habits: this.habits });
     }
   };
 
   checkExistance = (newName: string) => {
-    return this.habits.find((el) => el.habit.habitName === newName);
+    return this.habits.find((el) => el.habit!.habitName === newName);
   };
 }

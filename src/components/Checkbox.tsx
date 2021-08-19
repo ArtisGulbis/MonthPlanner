@@ -10,12 +10,13 @@ interface Props {
 }
 
 const Checkbox = ({ habit, passed, dayId }: Props) => {
+  const { dayStore, statisticsStore } = useStore();
+
   const updateHabit = async (state: boolean) => {
     await habitService.updateHabitCompletion(state, habit.id);
     dayStore.completeHabit(dayId, habit.id, state);
   };
 
-  const { dayStore } = useStore();
   return (
     <label className="checkbox ml-2">
       <span className="checkbox__input">
@@ -25,14 +26,10 @@ const Checkbox = ({ habit, passed, dayId }: Props) => {
           checked={habit.completed}
           disabled={passed}
           onChange={async (e) => {
-            switch (e.target.checked) {
-              case true:
-                updateHabit(true);
-                break;
-              default:
-                updateHabit(false);
-                break;
-            }
+            updateHabit(e.target.checked ? true : false);
+            e.target.checked
+              ? statisticsStore.increaseCompletedCount(habit)
+              : statisticsStore.reduceCompletedCount(habit);
           }}
         />
         <span className="checkbox__control">

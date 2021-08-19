@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { Day } from '../days/entities/day';
 import { Habit } from '../habits/entities/habit';
 import { NewHabitInput } from './dto/new-habit.input';
@@ -53,5 +53,19 @@ export class DaysService {
       .catch((err) => {
         throw new InternalServerErrorException();
       });
+  }
+
+  public async setDayPassed(dayIds: string[]): Promise<boolean> {
+    const res = await getConnection()
+      .createQueryBuilder()
+      .update(Day)
+      .set({ passed: true })
+      .andWhereInIds(dayIds)
+      .execute();
+
+    if (res.affected > 0) {
+      return true;
+    }
+    return false;
   }
 }

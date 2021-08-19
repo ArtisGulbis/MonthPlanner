@@ -34,7 +34,13 @@ const MainPage = () => {
       monthService.getMonth(userStore.userData.monthId).then((res) => {
         if (res) {
           dayStore.setData(res.getMonth.days);
+          dayStore.checkPassedDays();
           monthStore.setMonth(res.getMonth.name);
+          res.getMonth.days.forEach((el) => {
+            if (el.habits) {
+              statisticsStore.createStatistics(el.habits);
+            }
+          });
         }
       });
     }

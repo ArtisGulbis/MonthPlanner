@@ -13,7 +13,7 @@ interface Props {
 }
 
 const DayCard = ({ day, habits }: Props) => {
-  const { userStore } = useStore();
+  const { userStore, statisticsStore } = useStore();
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'habit',
     drop: async (item: { name: string }) => {
@@ -25,6 +25,7 @@ const DayCard = ({ day, habits }: Props) => {
         });
         if (res?.addHabit) {
           dayStore.addHabit(day.id, res.addHabit);
+          statisticsStore.addToStats(res.addHabit);
         }
       }
 

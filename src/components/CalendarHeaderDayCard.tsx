@@ -16,6 +16,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
   const {
     monthStore,
     userStore,
+    statisticsStore,
     dayStore: { addHabit },
   } = useStore();
 
@@ -31,6 +32,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
 
         if (res?.addHabit) {
           addHabit(day.id, res.addHabit);
+          statisticsStore.addToStats(res.addHabit);
         }
       }
     },

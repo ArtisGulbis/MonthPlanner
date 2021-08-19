@@ -14,6 +14,7 @@ interface Props {
 const DeleteHabitButton = ({ dayId, completed, dayNumber, habit }: Props) => {
   const {
     dayStore,
+    statisticsStore,
     monthStore: { currentDay },
   } = useStore();
 
@@ -21,11 +22,13 @@ const DeleteHabitButton = ({ dayId, completed, dayNumber, habit }: Props) => {
     return `fill-current hover:text-${color}-500 cursor-pointer transform hover:scale-125 duration-75`;
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     // reduceCompletedCount(habit);
     // reduceHabitCount(habit);
+    await habitService.deleteHabit(habit.id);
     dayStore.removeHabit(dayId, habit.id);
-    habitService.deleteHabit(habit.id);
+    statisticsStore.reduceCompletedCount(habit);
+    statisticsStore.reduceHabitCount(habit);
   };
 
   return (

@@ -56,9 +56,11 @@ export type Mutation = {
   addNewMonth: Month;
   login: User;
   register: JwtResponse;
+  setDayPassed: Scalars['Boolean'];
   addHabit: Habit;
   deleteHabit: Habit;
-  deleteHabits: Scalars['Boolean'];
+  deleteHabitsByName: Scalars['Boolean'];
+  deleteAllHabits: Scalars['Boolean'];
   editHabitText: Scalars['Boolean'];
   updateHabitCompletion: Scalars['Boolean'];
   updateHabitMissed: Scalars['Boolean'];
@@ -76,6 +78,10 @@ export type MutationRegisterArgs = {
   registerInput: RegisterInput;
 };
 
+export type MutationSetDayPassedArgs = {
+  dayIds: Array<Scalars['String']>;
+};
+
 export type MutationAddHabitArgs = {
   newHabitInput: NewHabitInput;
 };
@@ -84,9 +90,13 @@ export type MutationDeleteHabitArgs = {
   habitId: Scalars['String'];
 };
 
-export type MutationDeleteHabitsArgs = {
+export type MutationDeleteHabitsByNameArgs = {
   userId: Scalars['String'];
   habitName: Scalars['String'];
+};
+
+export type MutationDeleteAllHabitsArgs = {
+  userId: Scalars['String'];
 };
 
 export type MutationEditHabitTextArgs = {
@@ -175,6 +185,15 @@ export type AddHabitMutation = {
   };
 };
 
+export type DeleteAllHabitsMutationVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+export type DeleteAllHabitsMutation = {
+  __typename?: 'Mutation';
+  deleteAllHabits: boolean;
+};
+
 export type DeleteHabitMutationVariables = Exact<{
   habitId: Scalars['String'];
 }>;
@@ -190,14 +209,14 @@ export type DeleteHabitMutation = {
   };
 };
 
-export type DeleteHabitsMutationVariables = Exact<{
+export type DeleteHabitsByNameMutationVariables = Exact<{
   userId: Scalars['String'];
   habitName: Scalars['String'];
 }>;
 
-export type DeleteHabitsMutation = {
+export type DeleteHabitsByNameMutation = {
   __typename?: 'Mutation';
-  deleteHabits: boolean;
+  deleteHabitsByName: boolean;
 };
 
 export type EditHabitTextMutationVariables = Exact<{
@@ -225,6 +244,15 @@ export type RegisterMutation = {
     username: string;
     id: string;
   };
+};
+
+export type SetDayPassedMutationVariables = Exact<{
+  dayIds: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+export type SetDayPassedMutation = {
+  __typename?: 'Mutation';
+  setDayPassed: boolean;
 };
 
 export type UpdateHabitCompletionMutationVariables = Exact<{
@@ -329,6 +357,54 @@ export type AddHabitMutationOptions = Apollo.BaseMutationOptions<
   AddHabitMutation,
   AddHabitMutationVariables
 >;
+export const DeleteAllHabitsDocument = gql`
+  mutation DeleteAllHabits($userId: String!) {
+    deleteAllHabits(userId: $userId)
+  }
+`;
+export type DeleteAllHabitsMutationFn = Apollo.MutationFunction<
+  DeleteAllHabitsMutation,
+  DeleteAllHabitsMutationVariables
+>;
+
+/**
+ * __useDeleteAllHabitsMutation__
+ *
+ * To run a mutation, you first call `useDeleteAllHabitsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAllHabitsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAllHabitsMutation, { data, loading, error }] = useDeleteAllHabitsMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useDeleteAllHabitsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteAllHabitsMutation,
+    DeleteAllHabitsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteAllHabitsMutation,
+    DeleteAllHabitsMutationVariables
+  >(DeleteAllHabitsDocument, options);
+}
+export type DeleteAllHabitsMutationHookResult = ReturnType<
+  typeof useDeleteAllHabitsMutation
+>;
+export type DeleteAllHabitsMutationResult =
+  Apollo.MutationResult<DeleteAllHabitsMutation>;
+export type DeleteAllHabitsMutationOptions = Apollo.BaseMutationOptions<
+  DeleteAllHabitsMutation,
+  DeleteAllHabitsMutationVariables
+>;
 export const DeleteHabitDocument = gql`
   mutation DeleteHabit($habitId: String!) {
     deleteHabit(habitId: $habitId) {
@@ -382,54 +458,54 @@ export type DeleteHabitMutationOptions = Apollo.BaseMutationOptions<
   DeleteHabitMutation,
   DeleteHabitMutationVariables
 >;
-export const DeleteHabitsDocument = gql`
-  mutation DeleteHabits($userId: String!, $habitName: String!) {
-    deleteHabits(userId: $userId, habitName: $habitName)
+export const DeleteHabitsByNameDocument = gql`
+  mutation DeleteHabitsByName($userId: String!, $habitName: String!) {
+    deleteHabitsByName(userId: $userId, habitName: $habitName)
   }
 `;
-export type DeleteHabitsMutationFn = Apollo.MutationFunction<
-  DeleteHabitsMutation,
-  DeleteHabitsMutationVariables
+export type DeleteHabitsByNameMutationFn = Apollo.MutationFunction<
+  DeleteHabitsByNameMutation,
+  DeleteHabitsByNameMutationVariables
 >;
 
 /**
- * __useDeleteHabitsMutation__
+ * __useDeleteHabitsByNameMutation__
  *
- * To run a mutation, you first call `useDeleteHabitsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteHabitsMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useDeleteHabitsByNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteHabitsByNameMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deleteHabitsMutation, { data, loading, error }] = useDeleteHabitsMutation({
+ * const [deleteHabitsByNameMutation, { data, loading, error }] = useDeleteHabitsByNameMutation({
  *   variables: {
  *      userId: // value for 'userId'
  *      habitName: // value for 'habitName'
  *   },
  * });
  */
-export function useDeleteHabitsMutation(
+export function useDeleteHabitsByNameMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    DeleteHabitsMutation,
-    DeleteHabitsMutationVariables
+    DeleteHabitsByNameMutation,
+    DeleteHabitsByNameMutationVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    DeleteHabitsMutation,
-    DeleteHabitsMutationVariables
-  >(DeleteHabitsDocument, options);
+    DeleteHabitsByNameMutation,
+    DeleteHabitsByNameMutationVariables
+  >(DeleteHabitsByNameDocument, options);
 }
-export type DeleteHabitsMutationHookResult = ReturnType<
-  typeof useDeleteHabitsMutation
+export type DeleteHabitsByNameMutationHookResult = ReturnType<
+  typeof useDeleteHabitsByNameMutation
 >;
-export type DeleteHabitsMutationResult =
-  Apollo.MutationResult<DeleteHabitsMutation>;
-export type DeleteHabitsMutationOptions = Apollo.BaseMutationOptions<
-  DeleteHabitsMutation,
-  DeleteHabitsMutationVariables
+export type DeleteHabitsByNameMutationResult =
+  Apollo.MutationResult<DeleteHabitsByNameMutation>;
+export type DeleteHabitsByNameMutationOptions = Apollo.BaseMutationOptions<
+  DeleteHabitsByNameMutation,
+  DeleteHabitsByNameMutationVariables
 >;
 export const EditHabitTextDocument = gql`
   mutation EditHabitText(
@@ -535,6 +611,54 @@ export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<
   RegisterMutation,
   RegisterMutationVariables
+>;
+export const SetDayPassedDocument = gql`
+  mutation SetDayPassed($dayIds: [String!]!) {
+    setDayPassed(dayIds: $dayIds)
+  }
+`;
+export type SetDayPassedMutationFn = Apollo.MutationFunction<
+  SetDayPassedMutation,
+  SetDayPassedMutationVariables
+>;
+
+/**
+ * __useSetDayPassedMutation__
+ *
+ * To run a mutation, you first call `useSetDayPassedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetDayPassedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setDayPassedMutation, { data, loading, error }] = useSetDayPassedMutation({
+ *   variables: {
+ *      dayIds: // value for 'dayIds'
+ *   },
+ * });
+ */
+export function useSetDayPassedMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetDayPassedMutation,
+    SetDayPassedMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    SetDayPassedMutation,
+    SetDayPassedMutationVariables
+  >(SetDayPassedDocument, options);
+}
+export type SetDayPassedMutationHookResult = ReturnType<
+  typeof useSetDayPassedMutation
+>;
+export type SetDayPassedMutationResult =
+  Apollo.MutationResult<SetDayPassedMutation>;
+export type SetDayPassedMutationOptions = Apollo.BaseMutationOptions<
+  SetDayPassedMutation,
+  SetDayPassedMutationVariables
 >;
 export const UpdateHabitCompletionDocument = gql`
   mutation UpdateHabitCompletion($value: Boolean!, $habitId: String!) {

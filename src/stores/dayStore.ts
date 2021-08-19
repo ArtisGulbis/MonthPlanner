@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { Day, Habit } from '../generated/graphql';
+import dayService from '../services/dayService/dayService';
 import { store } from './store';
 
 export default class DayStore {
@@ -54,16 +55,18 @@ export default class DayStore {
     }
   };
 
-  checkPassedDays = () => {
-    for (let i = 0; i < store.monthStore.currentDay - 1; i++) {
+  checkPassedDays = async () => {
+    const dayIds: string[] = [];
+    for (let i = store.monthStore.currentDay - 2; i > 0; i--) {
       const day = this.days[i];
-      day.passed = true;
-      day.habits!.forEach((el) => {
-        if (!el.completed && !el.missed) {
-          store.statisticsStore.increaseMissedCount(el);
-        }
-      });
+      if (!day.passed) {
+        day.passed = true;
+        dayIds.push(day.id);
+        continue;
+      }
+      break;
     }
+    await dayService.setDayPassed({ dayIds });
   };
 
   renameHabit = (habit: string, newName: string) => {

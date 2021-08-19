@@ -91,6 +91,7 @@ export default class UserStore {
     this.userData = null;
     store.dayStore.clearDays();
     store.createdHabitsStore.clearHabits();
+    store.statisticsStore.clearStatistics();
     history.push('/');
   };
 }

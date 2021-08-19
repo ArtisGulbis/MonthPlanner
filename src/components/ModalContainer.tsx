@@ -2,17 +2,29 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../stores/store';
 import Modal from '../components/Modal';
-import { clearLocalStorage } from '../utils/utils';
 import habitService from '../services/habitService/habitService';
 
 const ModalContainer = () => {
-  const { modalStore, dayStore, userStore, createdHabitsStore } = useStore();
+  const {
+    modalStore,
+    dayStore,
+    userStore,
+    createdHabitsStore,
+    statisticsStore,
+  } = useStore();
 
-  const onYesClearData = () => {
-    modalStore.closeModal();
-    clearLocalStorage();
+  //handles clearing ALL the data
+  const onYesClearData = async () => {
+    if (userStore.userData?.id) {
+      await habitService.deleteAllHabits({ userId: userStore.userData.id });
+      modalStore.closeModal();
+      dayStore.clearHabits();
+      createdHabitsStore.clearHabits();
+      statisticsStore.clearStatistics();
+    }
   };
 
+  //handles clearing one specific habit
   const handleClick = (habit: string) => {
     if (userStore.userData?.id) {
       habitService.deleteHabits({
@@ -24,6 +36,7 @@ const ModalContainer = () => {
     dayStore.clearDaysOfHabit(habit);
     createdHabitsStore.removeHabit(habit);
     createdHabitsStore.closeModal();
+    statisticsStore.removeHabit(habit);
   };
   return (
     <>
