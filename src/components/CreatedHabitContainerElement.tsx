@@ -49,7 +49,9 @@ const CreatedHabitContainerElement = ({ habit }: Props) => {
         styling={`h-7 w-7 absolute chdb hover:text-blue-500 cursor-pointer transform hover:scale-125 duration-75 ${buttonStyles(
           'blue'
         )}`}
-        onClick={() => createdHabitsStore.openModal(habit)}
+        onClick={() => {
+          createdHabitsStore.openModal(habit);
+        }}
       />
     </div>
   );

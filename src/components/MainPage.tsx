@@ -45,8 +45,8 @@ const MainPage = () => {
       <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
         <LoginHeader />
         <div className="bg-gradient-to-b from-blue-100 to-blue-200 pb-8">
-          <GitHubIcon />
           <ModalContainer />
+          <GitHubIcon />
           <Header monthName={monthStore.currentMonth} />
           <CalendarHeader days={dayStore.days} />
           <div className="container w-full">

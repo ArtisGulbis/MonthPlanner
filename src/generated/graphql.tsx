@@ -1,10 +1,14 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -54,36 +58,36 @@ export type Mutation = {
   register: JwtResponse;
   addHabit: Habit;
   deleteHabit: Habit;
+  deleteHabits: Scalars['Boolean'];
   editHabitText: Scalars['Boolean'];
   updateHabitCompletion: Scalars['Boolean'];
   updateHabitMissed: Scalars['Boolean'];
 };
 
-
 export type MutationAddNewMonthArgs = {
   newMonthData: NewMonthInput;
 };
-
 
 export type MutationLoginArgs = {
   username: Scalars['String'];
 };
 
-
 export type MutationRegisterArgs = {
   registerInput: RegisterInput;
 };
-
 
 export type MutationAddHabitArgs = {
   newHabitInput: NewHabitInput;
 };
 
-
 export type MutationDeleteHabitArgs = {
   habitId: Scalars['String'];
 };
 
+export type MutationDeleteHabitsArgs = {
+  userId: Scalars['String'];
+  habitName: Scalars['String'];
+};
 
 export type MutationEditHabitTextArgs = {
   newText: Scalars['String'];
@@ -91,12 +95,10 @@ export type MutationEditHabitTextArgs = {
   habitName: Scalars['String'];
 };
 
-
 export type MutationUpdateHabitCompletionArgs = {
   value: Scalars['Boolean'];
   habitId: Scalars['String'];
 };
-
 
 export type MutationUpdateHabitMissedArgs = {
   value: Scalars['Boolean'];
@@ -124,26 +126,21 @@ export type Query = {
   getDay: Day;
 };
 
-
 export type QueryGetMonthArgs = {
   id: Scalars['String'];
 };
-
 
 export type QueryGetUserHabitsArgs = {
   userId: Scalars['String'];
 };
 
-
 export type QueryGetUserArgs = {
   id: Scalars['String'];
 };
 
-
 export type QueryMonthArgs = {
   monthId: Scalars['String'];
 };
-
 
 export type QueryGetDayArgs = {
   dayId: Scalars['String'];
@@ -167,15 +164,41 @@ export type AddHabitMutationVariables = Exact<{
   userId: Scalars['String'];
 }>;
 
-
-export type AddHabitMutation = { __typename?: 'Mutation', addHabit: { __typename?: 'Habit', id: string, habitName: string, completed: boolean, missed: boolean } };
+export type AddHabitMutation = {
+  __typename?: 'Mutation';
+  addHabit: {
+    __typename?: 'Habit';
+    id: string;
+    habitName: string;
+    completed: boolean;
+    missed: boolean;
+  };
+};
 
 export type DeleteHabitMutationVariables = Exact<{
   habitId: Scalars['String'];
 }>;
 
+export type DeleteHabitMutation = {
+  __typename?: 'Mutation';
+  deleteHabit: {
+    __typename?: 'Habit';
+    id: string;
+    habitName: string;
+    completed: boolean;
+    missed: boolean;
+  };
+};
 
-export type DeleteHabitMutation = { __typename?: 'Mutation', deleteHabit: { __typename?: 'Habit', id: string, habitName: string, completed: boolean, missed: boolean } };
+export type DeleteHabitsMutationVariables = Exact<{
+  userId: Scalars['String'];
+  habitName: Scalars['String'];
+}>;
+
+export type DeleteHabitsMutation = {
+  __typename?: 'Mutation';
+  deleteHabits: boolean;
+};
 
 export type EditHabitTextMutationVariables = Exact<{
   newText: Scalars['String'];
@@ -183,51 +206,91 @@ export type EditHabitTextMutationVariables = Exact<{
   habitName: Scalars['String'];
 }>;
 
-
-export type EditHabitTextMutation = { __typename?: 'Mutation', editHabitText: boolean };
+export type EditHabitTextMutation = {
+  __typename?: 'Mutation';
+  editHabitText: boolean;
+};
 
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'JwtResponse', access_token: string, monthId: string, username: string, id: string } };
+export type RegisterMutation = {
+  __typename?: 'Mutation';
+  register: {
+    __typename?: 'JwtResponse';
+    access_token: string;
+    monthId: string;
+    username: string;
+    id: string;
+  };
+};
 
 export type UpdateHabitCompletionMutationVariables = Exact<{
   value: Scalars['Boolean'];
   habitId: Scalars['String'];
 }>;
 
-
-export type UpdateHabitCompletionMutation = { __typename?: 'Mutation', updateHabitCompletion: boolean };
+export type UpdateHabitCompletionMutation = {
+  __typename?: 'Mutation';
+  updateHabitCompletion: boolean;
+};
 
 export type GetUserHabitsQueryVariables = Exact<{
   userId: Scalars['String'];
 }>;
 
-
-export type GetUserHabitsQuery = { __typename?: 'Query', getUserHabits: Array<{ __typename?: 'Habit', habitName: string }> };
+export type GetUserHabitsQuery = {
+  __typename?: 'Query';
+  getUserHabits: Array<{ __typename?: 'Habit'; habitName: string }>;
+};
 
 export type GetMonthQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
-
-export type GetMonthQuery = { __typename?: 'Query', getMonth: { __typename?: 'Month', id: string, name: string, days: Array<{ __typename?: 'Day', id: string, dayNumber: number, weekday: string, passed: boolean, habits?: Maybe<Array<{ __typename?: 'Habit', id: string, habitName: string, completed: boolean, missed: boolean }>> }> } };
-
+export type GetMonthQuery = {
+  __typename?: 'Query';
+  getMonth: {
+    __typename?: 'Month';
+    id: string;
+    name: string;
+    days: Array<{
+      __typename?: 'Day';
+      id: string;
+      dayNumber: number;
+      weekday: string;
+      passed: boolean;
+      habits?: Maybe<
+        Array<{
+          __typename?: 'Habit';
+          id: string;
+          habitName: string;
+          completed: boolean;
+          missed: boolean;
+        }>
+      >;
+    }>;
+  };
+};
 
 export const AddHabitDocument = gql`
-    mutation AddHabit($habitName: String!, $dayId: String!, $userId: String!) {
-  addHabit(newHabitInput: {habitName: $habitName, dayId: $dayId, userId: $userId}) {
-    id
-    habitName
-    completed
-    missed
+  mutation AddHabit($habitName: String!, $dayId: String!, $userId: String!) {
+    addHabit(
+      newHabitInput: { habitName: $habitName, dayId: $dayId, userId: $userId }
+    ) {
+      id
+      habitName
+      completed
+      missed
+    }
   }
-}
-    `;
-export type AddHabitMutationFn = Apollo.MutationFunction<AddHabitMutation, AddHabitMutationVariables>;
+`;
+export type AddHabitMutationFn = Apollo.MutationFunction<
+  AddHabitMutation,
+  AddHabitMutationVariables
+>;
 
 /**
  * __useAddHabitMutation__
@@ -248,24 +311,38 @@ export type AddHabitMutationFn = Apollo.MutationFunction<AddHabitMutation, AddHa
  *   },
  * });
  */
-export function useAddHabitMutation(baseOptions?: Apollo.MutationHookOptions<AddHabitMutation, AddHabitMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddHabitMutation, AddHabitMutationVariables>(AddHabitDocument, options);
-      }
+export function useAddHabitMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddHabitMutation,
+    AddHabitMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddHabitMutation, AddHabitMutationVariables>(
+    AddHabitDocument,
+    options
+  );
+}
 export type AddHabitMutationHookResult = ReturnType<typeof useAddHabitMutation>;
 export type AddHabitMutationResult = Apollo.MutationResult<AddHabitMutation>;
-export type AddHabitMutationOptions = Apollo.BaseMutationOptions<AddHabitMutation, AddHabitMutationVariables>;
+export type AddHabitMutationOptions = Apollo.BaseMutationOptions<
+  AddHabitMutation,
+  AddHabitMutationVariables
+>;
 export const DeleteHabitDocument = gql`
-    mutation DeleteHabit($habitId: String!) {
-  deleteHabit(habitId: $habitId) {
-    id
-    habitName
-    completed
-    missed
+  mutation DeleteHabit($habitId: String!) {
+    deleteHabit(habitId: $habitId) {
+      id
+      habitName
+      completed
+      missed
+    }
   }
-}
-    `;
-export type DeleteHabitMutationFn = Apollo.MutationFunction<DeleteHabitMutation, DeleteHabitMutationVariables>;
+`;
+export type DeleteHabitMutationFn = Apollo.MutationFunction<
+  DeleteHabitMutation,
+  DeleteHabitMutationVariables
+>;
 
 /**
  * __useDeleteHabitMutation__
@@ -284,19 +361,89 @@ export type DeleteHabitMutationFn = Apollo.MutationFunction<DeleteHabitMutation,
  *   },
  * });
  */
-export function useDeleteHabitMutation(baseOptions?: Apollo.MutationHookOptions<DeleteHabitMutation, DeleteHabitMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteHabitMutation, DeleteHabitMutationVariables>(DeleteHabitDocument, options);
-      }
-export type DeleteHabitMutationHookResult = ReturnType<typeof useDeleteHabitMutation>;
-export type DeleteHabitMutationResult = Apollo.MutationResult<DeleteHabitMutation>;
-export type DeleteHabitMutationOptions = Apollo.BaseMutationOptions<DeleteHabitMutation, DeleteHabitMutationVariables>;
-export const EditHabitTextDocument = gql`
-    mutation EditHabitText($newText: String!, $userId: String!, $habitName: String!) {
-  editHabitText(newText: $newText, userId: $userId, habitName: $habitName)
+export function useDeleteHabitMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteHabitMutation,
+    DeleteHabitMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteHabitMutation, DeleteHabitMutationVariables>(
+    DeleteHabitDocument,
+    options
+  );
 }
-    `;
-export type EditHabitTextMutationFn = Apollo.MutationFunction<EditHabitTextMutation, EditHabitTextMutationVariables>;
+export type DeleteHabitMutationHookResult = ReturnType<
+  typeof useDeleteHabitMutation
+>;
+export type DeleteHabitMutationResult =
+  Apollo.MutationResult<DeleteHabitMutation>;
+export type DeleteHabitMutationOptions = Apollo.BaseMutationOptions<
+  DeleteHabitMutation,
+  DeleteHabitMutationVariables
+>;
+export const DeleteHabitsDocument = gql`
+  mutation DeleteHabits($userId: String!, $habitName: String!) {
+    deleteHabits(userId: $userId, habitName: $habitName)
+  }
+`;
+export type DeleteHabitsMutationFn = Apollo.MutationFunction<
+  DeleteHabitsMutation,
+  DeleteHabitsMutationVariables
+>;
+
+/**
+ * __useDeleteHabitsMutation__
+ *
+ * To run a mutation, you first call `useDeleteHabitsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteHabitsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteHabitsMutation, { data, loading, error }] = useDeleteHabitsMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      habitName: // value for 'habitName'
+ *   },
+ * });
+ */
+export function useDeleteHabitsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteHabitsMutation,
+    DeleteHabitsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteHabitsMutation,
+    DeleteHabitsMutationVariables
+  >(DeleteHabitsDocument, options);
+}
+export type DeleteHabitsMutationHookResult = ReturnType<
+  typeof useDeleteHabitsMutation
+>;
+export type DeleteHabitsMutationResult =
+  Apollo.MutationResult<DeleteHabitsMutation>;
+export type DeleteHabitsMutationOptions = Apollo.BaseMutationOptions<
+  DeleteHabitsMutation,
+  DeleteHabitsMutationVariables
+>;
+export const EditHabitTextDocument = gql`
+  mutation EditHabitText(
+    $newText: String!
+    $userId: String!
+    $habitName: String!
+  ) {
+    editHabitText(newText: $newText, userId: $userId, habitName: $habitName)
+  }
+`;
+export type EditHabitTextMutationFn = Apollo.MutationFunction<
+  EditHabitTextMutation,
+  EditHabitTextMutationVariables
+>;
 
 /**
  * __useEditHabitTextMutation__
@@ -317,24 +464,41 @@ export type EditHabitTextMutationFn = Apollo.MutationFunction<EditHabitTextMutat
  *   },
  * });
  */
-export function useEditHabitTextMutation(baseOptions?: Apollo.MutationHookOptions<EditHabitTextMutation, EditHabitTextMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<EditHabitTextMutation, EditHabitTextMutationVariables>(EditHabitTextDocument, options);
-      }
-export type EditHabitTextMutationHookResult = ReturnType<typeof useEditHabitTextMutation>;
-export type EditHabitTextMutationResult = Apollo.MutationResult<EditHabitTextMutation>;
-export type EditHabitTextMutationOptions = Apollo.BaseMutationOptions<EditHabitTextMutation, EditHabitTextMutationVariables>;
-export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!) {
-  register(registerInput: {username: $username, password: $password}) {
-    access_token
-    monthId
-    username
-    id
-  }
+export function useEditHabitTextMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    EditHabitTextMutation,
+    EditHabitTextMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    EditHabitTextMutation,
+    EditHabitTextMutationVariables
+  >(EditHabitTextDocument, options);
 }
-    `;
-export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+export type EditHabitTextMutationHookResult = ReturnType<
+  typeof useEditHabitTextMutation
+>;
+export type EditHabitTextMutationResult =
+  Apollo.MutationResult<EditHabitTextMutation>;
+export type EditHabitTextMutationOptions = Apollo.BaseMutationOptions<
+  EditHabitTextMutation,
+  EditHabitTextMutationVariables
+>;
+export const RegisterDocument = gql`
+  mutation Register($username: String!, $password: String!) {
+    register(registerInput: { username: $username, password: $password }) {
+      access_token
+      monthId
+      username
+      id
+    }
+  }
+`;
+export type RegisterMutationFn = Apollo.MutationFunction<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 
 /**
  * __useRegisterMutation__
@@ -354,19 +518,33 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
-      }
+export function useRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument,
+    options
+  );
+}
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 export const UpdateHabitCompletionDocument = gql`
-    mutation UpdateHabitCompletion($value: Boolean!, $habitId: String!) {
-  updateHabitCompletion(value: $value, habitId: $habitId)
-}
-    `;
-export type UpdateHabitCompletionMutationFn = Apollo.MutationFunction<UpdateHabitCompletionMutation, UpdateHabitCompletionMutationVariables>;
+  mutation UpdateHabitCompletion($value: Boolean!, $habitId: String!) {
+    updateHabitCompletion(value: $value, habitId: $habitId)
+  }
+`;
+export type UpdateHabitCompletionMutationFn = Apollo.MutationFunction<
+  UpdateHabitCompletionMutation,
+  UpdateHabitCompletionMutationVariables
+>;
 
 /**
  * __useUpdateHabitCompletionMutation__
@@ -386,20 +564,34 @@ export type UpdateHabitCompletionMutationFn = Apollo.MutationFunction<UpdateHabi
  *   },
  * });
  */
-export function useUpdateHabitCompletionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateHabitCompletionMutation, UpdateHabitCompletionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateHabitCompletionMutation, UpdateHabitCompletionMutationVariables>(UpdateHabitCompletionDocument, options);
-      }
-export type UpdateHabitCompletionMutationHookResult = ReturnType<typeof useUpdateHabitCompletionMutation>;
-export type UpdateHabitCompletionMutationResult = Apollo.MutationResult<UpdateHabitCompletionMutation>;
-export type UpdateHabitCompletionMutationOptions = Apollo.BaseMutationOptions<UpdateHabitCompletionMutation, UpdateHabitCompletionMutationVariables>;
-export const GetUserHabitsDocument = gql`
-    query GetUserHabits($userId: String!) {
-  getUserHabits(userId: $userId) {
-    habitName
-  }
+export function useUpdateHabitCompletionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateHabitCompletionMutation,
+    UpdateHabitCompletionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateHabitCompletionMutation,
+    UpdateHabitCompletionMutationVariables
+  >(UpdateHabitCompletionDocument, options);
 }
-    `;
+export type UpdateHabitCompletionMutationHookResult = ReturnType<
+  typeof useUpdateHabitCompletionMutation
+>;
+export type UpdateHabitCompletionMutationResult =
+  Apollo.MutationResult<UpdateHabitCompletionMutation>;
+export type UpdateHabitCompletionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateHabitCompletionMutation,
+  UpdateHabitCompletionMutationVariables
+>;
+export const GetUserHabitsDocument = gql`
+  query GetUserHabits($userId: String!) {
+    getUserHabits(userId: $userId) {
+      habitName
+    }
+  }
+`;
 
 /**
  * __useGetUserHabitsQuery__
@@ -417,37 +609,60 @@ export const GetUserHabitsDocument = gql`
  *   },
  * });
  */
-export function useGetUserHabitsQuery(baseOptions: Apollo.QueryHookOptions<GetUserHabitsQuery, GetUserHabitsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserHabitsQuery, GetUserHabitsQueryVariables>(GetUserHabitsDocument, options);
-      }
-export function useGetUserHabitsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserHabitsQuery, GetUserHabitsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserHabitsQuery, GetUserHabitsQueryVariables>(GetUserHabitsDocument, options);
-        }
-export type GetUserHabitsQueryHookResult = ReturnType<typeof useGetUserHabitsQuery>;
-export type GetUserHabitsLazyQueryHookResult = ReturnType<typeof useGetUserHabitsLazyQuery>;
-export type GetUserHabitsQueryResult = Apollo.QueryResult<GetUserHabitsQuery, GetUserHabitsQueryVariables>;
+export function useGetUserHabitsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetUserHabitsQuery,
+    GetUserHabitsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserHabitsQuery, GetUserHabitsQueryVariables>(
+    GetUserHabitsDocument,
+    options
+  );
+}
+export function useGetUserHabitsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUserHabitsQuery,
+    GetUserHabitsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserHabitsQuery, GetUserHabitsQueryVariables>(
+    GetUserHabitsDocument,
+    options
+  );
+}
+export type GetUserHabitsQueryHookResult = ReturnType<
+  typeof useGetUserHabitsQuery
+>;
+export type GetUserHabitsLazyQueryHookResult = ReturnType<
+  typeof useGetUserHabitsLazyQuery
+>;
+export type GetUserHabitsQueryResult = Apollo.QueryResult<
+  GetUserHabitsQuery,
+  GetUserHabitsQueryVariables
+>;
 export const GetMonthDocument = gql`
-    query GetMonth($id: String!) {
-  getMonth(id: $id) {
-    id
-    name
-    days {
+  query GetMonth($id: String!) {
+    getMonth(id: $id) {
       id
-      dayNumber
-      weekday
-      passed
-      habits {
+      name
+      days {
         id
-        habitName
-        completed
-        missed
+        dayNumber
+        weekday
+        passed
+        habits {
+          id
+          habitName
+          completed
+          missed
+        }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetMonthQuery__
@@ -465,14 +680,32 @@ export const GetMonthDocument = gql`
  *   },
  * });
  */
-export function useGetMonthQuery(baseOptions: Apollo.QueryHookOptions<GetMonthQuery, GetMonthQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetMonthQuery, GetMonthQueryVariables>(GetMonthDocument, options);
-      }
-export function useGetMonthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMonthQuery, GetMonthQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetMonthQuery, GetMonthQueryVariables>(GetMonthDocument, options);
-        }
+export function useGetMonthQuery(
+  baseOptions: Apollo.QueryHookOptions<GetMonthQuery, GetMonthQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetMonthQuery, GetMonthQueryVariables>(
+    GetMonthDocument,
+    options
+  );
+}
+export function useGetMonthLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMonthQuery,
+    GetMonthQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetMonthQuery, GetMonthQueryVariables>(
+    GetMonthDocument,
+    options
+  );
+}
 export type GetMonthQueryHookResult = ReturnType<typeof useGetMonthQuery>;
-export type GetMonthLazyQueryHookResult = ReturnType<typeof useGetMonthLazyQuery>;
-export type GetMonthQueryResult = Apollo.QueryResult<GetMonthQuery, GetMonthQueryVariables>;
+export type GetMonthLazyQueryHookResult = ReturnType<
+  typeof useGetMonthLazyQuery
+>;
+export type GetMonthQueryResult = Apollo.QueryResult<
+  GetMonthQuery,
+  GetMonthQueryVariables
+>;

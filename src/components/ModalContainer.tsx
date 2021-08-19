@@ -1,10 +1,12 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { Modal } from 'semantic-ui-react';
 import { useStore } from '../stores/store';
+import Modal from '../components/Modal';
 import { clearLocalStorage } from '../utils/utils';
+import habitService from '../services/habitService/habitService';
 
 const ModalContainer = () => {
-  const { modalStore, statisticsStore, createdHabitsStore } = useStore();
+  const { modalStore, dayStore, userStore, createdHabitsStore } = useStore();
 
   const onYesClearData = () => {
     modalStore.closeModal();
@@ -12,8 +14,14 @@ const ModalContainer = () => {
   };
 
   const handleClick = (habit: string) => {
-    // dayStore.clearDaysOfHabit(habit);
-    statisticsStore.removeHabit(habit);
+    if (userStore.userData?.id) {
+      habitService.deleteHabits({
+        userId: userStore.userData.id,
+        habitName: habit,
+      });
+    }
+    // statisticsStore.removeHabit(habit);
+    dayStore.clearDaysOfHabit(habit);
     createdHabitsStore.removeHabit(habit);
     createdHabitsStore.closeModal();
   };
@@ -37,4 +45,4 @@ const ModalContainer = () => {
   );
 };
 
-export default ModalContainer;
+export default observer(ModalContainer);

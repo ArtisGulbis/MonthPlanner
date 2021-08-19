@@ -27,6 +27,20 @@ export class HabitsResolver {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Mutation((_) => Boolean)
+  public async deleteHabits(
+    @Args('habitName') habitId: string,
+    @Args('userId') userId: string,
+  ): Promise<boolean> {
+    return await this.habitsService
+      .deleteHabits(habitId, userId)
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Mutation((_) => Boolean)
   public async editHabitText(
     @Args('habitName') habitId: string,

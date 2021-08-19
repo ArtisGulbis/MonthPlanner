@@ -115,4 +115,23 @@ export class HabitsService {
     }
     return false;
   }
+
+  public async deleteHabits(
+    habitName: string,
+    userId: string,
+  ): Promise<boolean> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(Habit)
+      .where('userId = :userId AND habitName = :habitName', {
+        userId,
+        habitName,
+      })
+      .execute();
+    if (result.affected > 0) {
+      return true;
+    }
+    return false;
+  }
 }

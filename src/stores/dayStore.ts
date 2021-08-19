@@ -47,13 +47,12 @@ export default class DayStore {
     this.days = [];
   };
 
-  // clearDaysOfHabit = (habitName: string) => {
-  //   for (let i = 0; i < this.days.length; i++) {
-  //     const day = this.days[i];
-  //     day.habits = day.habits.filter((habit) => habit.habitName !== habitName);
-  //   }
-  //   saveToStorage<Day[]>(DAYS, this.days);
-  // };
+  clearDaysOfHabit = (habitName: string) => {
+    for (let i = 0; i < this.days.length; i++) {
+      const day = this.days[i];
+      day.habits = day.habits!.filter((habit) => habit.habitName !== habitName);
+    }
+  };
 
   checkPassedDays = () => {
     for (let i = 0; i < store.monthStore.currentDay - 1; i++) {

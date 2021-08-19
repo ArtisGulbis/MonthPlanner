@@ -1,0 +1,3 @@
+mutation DeleteHabits($userId: String!, $habitName: String!) {
+  deleteHabits(userId: $userId, habitName: $habitName)
+}
