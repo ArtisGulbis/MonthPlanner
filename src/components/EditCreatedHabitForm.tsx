@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import habitService from '../services/habitService/habitService';
@@ -6,6 +6,7 @@ import { useStore } from '../stores/store';
 import { buttonStyles, inputOutline } from '../utils/utils';
 import Checkmark from './Checkmark';
 import DeleteButton from './DeleteButton';
+import * as Yup from 'yup';
 
 interface Props {
   habit: string;
@@ -19,10 +20,15 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
   return (
     <Formik
       initialValues={{ newName: habit, error: '' }}
-      onSubmit={async (values) => {
+      validationSchema={Yup.object({
+        newName: Yup.string()
+          .max(30, 'Can be max 30 characters long.')
+          .required('Please enter a Habit/Task'),
+      })}
+      onSubmit={async (values, { setErrors }) => {
         const { newName } = values;
-        if (habit === newName) {
-          changeEditMode();
+        if (createdHabitsStore.checkExistance(newName)) {
+          setErrors({ error: 'Name already Exists' });
           return;
         }
         if (userStore.userData?.id) {
@@ -44,7 +50,11 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
             name="newName"
             className={`${inputOutline()} w-36 rounded-md text-center text-lg capitalize`}
           />
-          <p className="absolute error-msg text-red-700">{errors.error}</p>
+          <div className="absolute error-msg text-red-700">
+            <ErrorMessage name="error" />
+            <ErrorMessage name="newName" />
+          </div>
+          {/* <p >{errors.error}</p> */}
           <div className="absolute edit-mode flex flex-row">
             <div className="flex flex-row justify-center items-center ">
               <Checkmark

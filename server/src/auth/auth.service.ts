@@ -16,7 +16,7 @@ export class AuthService {
     if (user && (await compare(password, user.password))) {
       return user;
     }
-    return null;
+    throw new UnauthorizedException('Incorrect Credentials!');
   }
 
   async login(user: User) {

@@ -57,16 +57,25 @@ export default class DayStore {
 
   checkPassedDays = async () => {
     const dayIds: string[] = [];
+    const habitIds: string[] = [];
     for (let i = store.monthStore.currentDay - 2; i > 0; i--) {
       const day = this.days[i];
       if (!day.passed) {
         day.passed = true;
         dayIds.push(day.id);
+        //check if habit has not been completed and has not been marked missed yet
+        day.habits?.forEach(
+          (habit) =>
+            !habit.missed && !habit.completed && habitIds.push(habit.id)
+        );
         continue;
       }
       break;
     }
     await dayService.setDayPassed({ dayIds });
+    if (habitIds.length) {
+      await store.statisticsStore.updateMissedHabits(habitIds);
+    }
   };
 
   renameHabit = (habit: string, newName: string) => {

@@ -100,15 +100,12 @@ export class HabitsService {
     return false;
   }
 
-  public async updateHabitMissed(
-    habitId: string,
-    value: boolean,
-  ): Promise<boolean> {
+  public async updateHabitMissed(habitIds: string[]): Promise<boolean> {
     const result = await getConnection()
       .createQueryBuilder()
       .update(Habit)
-      .set({ missed: value })
-      .where('id = :id', { id: habitId })
+      .set({ missed: true })
+      .andWhereInIds(habitIds)
       .execute();
     if (result.affected) {
       return true;

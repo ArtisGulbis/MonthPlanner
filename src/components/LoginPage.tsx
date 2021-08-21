@@ -16,17 +16,24 @@ const LoginPage = () => {
   return (
     <div>
       <Formik
-        initialValues={{ username: '', password: '' }}
-        onSubmit={(values) => {
+        initialValues={{ username: '', password: '', errors: '' }}
+        onSubmit={async (values, { setErrors }) => {
           const { username, password } = values;
-          userStore.login(username, password);
+          try {
+            await userStore.login(username, password);
+          } catch (error) {
+            setErrors({ errors: error });
+          }
         }}
       >
-        <Form>
-          <Field name="username" placeholder="Username" />
-          <Field name="password" type="password" placeholder="Password" />
-          <button type="submit">Login</button>
-        </Form>
+        {({ errors }) => (
+          <Form>
+            <Field name="username" placeholder="Username" />
+            <Field name="password" type="password" placeholder="Password" />
+            {errors && <p>{errors.errors}</p>}
+            <button type="submit">Login</button>
+          </Form>
+        )}
       </Formik>
     </div>
   );

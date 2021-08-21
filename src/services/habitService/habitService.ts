@@ -17,6 +17,9 @@ import {
   GetUserHabitsQuery,
   UpdateHabitCompletionDocument,
   UpdateHabitCompletionMutation,
+  UpdateHabitMissedDocument,
+  UpdateHabitMissedMutation,
+  UpdateHabitMissedMutationVariables,
 } from '../../generated/graphql';
 import { apolloClient } from '../../utils/graphql';
 
@@ -154,6 +157,27 @@ class HabitService {
         mutation: DeleteAllHabitsDocument,
         variables: {
           userId: values.userId,
+        },
+      })
+      .catch((err) => {
+        throw err;
+      });
+
+    if (response && response.data) {
+      return response.data;
+    }
+    return null;
+  }
+
+  public async updateHabitMissed(
+    values: UpdateHabitMissedMutationVariables
+  ): Promise<UpdateHabitMissedMutation | null> {
+    console.log(values.habitIds);
+    const response = await apolloClient
+      .mutate({
+        mutation: UpdateHabitMissedDocument,
+        variables: {
+          habitId: values.habitIds,
         },
       })
       .catch((err) => {

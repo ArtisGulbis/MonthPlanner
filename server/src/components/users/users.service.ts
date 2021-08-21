@@ -17,6 +17,7 @@ import { Habit } from '../habits/entities/habit';
 import { HabitsService } from '../habits/habits.service';
 import { JwtResponse } from '../jwtResponse';
 import { AuthService } from 'src/auth/auth.service';
+import { validate } from 'class-validator';
 
 const now = DateTime.now();
 const saltRounds = 10;
@@ -42,15 +43,18 @@ export class UsersService {
   }
 
   public async findOneByUsername(username: string): Promise<User> | null {
-    return await this.userRepository
-      .findOneOrFail({
+    try {
+      const user = await this.userRepository.findOneOrFail({
         where: { username },
         relations: ['month', 'month.days', 'month.days.habits'],
-      })
-      .catch((err) => {
-        console.log(err);
-        throw new InternalServerErrorException();
       });
+      if (!user) {
+        throw new InternalServerErrorException("Can't find user");
+      }
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException("Cant' find user!");
+    }
   }
 
   public async findOneById(id: string): Promise<User> | null {
@@ -74,7 +78,7 @@ export class UsersService {
 
     const user = this.userRepository.create({
       username: registerInput.username,
-      password: hashedPassword,
+      password: registerInput.password,
     });
 
     const month = this.monthRepository.create({
@@ -113,8 +117,21 @@ export class UsersService {
       .values([...days])
       .execute();
 
+    const errors = await validate(user);
+    if (errors.length > 0) {
+      errors.forEach((err) => {
+        switch (err.property) {
+          case 'password':
+            throw new Error('bad password');
+          default:
+            throw new InternalServerErrorException();
+        }
+      });
+    }
+    user.password = hashedPassword;
+
     await this.userRepository.save(user).catch((err) => {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('User already exists');
     });
 
     return await this.authService.login(user);

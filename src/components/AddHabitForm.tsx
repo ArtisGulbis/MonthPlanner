@@ -1,4 +1,4 @@
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import React from 'react';
 import AddHabitButton from './AddHabitButton';
 import * as Yup from 'yup';
@@ -12,13 +12,18 @@ const AddHabitForm = () => {
     <Formik
       enableReinitialize={true}
       initialValues={{ habitName: '', error: '' }}
-      onSubmit={async (values, { resetForm }) => {
+      onSubmit={async (values, { resetForm, setErrors }) => {
         const { habitName } = values;
+        if (createdHabitsStore.checkExistance(habitName)) {
+          return setErrors({ error: 'Name already exists' });
+        }
         createdHabitsStore.addHabit(habitName);
         resetForm();
       }}
       validationSchema={Yup.object({
-        habitName: Yup.string().required('Please enter a Habit/Task'),
+        habitName: Yup.string()
+          .max(30, 'Can be max 30 characters long.')
+          .required('Please enter a Habit/Task'),
       })}
     >
       {({ handleSubmit, errors }) => (
@@ -33,7 +38,8 @@ const AddHabitForm = () => {
             handleSubmit={handleSubmit}
             styling={`w-10 h-10 ml-2`}
           />
-          <div className="bg-red-400 min-w-min min-h-full">
+          <div className="text-red-800  min-w-min min-h-full flex justify-center items-center">
+            <ErrorMessage name="habitName" />
             {errors.error ? <p>{errors.error}</p> : null}
           </div>
           <div className="ml-auto flex flex-col h-20 w-20 items-center justify-center">

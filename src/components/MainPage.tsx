@@ -31,10 +31,10 @@ const MainPage = () => {
 
   useEffect(() => {
     if (userStore.userData?.monthId) {
-      monthService.getMonth(userStore.userData.monthId).then((res) => {
+      monthService.getMonth(userStore.userData.monthId).then(async (res) => {
         if (res) {
           dayStore.setData(res.getMonth.days);
-          dayStore.checkPassedDays();
+          await dayStore.checkPassedDays();
           monthStore.setMonth(res.getMonth.name);
           res.getMonth.days.forEach((el) => {
             if (el.habits) {

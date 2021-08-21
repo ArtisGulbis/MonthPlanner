@@ -79,13 +79,10 @@ export class HabitsResolver {
 
   @Mutation((_) => Boolean)
   public async updateHabitMissed(
-    @Args('habitId') habitId: string,
-    @Args('value') value: boolean,
+    @Args('habitIds', { type: () => [String] }) habitIds: string[],
   ): Promise<boolean> {
-    return await this.habitsService
-      .updateHabitMissed(habitId, value)
-      .catch((err) => {
-        throw err;
-      });
+    return await this.habitsService.updateHabitMissed(habitIds).catch((err) => {
+      throw err;
+    });
   }
 }

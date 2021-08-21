@@ -57,11 +57,15 @@ export default class UserStore {
   };
 
   register = async (username: string, password: string) => {
-    const res = await userService.register(username, password);
-    if (res?.register) {
-      runInAction(() => {
-        this.setData(res?.register);
-      });
+    try {
+      const res = await userService.register(username, password);
+      if (res?.register) {
+        runInAction(() => {
+          this.setData(res?.register);
+        });
+      }
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -70,17 +74,21 @@ export default class UserStore {
   }
 
   login = async (username: string, password: string) => {
-    const res = await axios.post<JwtResponse>(
-      'http://localhost:5000/auth/login',
-      {
-        username,
-        password,
+    try {
+      const res = await axios.post<JwtResponse>(
+        'http://localhost:5000/auth/login',
+        {
+          username,
+          password,
+        }
+      );
+      if (res.data) {
+        runInAction(() => {
+          this.setData(res.data);
+        });
       }
-    );
-    if (res.data) {
-      runInAction(() => {
-        this.setData(res.data);
-      });
+    } catch (error) {
+      throw error.response.data.message;
     }
   };
 

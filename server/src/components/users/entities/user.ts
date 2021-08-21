@@ -1,13 +1,14 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Habit } from 'src/components/habits/entities/habit';
+import { Length } from 'class-validator';
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Month } from '../../months/entities/Month';
 
@@ -18,11 +19,14 @@ export class User {
   @Field()
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   @Field()
   username: string;
 
-  @Column()
+  @Length(8, 20, {
+    message: 'Password must be between $constraint1 and $constraint2 long!',
+  })
+  @Column({ nullable: false })
   password: string;
 
   @OneToOne(() => Month, (month) => month.user)

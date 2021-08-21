@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { Habit } from '../generated/graphql';
 import { HabitStats } from '../models/habitStats';
+import habitService from '../services/habitService/habitService';
 
 export default class StatisticsStore {
   habits: HabitStats[] = [];
@@ -80,16 +81,21 @@ export default class StatisticsStore {
     }
   };
 
-  increaseMissedCount = (habit: Habit) => {
-    const index = this.habits.findIndex(
-      (el) => el.habit.habitName === habit.habitName
-    );
-    const foundHabit = this.habits[index].habit;
-    if (foundHabit && !foundHabit.completed && !foundHabit.missed) {
-      this.habits[index].missed++;
-      foundHabit.missed = true;
-    }
+  updateMissedHabits = async (habitIds: string[]) => {
+    await habitService.updateHabitMissed({ habitIds });
   };
+
+  // checkMissedHabits = async () => {
+  // const missedHabits: string[] = [];
+  // for (let i = store.monthStore.currentDay - 2; i > 0; i--) {
+  // const habitStats = this.habits[i];
+  // if (!habitStats.habit.missed && !habitStats.habit.completed) {
+  // missedHabits.push(habitStats.habit.id);
+  // habitStats.habit.missed = true;
+  // habitStats.missed++;
+  // }
+  // }
+  // };
 
   reduceMissedCount = (habit: Habit) => {
     const index = this.habits.findIndex(
