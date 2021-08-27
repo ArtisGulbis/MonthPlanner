@@ -1,18 +1,12 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import React, { useEffect } from 'react';
-import { useStore } from '../stores/store';
-import { history } from '..';
+import { Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
+import React from 'react';
 import * as Yup from 'yup';
+import { useStore } from '../stores/store';
+import CustomForm from './CustomForm';
 
 const RegisterPage = () => {
   const { userStore } = useStore();
-
-  useEffect(() => {
-    if (userStore.token) {
-      history.push('/planner');
-    }
-  }, [userStore]);
 
   const usernameRegex = /^[a-zA-Z0-9_]{4,30}$/gi;
 
@@ -45,17 +39,19 @@ const RegisterPage = () => {
           }
         }}
       >
-        {() => (
-          <Form>
-            <Field name="username" placeholder="Username" />
-            <Field name="password" type="password" placeholder="Password" />
-            <button type="submit">Register</button>
-            <div>
-              <ErrorMessage name="username" />
-              <ErrorMessage name="password" />
-              <ErrorMessage name="error" />
-            </div>
-          </Form>
+        {({ errors }) => (
+          <CustomForm
+            errors={errors.error}
+            name="Register"
+            errorMessages={['username', 'password', 'error']}
+          />
+          // <Form>
+          //   <Field name="username" placeholder="Username" />
+          //   <Field name="password" type="password" placeholder="Password" />
+          //   <button type="submit">Register</button>
+          //   <div>
+          //   </div>
+          // </Form>
         )}
       </Formik>
     </div>

@@ -1,60 +1,22 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../stores/store';
-import Modal from '../components/Modal';
-import habitService from '../services/habitService/habitService';
+import { Modal } from 'semantic-ui-react';
 
 const ModalContainer = () => {
-  const {
-    modalStore,
-    dayStore,
-    userStore,
-    createdHabitsStore,
-    statisticsStore,
-  } = useStore();
+  const { modalStore } = useStore();
 
-  //handles clearing ALL the data
-  const onYesClearData = async () => {
-    if (userStore.userData?.id) {
-      await habitService.deleteAllHabits({ userId: userStore.userData.id });
-      modalStore.closeModal();
-      dayStore.clearHabits();
-      createdHabitsStore.clearHabits();
-      statisticsStore.clearStatistics();
-    }
-  };
-
-  //handles clearing one specific habit
-  const handleClick = (habit: string) => {
-    if (userStore.userData?.id) {
-      habitService.deleteHabits({
-        userId: userStore.userData.id,
-        habitName: habit,
-      });
-    }
-    // statisticsStore.removeHabit(habit);
-    dayStore.clearDaysOfHabit(habit);
-    createdHabitsStore.removeHabit(habit);
-    createdHabitsStore.closeModal();
-    statisticsStore.removeHabit(habit);
-  };
   return (
-    <>
-      <Modal
-        onYes={onYesClearData}
-        text="Do you want to clear all data?"
-        onNo={() => modalStore.closeModal()}
-        onClose={() => modalStore.closeModal()}
-        open={modalStore.open}
-      />
-      <Modal
-        open={createdHabitsStore.open}
-        text={`Clear all instances of ${createdHabitsStore.currentlySelectedHabit}`}
-        onYes={() => handleClick(createdHabitsStore.currentlySelectedHabit)}
-        onClose={() => createdHabitsStore.closeModal()}
-        onNo={() => createdHabitsStore.closeModal()}
-      />
-    </>
+    <Modal
+      open={modalStore.modal.open}
+      onClose={modalStore.closeModal}
+      size="tiny"
+      className="rounded-md"
+    >
+      <Modal.Content className="bg-gradient-to-b from-blue-400 via-indigo-500 to-blue-800 p-24">
+        {modalStore.modal.body}
+      </Modal.Content>
+    </Modal>
   );
 };
 

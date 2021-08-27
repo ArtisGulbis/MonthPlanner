@@ -20,6 +20,14 @@ export class HabitsService {
     @Inject(forwardRef(() => UsersService)) private usersService: UsersService,
   ) {}
 
+  public createHabit(habitName: string): Habit {
+    return this.habitsRepository.create({
+      completed: false,
+      habitName,
+      missed: false,
+    });
+  }
+
   public async addHabit(newHabitInput: NewHabitInput): Promise<Habit> {
     const { dayId, habitName, userId } = newHabitInput;
     const user = await this.usersService.findOneById(userId);
@@ -145,5 +153,11 @@ export class HabitsService {
       return true;
     }
     return false;
+  }
+
+  public async saveHabit(habit: Habit) {
+    await this.habitsRepository.save(habit).catch((err) => {
+      throw new InternalServerErrorException('Something went wrong');
+    });
   }
 }

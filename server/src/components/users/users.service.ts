@@ -5,11 +5,10 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getConnection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Month } from '../months/entities/Month';
 import { RegisterInput } from './dto/register.input';
 import { User } from './entities/user';
-import { DateTime } from 'luxon';
 import { Day } from '../days/entities/day';
 import { MonthsService } from '../months/months.service';
 import { hash } from 'bcrypt';
@@ -17,10 +16,10 @@ import { Habit } from '../habits/entities/habit';
 import { HabitsService } from '../habits/habits.service';
 import { JwtResponse } from '../jwtResponse';
 import { AuthService } from 'src/auth/auth.service';
-import { validate } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
+import { saltRounds } from 'src/utils/utils';
+import { DaysService } from '../days/days.service';
 
-const now = DateTime.now();
-const saltRounds = 10;
 @Injectable()
 export class UsersService {
   constructor(
@@ -31,16 +30,8 @@ export class UsersService {
     @Inject(forwardRef(() => HabitsService))
     private habitsService: HabitsService,
     @Inject(forwardRef(() => AuthService)) private authService: AuthService,
+    private daysService: DaysService,
   ) {}
-
-  public async findAll(): Promise<User[]> {
-    return await this.userRepository
-      .find({ relations: ['month', 'month.days', 'month.days.habits'] })
-      .catch((err) => {
-        console.log(err);
-        throw new InternalServerErrorException();
-      });
-  }
 
   public async findOneByUsername(username: string): Promise<User> | null {
     try {
@@ -64,7 +55,6 @@ export class UsersService {
         relations: ['month', 'month.days', 'month.days.habits'],
       })
       .catch((err) => {
-        console.log(err);
         throw new InternalServerErrorException();
       });
   }
@@ -81,60 +71,38 @@ export class UsersService {
       password: registerInput.password,
     });
 
-    const month = this.monthRepository.create({
-      name: 'August',
-    });
-
-    let days: Day[] = [];
-    for (let i = 1; i < now.daysInMonth; i++) {
-      const day: Day = this.dayRepository.create({
-        dayNumber: i,
-        passed: false,
-        weekday: now.startOf('month').plus({ days: i - 1 }).weekdayShort,
-        habits: null,
-      });
-      day.month = month;
-      days.push(day);
-    }
-
-    for (let i = 0; i < DateTime.now().day - 1; i++) {
-      const day = days[i];
-      day.passed = true;
-    }
+    const month = this.monthsService.createMonth();
+    let days: Day[] = this.daysService.createDays(month);
 
     month.days = [...days];
     month.user = user;
     user.month = month;
 
-    await this.monthRepository.save(month).catch((err) => {
-      throw new InternalServerErrorException();
-    });
+    await this.monthsService.saveMonth(month);
+    await this.daysService.insertDays(days);
 
-    await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(Day)
-      .values([...days])
-      .execute();
+    const errors = await this.validateUser(user);
 
-    const errors = await validate(user);
     if (errors.length > 0) {
       errors.forEach((err) => {
         switch (err.property) {
           case 'password':
-            throw new Error('bad password');
+            throw new Error('Bad password');
           default:
             throw new InternalServerErrorException();
         }
       });
     }
+
     user.password = hashedPassword;
 
-    await this.userRepository.save(user).catch((err) => {
-      throw new InternalServerErrorException('User already exists');
-    });
+    await this.saveUser(user);
 
     return await this.authService.login(user);
+  }
+
+  public async validateUser(user: User): Promise<ValidationError[]> {
+    return await validate(user);
   }
 
   public async getMonth(monthId: string): Promise<Month> {
@@ -142,6 +110,8 @@ export class UsersService {
   }
 
   public async saveUser(user: User): Promise<User> {
-    return await this.userRepository.save(user);
+    return await this.userRepository.save(user).catch((err) => {
+      throw new InternalServerErrorException('User already exists');
+    });
   }
 }

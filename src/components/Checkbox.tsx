@@ -13,8 +13,12 @@ const Checkbox = ({ habit, passed, dayId }: Props) => {
   const { dayStore, statisticsStore } = useStore();
 
   const updateHabit = async (state: boolean) => {
-    await habitService.updateHabitCompletion(state, habit.id);
-    dayStore.completeHabit(dayId, habit.id, state);
+    if (!dayStore.demo) {
+      await habitService.updateHabitCompletion(state, habit.id);
+      dayStore.completeHabit(dayId, habit.id, state);
+    } else {
+      dayStore.completeHabit(dayId, habit.id, state);
+    }
   };
 
   return (
@@ -26,10 +30,10 @@ const Checkbox = ({ habit, passed, dayId }: Props) => {
           checked={habit.completed}
           disabled={passed}
           onChange={async (e) => {
-            updateHabit(e.target.checked ? true : false);
             e.target.checked
               ? statisticsStore.increaseCompletedCount(habit)
               : statisticsStore.reduceCompletedCount(habit);
+            updateHabit(e.target.checked ? true : false);
           }}
         />
         <span className="checkbox__control">

@@ -23,12 +23,16 @@ const DeleteHabitButton = ({ dayId, completed, dayNumber, habit }: Props) => {
   };
 
   const handleClick = async () => {
-    // reduceCompletedCount(habit);
-    // reduceHabitCount(habit);
-    await habitService.deleteHabit(habit.id);
-    dayStore.removeHabit(dayId, habit.id);
-    statisticsStore.reduceCompletedCount(habit);
-    statisticsStore.reduceHabitCount(habit);
+    if (!dayStore.demo) {
+      await habitService.deleteHabit(habit.id);
+      dayStore.removeHabit(dayId, habit.id);
+      statisticsStore.reduceCompletedCount(habit);
+      statisticsStore.reduceHabitCount(habit);
+    } else {
+      dayStore.removeHabit(dayId, habit.id);
+      statisticsStore.reduceCompletedCount(habit);
+      statisticsStore.reduceHabitCount(habit);
+    }
   };
 
   return (

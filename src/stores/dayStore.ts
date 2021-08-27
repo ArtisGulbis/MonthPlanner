@@ -2,9 +2,13 @@ import { makeAutoObservable } from 'mobx';
 import { Day, Habit } from '../generated/graphql';
 import dayService from '../services/dayService/dayService';
 import { store } from './store';
+import { DateTime } from 'luxon';
+import { v4 as uuidv4 } from 'uuid';
+const now = DateTime.now();
 
 export default class DayStore {
   days: Day[] = [];
+  demo = false;
   constructor() {
     makeAutoObservable(this);
   }
@@ -13,11 +17,29 @@ export default class DayStore {
     this.days = days;
   };
 
+  setDemo = (state: boolean) => {
+    this.demo = state;
+  };
+
   addHabit = (dayId: string, habit: Habit) => {
     let day = this.days.find((el) => el.id === dayId);
     if (day?.habits) {
       day.habits.push(habit);
       this.days.filter((el) => (el.id !== dayId ? el : day));
+    }
+  };
+
+  createDemoDays = () => {
+    const daysInMonth = now.daysInMonth;
+    const startOfMonth = now.startOf('month');
+    for (let i = 0; i < daysInMonth + 1; i++) {
+      this.days.push({
+        id: uuidv4(),
+        dayNumber: i,
+        habits: [],
+        weekday: startOfMonth.plus({ days: i - 1 }).weekdayShort,
+        passed: i < now.day,
+      });
     }
   };
 

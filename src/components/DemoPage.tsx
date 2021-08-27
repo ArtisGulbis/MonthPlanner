@@ -1,10 +1,12 @@
+import { DateTime } from 'luxon';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import monthService from '../services/monthService/monthService';
+import { history } from '..';
 import { useStore } from '../stores/store';
 import AddHabitForm from './AddHabitForm';
 import BackToTop from './BackToTop';
@@ -14,40 +16,24 @@ import DayCard from './DayCard';
 import GitHubIcon from './GitHubIcon';
 import Header from './Header';
 import HideDaysButton from './HideDaysButton';
-import LoginHeader from './LoginHeader';
 import Statistics from './Statistics';
 
-const MainPage = () => {
-  const {
-    dayStore,
-    userStore,
-    monthStore,
-    statisticsStore,
-    createdHabitsStore,
-  } = useStore();
-
+const DemoPage = () => {
   const [hidden, setHidden] = useState(true);
 
+  const { dayStore, monthStore, userStore } = useStore();
+
   useEffect(() => {
-    if (userStore.userData?.monthId) {
-      monthService.getMonth(userStore.userData.monthId).then(async (res) => {
-        if (res) {
-          dayStore.setData(res.getMonth.days);
-          await dayStore.checkPassedDays();
-          monthStore.setMonth(res.getMonth.name);
-          res.getMonth.days.forEach((el) => {
-            if (el.habits) {
-              statisticsStore.createStatistics(el.habits);
-            }
-          });
-        }
-      });
+    if (userStore.token) {
+      history.push('/planner');
     }
-  }, [dayStore, userStore, monthStore, statisticsStore, createdHabitsStore]);
+    dayStore.createDemoDays();
+    dayStore.setDemo(true);
+    monthStore.setMonth(DateTime.now().monthLong);
+  }, [dayStore, monthStore, userStore]);
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <LoginHeader />
       <div className="pb-8">
         <GitHubIcon />
         <Header monthName={monthStore.currentMonth} />
@@ -71,4 +57,4 @@ const MainPage = () => {
   );
 };
 
-export default observer(MainPage);
+export default observer(DemoPage);

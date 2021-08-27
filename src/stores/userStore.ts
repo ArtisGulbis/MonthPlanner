@@ -60,6 +60,7 @@ export default class UserStore {
     try {
       const res = await userService.register(username, password);
       if (res?.register) {
+        store.modalStore.closeModal();
         runInAction(() => {
           this.setData(res?.register);
         });
@@ -83,6 +84,7 @@ export default class UserStore {
         }
       );
       if (res.data) {
+        store.modalStore.closeModal();
         runInAction(() => {
           this.setData(res.data);
         });

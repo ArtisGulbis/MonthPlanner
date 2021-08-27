@@ -3,6 +3,7 @@ import { Month } from './entities/Month';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NewMonthInput } from './dto/new-month.input';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class MonthsService {
@@ -22,6 +23,17 @@ export class MonthsService {
       new InternalServerErrorException();
     });
   }
+
+  public async saveMonth(month: Month) {
+    await this.monthRepository.save(month);
+  }
+
+  public createMonth = (): Month => {
+    const month = this.monthRepository.create({
+      name: DateTime.now().monthLong,
+    });
+    return month;
+  };
 
   public async findOne(id: string): Promise<Month | null> {
     const month = await this.monthRepository.findOne({

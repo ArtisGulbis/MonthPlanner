@@ -2,24 +2,12 @@ import { makeAutoObservable } from 'mobx';
 
 export class CreatedHabitsStore {
   habits: string[] = [];
-  currentlySelectedHabit = '';
-  open = false;
   constructor() {
     makeAutoObservable(this);
   }
 
-  openModal = (habit: string) => {
-    this.open = true;
-    this.currentlySelectedHabit = habit;
-  };
-
   setData = (userHabits: any[]) => {
     this.habits = userHabits;
-  };
-
-  closeModal = () => {
-    this.open = false;
-    this.currentlySelectedHabit = '';
   };
 
   addHabit = (habit: string) => {

@@ -10,7 +10,7 @@ import { HabitsService } from './habits.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Habit, Day]),
-    DaysModule,
+    forwardRef(() => DaysModule),
     forwardRef(() => UsersModule),
   ],
   providers: [HabitsService, HabitsResolver],

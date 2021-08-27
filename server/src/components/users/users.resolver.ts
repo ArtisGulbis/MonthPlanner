@@ -12,12 +12,12 @@ import { UsersService } from './users.service';
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 
-  @Query((_) => [User])
-  public async getUsers(): Promise<User[]> {
-    return this.usersService.findAll().catch((err) => {
-      throw err;
-    });
-  }
+  // @Query((_) => [User])
+  // public async getUsers(): Promise<User[]> {
+  //   return this.usersService.findAll().catch((err) => {
+  //     throw err;
+  //   });
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Query((_) => [Habit])

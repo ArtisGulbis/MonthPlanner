@@ -1,7 +1,5 @@
 import { makeAutoObservable } from 'mobx';
 import { DateTime } from 'luxon';
-import { getFromStorage, MONTH, saveToStorage } from '../utils/utils';
-import { Month } from '../models/month';
 
 export default class MonthStore {
   currentMonth = '';
@@ -11,28 +9,6 @@ export default class MonthStore {
   constructor() {
     makeAutoObservable(this);
   }
-
-  init = () => {
-    const data = getFromStorage<Month>(MONTH);
-    //first time with no data whatsoever
-    if (!data) {
-      this.currentMonth = DateTime.now().monthLong;
-      this.reset = false;
-      saveToStorage<Month>(MONTH, {
-        currentMonth: this.currentMonth,
-        reset: this.reset,
-      });
-      //data exists
-    } else if (data) {
-      this.currentMonth = data.currentMonth;
-      this.reset = data.reset;
-      if (this.checkNewMonth) {
-        //set reset flag to create new data
-        this.reset = true;
-        this.currentMonth = DateTime.now().monthLong;
-      }
-    }
-  };
 
   setMonth = (name: string) => {
     this.currentMonth = name;
@@ -49,9 +25,5 @@ export default class MonthStore {
   clearCurrentMonth = () => {
     this.currentMonth = DateTime.now().monthLong;
     this.reset = false;
-    saveToStorage<Month>(MONTH, {
-      currentMonth: this.currentMonth,
-      reset: this.reset,
-    });
   };
 }

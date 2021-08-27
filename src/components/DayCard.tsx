@@ -6,6 +6,7 @@ import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
 import HabitEntry from './HabitEntry';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   day: Day;
@@ -17,19 +18,28 @@ const DayCard = ({ day, habits }: Props) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'habit',
     drop: async (item: { name: string }) => {
-      if (userStore.userData?.id) {
-        const res = await habitService.addHabit({
-          dayId: day.id,
-          habitName: item.name,
-          userId: userStore.userData.id,
-        });
-        if (res?.addHabit) {
-          dayStore.addHabit(day.id, res.addHabit);
-          statisticsStore.addToStats(res.addHabit);
+      if (!dayStore.demo) {
+        if (userStore.userData?.id) {
+          const res = await habitService.addHabit({
+            dayId: day.id,
+            habitName: item.name,
+            userId: userStore.userData.id,
+          });
+          if (res?.addHabit) {
+            dayStore.addHabit(day.id, res.addHabit);
+            statisticsStore.addToStats(res.addHabit);
+          }
         }
+      } else {
+        const habit: Habit = {
+          completed: false,
+          habitName: item.name,
+          id: uuidv4(),
+          missed: false,
+        };
+        dayStore.addHabit(day.id, habit);
+        statisticsStore.addToStats(habit);
       }
-
-      // addToStats(habit);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
