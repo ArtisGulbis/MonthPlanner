@@ -7,16 +7,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ComponentsModule } from './components/components.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    DatabaseModule,
-    GraphQLModule.forRoot({
-      playground: true,
-      debug: true,
-      autoSchemaFile: true,
-    }),
-    ComponentsModule,
-  ],
+  imports: [ConfigModule.forRoot(), DatabaseModule, ComponentsModule],
   controllers: [AppController],
   providers: [AppService],
 })

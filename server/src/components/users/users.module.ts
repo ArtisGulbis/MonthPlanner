@@ -8,7 +8,6 @@ import { Month } from '../months/entities/Month';
 import { MonthsModule } from '../months/months.module';
 import { User } from './entities/user';
 import { UserController } from './user.controller';
-import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
@@ -19,7 +18,7 @@ import { UsersService } from './users.service';
     forwardRef(() => AuthModule),
     HabitsModule,
   ],
-  providers: [UsersService, UsersResolver],
+  providers: [UsersService],
   exports: [UsersService],
   controllers: [UserController],
 })

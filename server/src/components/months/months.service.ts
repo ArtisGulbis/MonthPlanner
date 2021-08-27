@@ -11,12 +11,6 @@ export class MonthsService {
     @InjectRepository(Month) private monthRepository: Repository<Month>,
   ) {}
 
-  public async findAll(): Promise<Month[]> {
-    return await this.monthRepository.find({}).catch((err) => {
-      throw new InternalServerErrorException();
-    });
-  }
-
   public async addMonth(newMonthData: NewMonthInput): Promise<Month | void> {
     const newMonth = this.monthRepository.create(newMonthData);
     return await this.monthRepository.save(newMonth).catch((err) => {
@@ -35,10 +29,10 @@ export class MonthsService {
     return month;
   };
 
-  public async findOne(id: string): Promise<Month | null> {
+  public async find(userId: number): Promise<Month | null> {
     const month = await this.monthRepository.findOne({
-      where: { id },
-      relations: ['user', 'days', 'days.habits'],
+      where: { user: userId },
+      relations: ['days', 'days.habits'],
     });
     month.days.sort((first, second) => first.dayNumber - second.dayNumber);
     if (month) {

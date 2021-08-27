@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { MonthsResolver } from './months.resolver';
-import { MonthsService } from './months.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Month } from './entities/Month';
-import { Habit } from '../habits/entities/habit';
+import { MonthsController } from './months.controller';
+import { MonthsService } from './months.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Month])],
-  providers: [MonthsService, MonthsResolver],
+  providers: [MonthsService],
   exports: [MonthsService],
+  controllers: [MonthsController],
 })
 export class MonthsModule {
   constructor() {}

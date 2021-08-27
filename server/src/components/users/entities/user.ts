@@ -23,14 +23,10 @@ export class User {
   @Field()
   username: string;
 
-  @Length(8, 20, {
-    message: 'Password must be between $constraint1 and $constraint2 long!',
-  })
   @Column({ nullable: false })
   password: string;
 
   @OneToOne(() => Month, (month) => month.user)
-  @JoinColumn()
   @Field(() => Month)
   month: Month;
 

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -19,6 +20,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { validate, ValidationError } from 'class-validator';
 import { saltRounds } from 'src/utils/utils';
 import { DaysService } from '../days/days.service';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class UsersService {
@@ -63,55 +65,40 @@ export class UsersService {
     return await this.habitsService.getHabits(userId);
   }
 
-  public async register(registerInput: RegisterInput): Promise<JwtResponse> {
-    const hashedPassword = await hash(registerInput.password, saltRounds);
+  public async register(registerDto: RegisterDto): Promise<JwtResponse> {
+    const { password, username } = registerDto;
+    const hashedPassword = await hash(password, saltRounds);
 
     const user = this.userRepository.create({
-      username: registerInput.username,
-      password: registerInput.password,
+      username,
+      password,
     });
+
+    try {
+      user.password = hashedPassword;
+      await this.saveUser(user);
+    } catch (error) {
+      console.log('im in here for some reason');
+      throw new InternalServerErrorException('User already exists.');
+    }
 
     const month = this.monthsService.createMonth();
     let days: Day[] = this.daysService.createDays(month);
 
     month.days = [...days];
     month.user = user;
-    user.month = month;
 
     await this.monthsService.saveMonth(month);
     await this.daysService.insertDays(days);
 
-    const errors = await this.validateUser(user);
-
-    if (errors.length > 0) {
-      errors.forEach((err) => {
-        switch (err.property) {
-          case 'password':
-            throw new Error('Bad password');
-          default:
-            throw new InternalServerErrorException();
-        }
-      });
-    }
-
-    user.password = hashedPassword;
-
-    await this.saveUser(user);
-
     return await this.authService.login(user);
   }
 
-  public async validateUser(user: User): Promise<ValidationError[]> {
-    return await validate(user);
-  }
-
-  public async getMonth(monthId: string): Promise<Month> {
-    return await this.monthsService.findOne(monthId);
-  }
+  // public async getMonth(monthId: string): Promise<Month> {
+  //   return await this.monthsService.find(monthId);
+  // }
 
   public async saveUser(user: User): Promise<User> {
-    return await this.userRepository.save(user).catch((err) => {
-      throw new InternalServerErrorException('User already exists');
-    });
+    return await this.userRepository.save(user);
   }
 }

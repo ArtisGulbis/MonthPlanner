@@ -4,7 +4,7 @@ import { DaysModule } from '../days/days.module';
 import { Day } from '../days/entities/day';
 import { UsersModule } from '../users/users.module';
 import { Habit } from './entities/habit';
-import { HabitsResolver } from './habits.resolver';
+import { HabitsController } from './habits.controller';
 import { HabitsService } from './habits.service';
 
 @Module({
@@ -13,8 +13,9 @@ import { HabitsService } from './habits.service';
     forwardRef(() => DaysModule),
     forwardRef(() => UsersModule),
   ],
-  providers: [HabitsService, HabitsResolver],
+  providers: [HabitsService],
   exports: [HabitsService],
+  controllers: [HabitsController],
 })
 export class HabitsModule {
   constructor() {}
