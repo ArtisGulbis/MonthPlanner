@@ -28,9 +28,6 @@ export class AuthService {
       };
       return {
         access_token: this.jwtService.sign(payload),
-        monthId: foundUser.month.id,
-        username: foundUser.username,
-        id: foundUser.id,
       };
     }
   }

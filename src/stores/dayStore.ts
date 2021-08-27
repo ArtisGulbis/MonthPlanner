@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx';
-import { Day, Habit } from '../generated/graphql';
-import dayService from '../services/dayService/dayService';
 import { store } from './store';
 import { DateTime } from 'luxon';
 import { v4 as uuidv4 } from 'uuid';
+import { Day } from '../models/day';
+import { Habit } from '../models/habit';
+import agent from '../api/agent';
 const now = DateTime.now();
 
 export default class DayStore {
@@ -21,11 +22,14 @@ export default class DayStore {
     this.demo = state;
   };
 
-  addHabit = (dayId: string, habit: Habit) => {
+  addHabit = async (dayId: string, habit: Habit) => {
     let day = this.days.find((el) => el.id === dayId);
     if (day?.habits) {
       day.habits.push(habit);
       this.days.filter((el) => (el.id !== dayId ? el : day));
+      if (!this.demo) {
+        await agent.Habits.create({ habitName: habit.habitName, dayId });
+      }
     }
   };
 
@@ -43,27 +47,37 @@ export default class DayStore {
     }
   };
 
-  completeHabit = (dayId: string, habitId: string, state: boolean) => {
+  completeHabit = async (dayId: string, habitId: string, state: boolean) => {
     let dayIndex = this.days.findIndex((el) => el.id === dayId);
     if (this.days[dayIndex]) {
       const habitIndex = this.days[dayIndex].habits!.findIndex(
         (el) => el.id === habitId
       );
       this.days[dayIndex].habits![habitIndex].completed = state;
+      if (!this.demo) {
+        //TODO this is not being called after clearing all the data
+        await agent.Habits.updateCompletion({ id: habitId, value: state });
+      }
     }
   };
 
-  removeHabit = (dayId: string, habitId: string) => {
+  removeHabit = async (dayId: string, habitId: string) => {
     const dayIndex = this.days.findIndex((el) => el.id === dayId);
     if (this.days[dayIndex]) {
       this.days[dayIndex].habits = this.days[dayIndex].habits?.filter(
         (el) => el.id !== habitId
       );
+      if (!this.demo) {
+        await agent.Habits.delete({ id: habitId });
+      }
     }
   };
 
-  clearHabits = () => {
+  clearHabits = async () => {
     this.days.forEach((day) => (day.habits = []));
+    if (!this.demo) {
+      await agent.Habits.deleteAll();
+    }
   };
 
   clearDays = () => {
@@ -94,10 +108,10 @@ export default class DayStore {
       }
       break;
     }
-    await dayService.setDayPassed({ dayIds });
-    if (habitIds.length) {
-      await store.statisticsStore.updateMissedHabits(habitIds);
-    }
+    // await dayService.setDayPassed({ dayIds });
+    // if (habitIds.length) {
+    //   await store.statisticsStore.updateMissedHabits(habitIds);
+    // }
   };
 
   renameHabit = (habit: string, newName: string) => {

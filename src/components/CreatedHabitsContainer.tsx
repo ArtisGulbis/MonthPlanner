@@ -1,24 +1,19 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
-import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 import CreatedHabitContainerElement from './CreatedHabitContainerElement';
 import Info from './Info';
 
 const CreatedHabitsContainer = () => {
-  const { createdHabitsStore, userStore } = useStore();
+  const { createdHabitsStore, dayStore } = useStore();
   // const [sticky, setSticky] = useState('');
 
   useEffect(() => {
-    if (userStore.userData?.id) {
-      habitService.getHabits(userStore.userData.id).then((res) => {
-        if (res?.getUserHabits) {
-          res.getUserHabits.forEach((el) =>
-            createdHabitsStore.addHabit(el.habitName)
-          );
-        }
+    dayStore.days.forEach((day) => {
+      day.habits?.forEach((habit) => {
+        createdHabitsStore.addHabit(habit.habitName);
       });
-    }
+    });
     // window.addEventListener('scroll', () => {
     //   if (window.pageYOffset > 400 && createdHabitsStore.habits.length) {
     //     setSticky('sticky');
@@ -30,7 +25,7 @@ const CreatedHabitsContainer = () => {
     createdHabitsStore.habits.length,
     createdHabitsStore.habits,
     createdHabitsStore,
-    userStore.userData,
+    dayStore.days,
   ]);
 
   return (

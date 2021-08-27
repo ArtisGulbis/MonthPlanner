@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Month } from './entities/Month';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { NewMonthInput } from './dto/new-month.input';
 import { DateTime } from 'luxon';
 
@@ -10,12 +10,6 @@ export class MonthsService {
   constructor(
     @InjectRepository(Month) private monthRepository: Repository<Month>,
   ) {}
-
-  public async findAll(): Promise<Month[]> {
-    return await this.monthRepository.find({}).catch((err) => {
-      throw new InternalServerErrorException();
-    });
-  }
 
   public async addMonth(newMonthData: NewMonthInput): Promise<Month | void> {
     const newMonth = this.monthRepository.create(newMonthData);
@@ -35,11 +29,16 @@ export class MonthsService {
     return month;
   };
 
-  public async findOne(id: string): Promise<Month | null> {
+  public async find(userId: number): Promise<Month | null> {
     const month = await this.monthRepository.findOne({
-      where: { id },
-      relations: ['user', 'days', 'days.habits'],
+      where: { user: userId },
+      relations: ['days', 'days.habits'],
     });
+    // const month = await getConnection()
+    //   .createQueryBuilder(Month, 'months')
+    //   .where('userId = :userId', { userId })
+    //   .leftJoinAndSelect('days', 'days.habits')
+    //   .getOne();
     month.days.sort((first, second) => first.dayNumber - second.dayNumber);
     if (month) {
       return month;

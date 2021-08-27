@@ -4,7 +4,6 @@ import { isMobile } from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import monthService from '../services/monthService/monthService';
 import { useStore } from '../stores/store';
 import AddHabitForm from './AddHabitForm';
 import BackToTop from './BackToTop';
@@ -29,20 +28,7 @@ const MainPage = () => {
   const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
-    if (userStore.userData?.monthId) {
-      monthService.getMonth(userStore.userData.monthId).then(async (res) => {
-        if (res) {
-          dayStore.setData(res.getMonth.days);
-          await dayStore.checkPassedDays();
-          monthStore.setMonth(res.getMonth.name);
-          res.getMonth.days.forEach((el) => {
-            if (el.habits) {
-              statisticsStore.createStatistics(el.habits);
-            }
-          });
-        }
-      });
-    }
+    monthStore.loadMonth();
   }, [dayStore, userStore, monthStore, statisticsStore, createdHabitsStore]);
 
   return (

@@ -1,3 +1,0 @@
-mutation DeleteAllHabits($userId: String!) {
-  deleteAllHabits(userId: $userId)
-}

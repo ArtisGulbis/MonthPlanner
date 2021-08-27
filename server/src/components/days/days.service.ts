@@ -11,24 +11,20 @@ import { Day } from '../days/entities/day';
 import { Habit } from '../habits/entities/habit';
 import { HabitsService } from '../habits/habits.service';
 import { Month } from '../months/entities/Month';
-import { NewHabitInput } from './dto/new-habit.input';
+import { NewHabitDto } from './dto/NewHabitDto';
 
 @Injectable()
 export class DaysService {
   constructor(
     @InjectRepository(Day) private daysRepository: Repository<Day>,
-    // @InjectRepository(Habit) private habitsRepository: Repository<Habit>,
     @Inject(forwardRef(() => HabitsService))
     private habitsService: HabitsService,
   ) {}
 
-  public async addHabitToDay(newHabitInput: NewHabitInput): Promise<Habit> {
-    const { dayId, habitName } = newHabitInput;
-    const day = await this.daysRepository.findOne(dayId, {
-      relations: ['habits'],
-    });
+  public async addHabitToDay(newHabitDto: NewHabitDto): Promise<Habit> {
+    const { dayId, habitName } = newHabitDto;
+    const day = await this.daysRepository.findOne(dayId);
     const habit = this.habitsService.createHabit(habitName);
-    habit.day = day;
 
     day.habits.push(habit);
 

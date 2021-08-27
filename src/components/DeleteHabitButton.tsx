@@ -1,6 +1,5 @@
 import React from 'react';
-import { Habit } from '../generated/graphql';
-import habitService from '../services/habitService/habitService';
+import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
 import DeleteButton from './DeleteButton';
 
@@ -23,16 +22,9 @@ const DeleteHabitButton = ({ dayId, completed, dayNumber, habit }: Props) => {
   };
 
   const handleClick = async () => {
-    if (!dayStore.demo) {
-      await habitService.deleteHabit(habit.id);
-      dayStore.removeHabit(dayId, habit.id);
-      statisticsStore.reduceCompletedCount(habit);
-      statisticsStore.reduceHabitCount(habit);
-    } else {
-      dayStore.removeHabit(dayId, habit.id);
-      statisticsStore.reduceCompletedCount(habit);
-      statisticsStore.reduceHabitCount(habit);
-    }
+    dayStore.removeHabit(dayId, habit.id);
+    statisticsStore.reduceCompletedCount(habit);
+    statisticsStore.reduceHabitCount(habit);
   };
 
   return (

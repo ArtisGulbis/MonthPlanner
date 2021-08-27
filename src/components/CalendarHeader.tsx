@@ -1,5 +1,5 @@
 import React from 'react';
-import { Day } from '../generated/graphql';
+import { Day } from '../models/day';
 import CalendarHeaderDayCard from './CalendarHeaderDayCard';
 import Info from './Info';
 

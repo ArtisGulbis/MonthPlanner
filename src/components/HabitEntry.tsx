@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import { Habit } from '../models/habit';
 // import { Habit } from '../models/habit';
-import { Habit } from '../generated/graphql';
 import { shortenText } from '../utils/utils';
 import Checkbox from './Checkbox';
 import DeleteHabitButton from './DeleteHabitButton';

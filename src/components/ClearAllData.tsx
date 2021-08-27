@@ -1,25 +1,17 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 
 const ClearAllData = () => {
-  const {
-    modalStore,
-    dayStore,
-    userStore,
-    createdHabitsStore,
-    statisticsStore,
-  } = useStore();
+  const { modalStore, dayStore, createdHabitsStore, statisticsStore } =
+    useStore();
 
   const handleClick = async () => {
-    if (userStore.userData?.id) {
-      await habitService.deleteAllHabits({ userId: userStore.userData.id });
-      modalStore.closeModal();
-      dayStore.clearHabits();
-      createdHabitsStore.clearHabits();
-      statisticsStore.clearStatistics();
-    }
+    // await habitService.deleteAllHabits({ userId: userStore.userData.id });
+    modalStore.closeModal();
+    dayStore.clearHabits();
+    createdHabitsStore.clearHabits();
+    statisticsStore.clearStatistics();
   };
   return (
     <div>

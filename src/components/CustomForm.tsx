@@ -33,12 +33,13 @@ const CustomForm = ({ errors, name, errorMessages }: Props) => {
           />
         </div>
         {errors && (
-          <p className="text-red-800 bg-red-200 p-1 pl-6 pr-6 mt-4 mb-4 rounded-md shadow-inner">
-            {errors}
-            {errorMessages?.map((el) => (
-              <ErrorMessage name={el} key={el} />
-            ))}
-          </p>
+          <div className="flex flex-col">
+            <p className="text-red-800 bg-red-200 p-1 pl-6 pr-6 mt-4 mb-4 rounded-md shadow-inner">
+              {errorMessages?.map((el) => (
+                <ErrorMessage name={el} key={el} />
+              ))}
+            </p>
+          </div>
         )}
 
         {/* {errorMessages && (

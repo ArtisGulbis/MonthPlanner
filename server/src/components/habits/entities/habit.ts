@@ -1,4 +1,3 @@
-import { Field, ObjectType } from '@nestjs/graphql';
 import { Day } from 'src/components/days/entities/day';
 import { User } from 'src/components/users/entities/user';
 import {
@@ -11,27 +10,28 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'habits' })
-@ObjectType()
 export class Habit {
   @PrimaryGeneratedColumn('uuid')
-  @Field()
   id: string;
 
   @Column()
-  @Field()
   habitName: string;
 
   @Column()
-  @Field()
   completed: boolean;
 
   @Column()
-  @Field()
   missed: boolean;
+
+  @Column()
+  dayId: string;
 
   @ManyToOne(() => Day, (day) => day.habits)
   @JoinColumn()
   day: Day;
+
+  @Column()
+  userId: string;
 
   @ManyToOne(() => User, (user) => user.habits)
   @JoinColumn()

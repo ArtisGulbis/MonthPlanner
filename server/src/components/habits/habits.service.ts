@@ -7,10 +7,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
 import { DaysService } from '../days/days.service';
-import { NewHabitInput } from '../days/dto/new-habit.input';
+import { NewHabitDto } from '../days/dto/NewHabitDto';
 import { Day } from '../days/entities/day';
 import { Habit } from '../habits/entities/habit';
 import { UsersService } from '../users/users.service';
+import { HabitDto } from './dtos/HabitDto';
+import { RemoveHabitDto } from './dtos/RemoveHabitDto';
+import { UpdateHabitDto } from './dtos/UpdateHabitDto';
+import { UpdateHabitTextDto } from './dtos/UpdateHabitTextDto';
 
 @Injectable()
 export class HabitsService {
@@ -28,17 +32,20 @@ export class HabitsService {
     });
   }
 
-  public async addHabit(newHabitInput: NewHabitInput): Promise<Habit> {
-    const { dayId, habitName, userId } = newHabitInput;
-    const user = await this.usersService.findOneById(userId);
+  public async addHabit(
+    newHabitInput: NewHabitDto,
+    userId: string,
+  ): Promise<HabitDto> {
+    const { dayId, habitName } = newHabitInput;
     const day = await this.daysService.findOne(dayId);
+    const user = await this.usersService.findOneById(userId);
 
     const habit = this.habitsRepository.create({
       completed: false,
       habitName: habitName,
       missed: false,
-      day,
       user,
+      day,
     });
 
     day.habits.push(habit);
@@ -46,7 +53,12 @@ export class HabitsService {
     await this.habitsRepository.save(habit);
     await this.daysService.update(day);
 
-    return habit;
+    return {
+      completed: habit.completed,
+      id: habit.id,
+      habitName: habit.habitName,
+      missed: habit.missed,
+    };
   }
 
   public async getHabits(userId: string): Promise<Habit[]> {
@@ -58,30 +70,34 @@ export class HabitsService {
       .getRawMany();
   }
 
-  public async deleteHabit(habitId: string): Promise<Habit | null> {
-    const habit = await this.habitsRepository.findOne(habitId);
+  public async deleteHabit(
+    removeHabitDto: RemoveHabitDto,
+  ): Promise<Habit | null> {
+    const habit = await this.habitsRepository.findOne({
+      where: { id: removeHabitDto.id },
+    });
 
     await getConnection()
       .createQueryBuilder()
       .delete()
       .from(Habit)
-      .where('id = :id', { id: habitId })
+      .where('id = :id', { id: removeHabitDto.id })
       .execute();
 
     return habit;
   }
 
   public async editHabitName(
-    habitName: string,
+    updateHabitTextDto: UpdateHabitTextDto,
     userId: string,
-    newText: string,
   ): Promise<boolean> {
+    const { name, newName } = updateHabitTextDto;
     const result = await getConnection()
       .createQueryBuilder()
       .update(Habit)
-      .set({ habitName: newText })
+      .set({ habitName: newName })
       .where('habitName = :habitName AND userId = :userId', {
-        habitName,
+        habitName: name,
         userId,
       })
       .execute();
@@ -93,14 +109,14 @@ export class HabitsService {
   }
 
   public async updateHabitCompletion(
-    habitId: string,
-    value: boolean,
+    updateHabitDto: UpdateHabitDto,
   ): Promise<boolean> {
+    const { id, value } = updateHabitDto;
     const result = await getConnection()
       .createQueryBuilder()
       .update(Habit)
-      .set({ completed: value })
-      .where('id = :id', { id: habitId })
+      .set({ completed: value as boolean })
+      .where('id = :id', { id })
       .execute();
     if (result.affected) {
       return true;
