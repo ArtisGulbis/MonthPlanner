@@ -21,7 +21,7 @@ const buttonStyles = (color: string) => {
 
 const ClearDataMotal = ({ text, onYes, onClose, onNo, open }: Props) => {
   return (
-    <Modal size="mini" open={open} onClose={onClose} className="font-sans">
+    <Modal size="large" open={open} onClose={onClose} className="font-sans">
       <Modal.Header>
         <p>{text}</p>
       </Modal.Header>

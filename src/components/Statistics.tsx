@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStore } from '../stores/store';
 import { shortenText } from '../utils/utils';
+import ClearAllData from './ClearAllData';
 import StatisticsContent from './StatisticsContent';
 import StatisticsLegend from './StatisticsLegend';
 
@@ -12,8 +13,8 @@ const Statistics = () => {
   return (
     <div className="relative bg-blue-300 bg-opacity-50 shadow-inner w-full rounded-md mt-4 ms:mt-0 md:mt-0">
       <button
-        onClick={openModal}
-        className="w-full font-light py-4 rounded-t-md text-xl tracking-widest bg-red-300 text-red-800 hover:bg-red-600 hover:text-red-200 text-lg"
+        onClick={() => openModal(<ClearAllData />)}
+        className="w-full font-light py-4 rounded-t-md text-xl tracking-widest bg-red-300 text-red-800 hover:bg-red-600 hover:text-red-200"
       >
         Clear
       </button>

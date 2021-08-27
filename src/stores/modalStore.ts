@@ -1,17 +1,27 @@
 import { makeAutoObservable } from 'mobx';
 
+interface Modal {
+  open: boolean;
+  body: JSX.Element | null;
+}
+
 export default class ModalStore {
-  open = false;
+  modal: Modal = {
+    open: false,
+    body: null,
+  };
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  openModal = () => {
-    this.open = true;
+  openModal = (body: JSX.Element) => {
+    this.modal.open = true;
+    this.modal.body = body;
   };
 
   closeModal = () => {
-    this.open = false;
+    this.modal.open = false;
+    this.modal.body = null;
   };
 }

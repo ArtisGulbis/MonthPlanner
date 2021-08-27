@@ -1,128 +1,123 @@
 import { makeAutoObservable } from 'mobx';
-import { Day } from '../models/day';
+import { Day, Habit } from '../generated/graphql';
+import dayService from '../services/dayService/dayService';
+import { store } from './store';
 import { DateTime } from 'luxon';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  DAYS,
-  getFromStorage,
-  removeFromStorage,
-  saveToStorage,
-} from '../utils/utils';
-import { Habit } from '../models/habit';
-import { store } from './store';
 const now = DateTime.now();
 
 export default class DayStore {
   days: Day[] = [];
+  demo = false;
   constructor() {
     makeAutoObservable(this);
   }
 
-  generateDays = () => {
-    let data = getFromStorage<Day[]>(DAYS);
-    if (!data) {
-      this.createData();
-    } else if (store.monthStore.checkNewMonth) {
-      //new month started
-      this.days = [];
-      removeFromStorage(DAYS);
-      this.createData();
-      return;
-    }
-    //still in current month => load data
-    this.days = getFromStorage<Day[]>(DAYS);
+  setData = (days: Day[]) => {
+    this.days = days;
   };
 
-  createData = () => {
+  setDemo = (state: boolean) => {
+    this.demo = state;
+  };
+
+  addHabit = (dayId: string, habit: Habit) => {
+    let day = this.days.find((el) => el.id === dayId);
+    if (day?.habits) {
+      day.habits.push(habit);
+      this.days.filter((el) => (el.id !== dayId ? el : day));
+    }
+  };
+
+  createDemoDays = () => {
     const daysInMonth = now.daysInMonth;
-    const startOfMonth = DateTime.now().startOf('month');
-    for (let i = 1; i < daysInMonth + 1; i++) {
+    const startOfMonth = now.startOf('month');
+    for (let i = 0; i < daysInMonth + 1; i++) {
       this.days.push({
         id: uuidv4(),
         dayNumber: i,
         habits: [],
-        weekDay: startOfMonth.plus({ days: i - 1 }).weekdayShort,
-        passed: false,
+        weekday: startOfMonth.plus({ days: i - 1 }).weekdayShort,
+        passed: i < now.day,
       });
-    }
-    saveToStorage(DAYS, this.days);
-  };
-
-  addHabit = (id: string, habit: Habit) => {
-    let day = this.days.find((el) => el.id === id);
-    if (day) {
-      day.habits.push(habit);
-      saveToStorage<Day[]>(DAYS, this.days);
     }
   };
 
   completeHabit = (dayId: string, habitId: string, state: boolean) => {
     let dayIndex = this.days.findIndex((el) => el.id === dayId);
-    if (dayIndex === 0 || dayIndex) {
-      const habitIndex = this.days[dayIndex].habits.findIndex(
+    if (this.days[dayIndex]) {
+      const habitIndex = this.days[dayIndex].habits!.findIndex(
         (el) => el.id === habitId
       );
-      this.days[dayIndex].habits[habitIndex].completed = state;
-      saveToStorage<Day[]>(DAYS, this.days);
+      this.days[dayIndex].habits![habitIndex].completed = state;
     }
   };
 
   removeHabit = (dayId: string, habitId: string) => {
     const dayIndex = this.days.findIndex((el) => el.id === dayId);
-    if (dayIndex === 0 || dayIndex) {
-      const habitIndex = this.days[dayIndex].habits.findIndex(
-        (el) => el.id === habitId
+    if (this.days[dayIndex]) {
+      this.days[dayIndex].habits = this.days[dayIndex].habits?.filter(
+        (el) => el.id !== habitId
       );
-      this.days[dayIndex].habits.splice(habitIndex, 1);
-      saveToStorage<Day[]>(DAYS, this.days);
     }
   };
 
   clearHabits = () => {
     this.days.forEach((day) => (day.habits = []));
-    saveToStorage<Day[]>(DAYS, this.days);
+  };
+
+  clearDays = () => {
+    this.days = [];
   };
 
   clearDaysOfHabit = (habitName: string) => {
     for (let i = 0; i < this.days.length; i++) {
       const day = this.days[i];
-      day.habits = day.habits.filter((habit) => habit.habitName !== habitName);
+      day.habits = day.habits!.filter((habit) => habit.habitName !== habitName);
     }
-    saveToStorage<Day[]>(DAYS, this.days);
   };
 
-  checkPassedDays = () => {
-    for (let i = 0; i < store.monthStore.currentDay - 1; i++) {
+  checkPassedDays = async () => {
+    const dayIds: string[] = [];
+    const habitIds: string[] = [];
+    for (let i = store.monthStore.currentDay - 2; i > 0; i--) {
       const day = this.days[i];
-      day.passed = true;
-      day.habits.forEach((el) => {
-        if (!el.completed && !el.missed) {
-          store.statisticsStore.increaseMissedCount(el);
-        }
-      });
+      if (!day.passed) {
+        day.passed = true;
+        dayIds.push(day.id);
+        //check if habit has not been completed and has not been marked missed yet
+        day.habits?.forEach(
+          (habit) =>
+            !habit.missed && !habit.completed && habitIds.push(habit.id)
+        );
+        continue;
+      }
+      break;
     }
-    saveToStorage<Day[]>(DAYS, this.days);
+    await dayService.setDayPassed({ dayIds });
+    if (habitIds.length) {
+      await store.statisticsStore.updateMissedHabits(habitIds);
+    }
   };
 
   renameHabit = (habit: string, newName: string) => {
     if (
       this.days.every(
-        (day) => !day.habits.find((el) => el.habitName === newName)
+        (day) => !day.habits!.find((el) => el.habitName === newName)
       )
     ) {
       for (let i = 0; i < this.days.length; i++) {
         const day = this.days[i];
-        day.habits = day.habits.map((el) =>
+        day.habits = day.habits!.map((el) =>
           el.habitName === habit ? { ...el, habitName: newName } : el
         );
       }
-      saveToStorage<Day[]>(DAYS, this.days);
     }
   };
 
-  checkExistance = (newName: string) => {
-    return this.days.every((day) =>
-      day.habits.find((el) => el.habitName === newName)
-    );
-  };
+  // checkExistance = (newName: string) => {
+  //   return this.days.every((day) =>
+  //     day.habits.find((el) => el.habitName === newName)
+  //   );
+  // };
 }

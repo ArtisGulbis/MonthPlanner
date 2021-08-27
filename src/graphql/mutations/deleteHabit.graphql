@@ -1,0 +1,8 @@
+mutation DeleteHabit($habitId: String!) {
+  deleteHabit(habitId: $habitId) {
+    id
+    habitName
+    completed
+    missed
+  }
+}

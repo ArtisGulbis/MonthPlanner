@@ -4,6 +4,7 @@ import { useDrag } from 'react-dnd';
 import { useStore } from '../stores/store';
 import { buttonStyles, shortenText } from '../utils/utils';
 import DeleteButton from './DeleteButton';
+import DeleteSpecificHabits from './DeleteSpecificHabits';
 import EditCreatedHabitForm from './EditCreatedHabitForm';
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
 const CreatedHabitContainerElement = ({ habit }: Props) => {
   const [editMode, setEditMode] = useState(false);
 
-  const { createdHabitsStore } = useStore();
+  const { modalStore } = useStore();
 
   const [, drag] = useDrag(() => ({
     type: 'habit',
@@ -49,7 +50,9 @@ const CreatedHabitContainerElement = ({ habit }: Props) => {
         styling={`h-7 w-7 absolute chdb hover:text-blue-500 cursor-pointer transform hover:scale-125 duration-75 ${buttonStyles(
           'blue'
         )}`}
-        onClick={() => createdHabitsStore.openModal(habit)}
+        onClick={() => {
+          modalStore.openModal(<DeleteSpecificHabits habit={habit} />);
+        }}
       />
     </div>
   );

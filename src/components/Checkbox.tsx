@@ -1,17 +1,26 @@
 import React from 'react';
-import { Habit } from '../models/habit';
+import { Habit } from '../generated/graphql';
+import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 
 interface Props {
   habit: Habit;
   passed: boolean;
+  dayId: string;
 }
 
-const Checkbox = ({ habit, passed }: Props) => {
-  const {
-    dayStore: { completeHabit },
-    statisticsStore: { reduceCompletedCount, increaseCompletedCount },
-  } = useStore();
+const Checkbox = ({ habit, passed, dayId }: Props) => {
+  const { dayStore, statisticsStore } = useStore();
+
+  const updateHabit = async (state: boolean) => {
+    if (!dayStore.demo) {
+      await habitService.updateHabitCompletion(state, habit.id);
+      dayStore.completeHabit(dayId, habit.id, state);
+    } else {
+      dayStore.completeHabit(dayId, habit.id, state);
+    }
+  };
+
   return (
     <label className="checkbox ml-2">
       <span className="checkbox__input">
@@ -20,14 +29,11 @@ const Checkbox = ({ habit, passed }: Props) => {
           name="checkbox"
           checked={habit.completed}
           disabled={passed}
-          onChange={(e) => {
-            if (e.target.checked) {
-              increaseCompletedCount(habit);
-              completeHabit(habit.dayId, habit.id, true);
-            } else {
-              reduceCompletedCount(habit);
-              completeHabit(habit.dayId, habit.id, false);
-            }
+          onChange={async (e) => {
+            e.target.checked
+              ? statisticsStore.increaseCompletedCount(habit)
+              : statisticsStore.reduceCompletedCount(habit);
+            updateHabit(e.target.checked ? true : false);
           }}
         />
         <span className="checkbox__control">

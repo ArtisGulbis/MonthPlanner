@@ -1,0 +1,7 @@
+mutation EditHabitText(
+  $newText: String!
+  $userId: String!
+  $habitName: String!
+) {
+  editHabitText(newText: $newText, userId: $userId, habitName: $habitName)
+}

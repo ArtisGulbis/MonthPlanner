@@ -1,18 +1,20 @@
 import React from 'react';
-import { Habit } from '../models/habit';
+import { Habit } from '../generated/graphql';
+import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 import DeleteButton from './DeleteButton';
 
 interface Props {
-  completed: boolean | 0;
+  completed: boolean | 0 | undefined;
   dayNumber: number;
+  dayId: string;
   habit: Habit;
 }
 
-const DeleteHabitButton = ({ completed, dayNumber, habit }: Props) => {
+const DeleteHabitButton = ({ dayId, completed, dayNumber, habit }: Props) => {
   const {
-    dayStore: { removeHabit },
-    statisticsStore: { reduceHabitCount, reduceCompletedCount },
+    dayStore,
+    statisticsStore,
     monthStore: { currentDay },
   } = useStore();
 
@@ -20,10 +22,17 @@ const DeleteHabitButton = ({ completed, dayNumber, habit }: Props) => {
     return `fill-current hover:text-${color}-500 cursor-pointer transform hover:scale-125 duration-75`;
   };
 
-  const handleClick = () => {
-    reduceCompletedCount(habit);
-    reduceHabitCount(habit);
-    removeHabit(habit.dayId, habit.id);
+  const handleClick = async () => {
+    if (!dayStore.demo) {
+      await habitService.deleteHabit(habit.id);
+      dayStore.removeHabit(dayId, habit.id);
+      statisticsStore.reduceCompletedCount(habit);
+      statisticsStore.reduceHabitCount(habit);
+    } else {
+      dayStore.removeHabit(dayId, habit.id);
+      statisticsStore.reduceCompletedCount(habit);
+      statisticsStore.reduceHabitCount(habit);
+    }
   };
 
   return (

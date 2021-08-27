@@ -1,0 +1,3 @@
+mutation UpdateHabitMissed($habitIds: [String!]!) {
+  updateHabitMissed(habitIds: $habitIds)
+}

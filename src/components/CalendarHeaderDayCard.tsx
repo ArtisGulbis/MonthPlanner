@@ -1,12 +1,12 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { Habit } from '../models/habit';
 import { v4 as uuidv4 } from 'uuid';
-import { useStore } from '../stores/store';
-import { Day } from '../models/day';
-import { checkCompletion, checkAllCompletedHabits } from '../utils/utils';
-import { observer } from 'mobx-react-lite';
 import { Popup } from 'semantic-ui-react';
+import { Day, Habit } from '../generated/graphql';
+import habitService from '../services/habitService/habitService';
+import { useStore } from '../stores/store';
+import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
 import HabitEntry from './HabitEntry';
 
 interface Props {
@@ -15,25 +15,38 @@ interface Props {
 
 const CalendarHeaderDayCard = ({ day }: Props) => {
   const {
-    createdHabitsStore,
     monthStore,
-    dayStore: { addHabit },
-    statisticsStore: { addToStats },
+    userStore,
+    statisticsStore,
+    dayStore: { addHabit, demo },
   } = useStore();
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'habit',
-    drop: (item: { name: string }) => {
-      const habit: Habit = {
-        completed: false,
-        dayId: day.id,
-        habitName: item.name,
-        id: uuidv4(),
-        missed: false,
-      };
-      createdHabitsStore.addHabit(habit.habitName);
-      addHabit(day.id, habit);
-      addToStats(habit);
+    drop: async (item: { name: string }) => {
+      if (!demo) {
+        if (userStore.userData?.id) {
+          const res = await habitService.addHabit({
+            dayId: day.id,
+            habitName: item.name,
+            userId: userStore.userData?.id,
+          });
+
+          if (res?.addHabit) {
+            addHabit(day.id, res.addHabit);
+            statisticsStore.addToStats(res.addHabit);
+          }
+        }
+      } else {
+        const habit: Habit = {
+          completed: false,
+          habitName: item.name,
+          id: uuidv4(),
+          missed: false,
+        };
+        addHabit(day.id, habit);
+        statisticsStore.addToStats(habit);
+      }
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -41,14 +54,16 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
   }));
 
   const borderAroundCurrentDay = (day: Day) => {
-    if (
-      day.dayNumber === monthStore.currentDay &&
-      day.habits.length &&
-      day.habits.every((el) => el.completed)
-    ) {
-      return 'border-green-500 border-2 font-normal';
-    } else if (day.dayNumber === monthStore.currentDay) {
-      return 'border-pink-500 border-2 font-normal';
+    if (day.habits) {
+      if (
+        day.dayNumber === monthStore.currentDay &&
+        day.habits.length &&
+        day.habits.every((el) => el.completed)
+      ) {
+        return 'border-green-500 border-2 font-normal';
+      } else if (day.dayNumber === monthStore.currentDay) {
+        return 'border-pink-500 border-2 font-normal';
+      }
     }
   };
 
@@ -69,6 +84,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
       >
         <div
           className={`${
+            day.habits &&
             day.habits.length &&
             `w-4 h-4 ${
               checkAllCompletedHabits(day)
@@ -81,7 +97,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
             } absolute indicator rounded-full`
           }`}
         ></div>
-        <p className="text-sm">{day.weekDay}</p>
+        <p className="text-sm">{day.weekday}</p>
         {day.dayNumber}
       </div>
     );
@@ -89,7 +105,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
 
   return (
     <>
-      {day.habits.length > 0 ? (
+      {day.habits && day.habits.length > 0 ? (
         <Popup
           hoverable
           on="click"
@@ -102,7 +118,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
                 ? 'rgba(249, 168, 212,1)'
                 : day.passed
                 ? 'rgba(147, 197, 253,1)'
-                : day.weekDay === 'Sat' || day.weekDay === 'Sun'
+                : day.weekday === 'Sat' || day.weekday === 'Sun'
                 ? 'rgba(252, 165, 165,1)'
                 : 'rgba(252, 211, 77,1)'
             }`,
@@ -112,6 +128,7 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
             <ul
               key={habit.id}
               className={`${
+                day.habits &&
                 day.habits.length &&
                 `${
                   checkAllCompletedHabits(day)
@@ -134,15 +151,16 @@ const CalendarHeaderDayCard = ({ day }: Props) => {
                     ? 'bg-pink-200'
                     : day.passed
                     ? 'bg-blue-200'
-                    : day.weekDay === 'Sat' || day.weekDay === 'Sun'
+                    : day.weekday === 'Sat' || day.weekday === 'Sun'
                     ? 'bg-red-200'
                     : 'bg-yellow-200'
                 }`}
                 completed={checkAllCompletedHabits(day)}
                 dayNumber={day.dayNumber}
                 habit={habit}
+                dayId={day.id}
                 passed={day.passed}
-                weekday={day.weekDay}
+                weekday={day.weekday}
               />
             </ul>
           ))}

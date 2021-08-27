@@ -1,0 +1,5 @@
+query GetUserHabits($userId: String!) {
+  getUserHabits(userId: $userId) {
+    habitName
+  }
+}

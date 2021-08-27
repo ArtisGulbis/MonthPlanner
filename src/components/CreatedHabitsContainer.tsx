@@ -1,26 +1,41 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 import CreatedHabitContainerElement from './CreatedHabitContainerElement';
 import Info from './Info';
 
 const CreatedHabitsContainer = () => {
-  const { createdHabitsStore } = useStore();
-  const [sticky, setSticky] = useState('');
+  const { createdHabitsStore, userStore } = useStore();
+  // const [sticky, setSticky] = useState('');
 
   useEffect(() => {
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 400 && createdHabitsStore.habits.length) {
-        setSticky('sticky');
-      } else {
-        setSticky('');
-      }
-    });
-  }, [createdHabitsStore.habits.length, createdHabitsStore.habits]);
+    if (userStore.userData?.id) {
+      habitService.getHabits(userStore.userData.id).then((res) => {
+        if (res?.getUserHabits) {
+          res.getUserHabits.forEach((el) =>
+            createdHabitsStore.addHabit(el.habitName)
+          );
+        }
+      });
+    }
+    // window.addEventListener('scroll', () => {
+    //   if (window.pageYOffset > 400 && createdHabitsStore.habits.length) {
+    //     setSticky('sticky');
+    //   } else {
+    //     setSticky('');
+    //   }
+    // });
+  }, [
+    createdHabitsStore.habits.length,
+    createdHabitsStore.habits,
+    createdHabitsStore,
+    userStore.userData,
+  ]);
 
   return (
     <div
-      className={`${sticky} rounded-md bg-blue-300 p-3 m-4 min-h-min min-h shadow-inner flex flex-row relative flex-wrap justify-center items-center`}
+      className={`rounded-md bg-blue-300 p-3 m-4 min-h-min min-h shadow-inner flex flex-row relative flex-wrap justify-center items-center`}
     >
       {createdHabitsStore.habits.map((el) => (
         <CreatedHabitContainerElement key={el} habit={el} />

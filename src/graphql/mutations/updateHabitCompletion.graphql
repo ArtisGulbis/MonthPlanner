@@ -1,0 +1,3 @@
+mutation UpdateHabitCompletion($value: Boolean!, $habitId: String!) {
+  updateHabitCompletion(value: $value, habitId: $habitId)
+}

@@ -1,42 +1,52 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { v4 as uuidv4 } from 'uuid';
-import { Day } from '../models/day';
-import { Habit } from '../models/habit';
+import { Day, Habit } from '../generated/graphql';
+import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
 import HabitEntry from './HabitEntry';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   day: Day;
-  habits: Habit[];
+  habits: Habit[] | undefined | null;
 }
 
 const DayCard = ({ day, habits }: Props) => {
+  const { userStore, statisticsStore } = useStore();
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'habit',
-    drop: (item: { name: string }) => {
-      const habit: Habit = {
-        completed: false,
-        dayId: day.id,
-        habitName: item.name,
-        id: uuidv4(),
-        missed: false,
-      };
-      createdHabitsStore.addHabit(habit.habitName);
-      addHabit(day.id, habit);
-      addToStats(habit);
+    drop: async (item: { name: string }) => {
+      if (!dayStore.demo) {
+        if (userStore.userData?.id) {
+          const res = await habitService.addHabit({
+            dayId: day.id,
+            habitName: item.name,
+            userId: userStore.userData.id,
+          });
+          if (res?.addHabit) {
+            dayStore.addHabit(day.id, res.addHabit);
+            statisticsStore.addToStats(res.addHabit);
+          }
+        }
+      } else {
+        const habit: Habit = {
+          completed: false,
+          habitName: item.name,
+          id: uuidv4(),
+          missed: false,
+        };
+        dayStore.addHabit(day.id, habit);
+        statisticsStore.addToStats(habit);
+      }
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
 
-  const { dayStore, statisticsStore, monthStore, createdHabitsStore } =
-    useStore();
-  const { addHabit } = dayStore;
-  const { addToStats } = statisticsStore;
+  const { dayStore, monthStore } = useStore();
   const { currentDay } = monthStore;
   const dayCardMonthStyle = (color: string) => {
     return `border-r-2 border-${color}-400`;
@@ -51,7 +61,7 @@ const DayCard = ({ day, habits }: Props) => {
       return dayCardMonthStyle('green');
     } else if (day.passed) {
       return dayCardMonthStyle('blue');
-    } else if (day.weekDay === 'Sun' || day.weekDay === 'Sat') {
+    } else if (day.weekday === 'Sun' || day.weekday === 'Sat') {
       return dayCardMonthStyle('red');
     }
     return dayCardMonthStyle('yellow');
@@ -75,12 +85,12 @@ const DayCard = ({ day, habits }: Props) => {
       <div
         className={`${backgroundStyles()} flex w-full day-card-header flex-col items-center justify-center h-full pr-4 `}
       >
-        <h1 className={cardNumberStyles}>{day.weekDay}</h1>
+        <h1 className={cardNumberStyles}>{day.weekday}</h1>
         <h1 className={cardNumberStyles}>{day.dayNumber}</h1>
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row flex-wrap mb-auto">
-          {habits.map((el) => (
+          {habits?.map((el) => (
             <HabitEntry
               styling={`w-full flex items-center shadow-inner rounded-r-md rounded-l-md habit h-10 ml-2 ${
                 checkAllCompletedHabits(day)
@@ -89,16 +99,17 @@ const DayCard = ({ day, habits }: Props) => {
                   ? 'bg-pink-200'
                   : day.passed
                   ? 'bg-blue-200'
-                  : day.weekDay === 'Sat' || day.weekDay === 'Sun'
+                  : day.weekday === 'Sat' || day.weekday === 'Sun'
                   ? 'bg-red-200'
                   : 'bg-yellow-200'
               }`}
               completed={checkAllCompletedHabits(day)}
               key={el.id}
               habit={el}
+              dayId={day.id}
               passed={day.passed}
               dayNumber={day.dayNumber}
-              weekday={day.weekDay}
+              weekday={day.weekday}
             />
           ))}
         </div>

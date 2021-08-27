@@ -1,4 +1,4 @@
-import { Day } from '../models/day';
+import { Day } from '../generated/graphql';
 import { store } from '../stores/store';
 
 export const saveToStorage = <T>(key: string, data: T) => {
@@ -17,7 +17,7 @@ export const clearLocalStorage = () => {
   store.dayStore.clearHabits();
   store.statisticsStore.clearStatistics();
   store.monthStore.clearCurrentMonth();
-  store.createdHabitsStore.clearHabits();
+  // store.createdHabitsStore.clearHabits();
 };
 
 export const shortenText = (text: string, length: number) => {
@@ -33,7 +33,7 @@ export const shortenText = (text: string, length: number) => {
 };
 
 export const checkAllCompletedHabits = (day: Day) => {
-  return day.habits.length && day.habits.every((el) => el.completed);
+  return day.habits!.length && day.habits!.every((el) => el.completed);
 };
 
 const completionStyles = (color: string) => {
@@ -90,7 +90,7 @@ export const checkCompletion = (
     return currentD;
   } else if (checkAllCompletedHabits(day)) {
     return completedDay;
-  } else if (day.weekDay === 'Sat' || day.weekDay === 'Sun') {
+  } else if (day.weekday === 'Sat' || day.weekday === 'Sun') {
     return weekend;
   }
   return todoDay;
@@ -100,5 +100,5 @@ export const checkCompletion = (
 export const DAYS = 'days';
 export const MONTH = 'month';
 export const STATISTICS = 'statistics';
-export const HABITS = 'habits';
 export const TUTORIALS = 'tutorials';
+export const USERDATA = 'user-data';
