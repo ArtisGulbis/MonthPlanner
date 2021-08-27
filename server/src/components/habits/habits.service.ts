@@ -45,6 +45,7 @@ export class HabitsService {
       habitName: habitName,
       missed: false,
       user,
+      day,
     });
 
     day.habits.push(habit);
@@ -73,14 +74,14 @@ export class HabitsService {
     removeHabitDto: RemoveHabitDto,
   ): Promise<Habit | null> {
     const habit = await this.habitsRepository.findOne({
-      where: { id: removeHabitDto },
+      where: { id: removeHabitDto.id },
     });
 
     await getConnection()
       .createQueryBuilder()
       .delete()
       .from(Habit)
-      .where('id = :id', { id: removeHabitDto })
+      .where('id = :id', { id: removeHabitDto.id })
       .execute();
 
     return habit;

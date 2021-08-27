@@ -1,12 +1,11 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import habitService from '../services/habitService/habitService';
+import * as Yup from 'yup';
 import { useStore } from '../stores/store';
 import { buttonStyles, inputOutline } from '../utils/utils';
 import Checkmark from './Checkmark';
 import DeleteButton from './DeleteButton';
-import * as Yup from 'yup';
 
 interface Props {
   habit: string;
@@ -14,8 +13,7 @@ interface Props {
 }
 
 const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
-  const { userStore, statisticsStore, createdHabitsStore, dayStore } =
-    useStore();
+  const { statisticsStore, createdHabitsStore, dayStore } = useStore();
 
   return (
     <Formik
@@ -30,13 +28,6 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
         if (createdHabitsStore.checkExistance(newName)) {
           setErrors({ error: 'Name already Exists' });
           return;
-        }
-        if (userStore.userData?.id) {
-          await habitService.updateHabitName({
-            habitName: habit,
-            newText: newName,
-            userId: userStore.userData.id,
-          });
         }
         createdHabitsStore.renameHabit(habit, newName);
         dayStore.renameHabit(habit, newName);
@@ -54,7 +45,6 @@ const EditCreatedHabitForm = ({ habit, changeEditMode }: Props) => {
             <ErrorMessage name="error" />
             <ErrorMessage name="newName" />
           </div>
-          {/* <p >{errors.error}</p> */}
           <div className="absolute edit-mode flex flex-row">
             <div className="flex flex-row justify-center items-center ">
               <Checkmark

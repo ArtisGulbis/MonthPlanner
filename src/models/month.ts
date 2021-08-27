@@ -1,4 +1,7 @@
+import { Day } from './day';
+
 export interface Month {
-  currentMonth: string;
-  reset: boolean;
+  id: string;
+  name: string;
+  days: Day[];
 }

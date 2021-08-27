@@ -1,5 +1,7 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import { DateTime } from 'luxon';
+import agent from '../api/agent';
+import { store } from './store';
 
 export default class MonthStore {
   currentMonth = '';
@@ -14,12 +16,14 @@ export default class MonthStore {
     this.currentMonth = name;
   };
 
-  get checkNewMonth() {
-    return this.currentMonth !== DateTime.now().monthLong;
-  }
-
-  setNewMonth = () => {
-    this.currentMonth = DateTime.now().monthLong;
+  loadMonth = async () => {
+    const res = await agent.Months.details();
+    if (res) {
+      runInAction(() => {
+        this.currentMonth = res.name;
+      });
+      store.dayStore.setData(res.days);
+    }
   };
 
   clearCurrentMonth = () => {

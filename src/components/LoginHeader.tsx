@@ -5,7 +5,7 @@ const LoginHeader = () => {
   const { userStore } = useStore();
   return (
     <div>
-      <p>Welcome {userStore.userData?.username}</p>
+      {/* <p>Welcome {userStore.userData?.username}</p> */}
       <button onClick={() => userStore.logout()}>log out</button>
     </div>
   );

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -8,7 +7,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Month } from '../months/entities/Month';
-import { RegisterInput } from './dto/register.input';
 import { User } from './entities/user';
 import { Day } from '../days/entities/day';
 import { MonthsService } from '../months/months.service';
@@ -17,7 +15,6 @@ import { Habit } from '../habits/entities/habit';
 import { HabitsService } from '../habits/habits.service';
 import { JwtResponse } from '../jwtResponse';
 import { AuthService } from 'src/auth/auth.service';
-import { validate, ValidationError } from 'class-validator';
 import { saltRounds } from 'src/utils/utils';
 import { DaysService } from '../days/days.service';
 import { RegisterDto } from './dto/register.dto';
@@ -78,7 +75,6 @@ export class UsersService {
       user.password = hashedPassword;
       await this.saveUser(user);
     } catch (error) {
-      console.log('im in here for some reason');
       throw new InternalServerErrorException('User already exists.');
     }
 

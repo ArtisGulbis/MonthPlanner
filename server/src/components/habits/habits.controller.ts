@@ -34,4 +34,9 @@ export class HabitsController {
   ) {
     return await this.habitsService.editHabitName(body, userId);
   }
+
+  @Patch('/deleteAll')
+  async deleteAll(@GetCurrentUserById() userId: string) {
+    return await this.habitsService.deleteAllHabits(userId);
+  }
 }

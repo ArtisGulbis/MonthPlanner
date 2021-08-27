@@ -1,21 +1,14 @@
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
-import userService from '../services/userService/userService';
-import axios from 'axios';
 import { history } from '..';
-import { UserData } from '../models/userData';
-import {
-  getFromStorage,
-  removeFromStorage,
-  saveToStorage,
-  USERDATA,
-} from '../utils/utils';
-import { JwtResponse } from '../generated/graphql';
+import agent from '../api/agent';
+import { AccessToken } from '../models/userData';
+// import { UserData } from '../models/userData';
+import { removeFromStorage, saveToStorage, USERDATA } from '../utils/utils';
 import { store } from './store';
 
-export const MONTHID = 'monthId';
-export const TOKEN = 'token';
+export const TOKEN = 'jwt';
 export default class UserStore {
-  userData: UserData | null = getFromStorage<UserData>(USERDATA);
+  // userData: UserData | null = getFromStorage<UserData>(USERDATA);
   token: string | null = window.localStorage.getItem(TOKEN);
 
   constructor() {
@@ -36,37 +29,28 @@ export default class UserStore {
     this.token = token;
   };
 
-  setUserData = (userData: UserData) => {
-    this.userData = userData;
-  };
+  // setUserData = (userData: UserData) => {
+  //   this.userData = userData;
+  // };
 
-  setData = (jwtResponse: JwtResponse) => {
-    const { access_token, id, monthId, username } = jwtResponse;
+  setData = (jwtResponse: AccessToken) => {
+    const { access_token } = jwtResponse;
     this.setToken(access_token);
-    this.setUserData({
-      id: id,
-      monthId: monthId,
-      username: username,
-    });
     saveToStorage(TOKEN, this.token);
-    saveToStorage<UserData>(USERDATA, {
-      ...this.userData,
-    });
-    window.localStorage.setItem(TOKEN, JSON.stringify(this.token));
-    history.push('/planner');
   };
 
   register = async (username: string, password: string) => {
     try {
-      const res = await userService.register(username, password);
-      if (res?.register) {
-        store.modalStore.closeModal();
+      const res = await agent.Account.register({ username, password });
+      if (res) {
         runInAction(() => {
-          this.setData(res?.register);
+          this.setData(res);
         });
+        store.modalStore.closeModal();
+        history.push('/planner');
       }
     } catch (error) {
-      throw error;
+      throw error.response.data.message;
     }
   };
 
@@ -76,18 +60,13 @@ export default class UserStore {
 
   login = async (username: string, password: string) => {
     try {
-      const res = await axios.post<JwtResponse>(
-        'http://localhost:5000/auth/login',
-        {
-          username,
-          password,
-        }
-      );
-      if (res.data) {
-        store.modalStore.closeModal();
+      const res = await agent.Account.login({ username, password });
+      if (res) {
         runInAction(() => {
-          this.setData(res.data);
+          this.setData(res);
         });
+        history.push('/planner');
+        store.modalStore.closeModal();
       }
     } catch (error) {
       throw error.response.data.message;
@@ -98,7 +77,7 @@ export default class UserStore {
     removeFromStorage(TOKEN);
     removeFromStorage(USERDATA);
     this.token = null;
-    this.userData = null;
+    // this.userData = null;
     store.dayStore.clearDays();
     store.createdHabitsStore.clearHabits();
     store.statisticsStore.clearStatistics();

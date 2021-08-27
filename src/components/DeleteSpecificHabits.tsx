@@ -1,5 +1,4 @@
 import React from 'react';
-import habitService from '../services/habitService/habitService';
 import { useStore } from '../stores/store';
 
 interface Props {
@@ -7,21 +6,10 @@ interface Props {
 }
 
 const DeleteSpecificHabits = ({ habit }: Props) => {
-  const {
-    modalStore,
-    dayStore,
-    userStore,
-    createdHabitsStore,
-    statisticsStore,
-  } = useStore();
+  const { modalStore, dayStore, createdHabitsStore, statisticsStore } =
+    useStore();
 
   const handleClick = (habit: string) => {
-    if (userStore.userData?.id) {
-      habitService.deleteHabits({
-        userId: userStore.userData.id,
-        habitName: habit,
-      });
-    }
     statisticsStore.removeHabit(habit);
     dayStore.clearDaysOfHabit(habit);
     createdHabitsStore.removeHabit(habit);

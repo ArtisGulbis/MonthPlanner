@@ -1,7 +1,6 @@
 import { makeAutoObservable } from 'mobx';
-import { Habit } from '../generated/graphql';
+import { Habit } from '../models/habit';
 import { HabitStats } from '../models/habitStats';
-import habitService from '../services/habitService/habitService';
 
 export default class StatisticsStore {
   habits: HabitStats[] = [];
@@ -21,18 +20,18 @@ export default class StatisticsStore {
         habitStat.missed += el.missed ? 1 : 0;
         habitStat.completed += el.completed ? 1 : 0;
       } else {
-        let habitStats: HabitStats = {
-          completed: el.completed ? 1 : 0,
-          habit: {
-            completed: el.completed,
-            habitName: el.habitName,
-            id: el.id,
-            missed: el.missed,
-          },
-          missed: el.missed ? 1 : 0,
-          toDo: 1,
-        };
-        this.habits.push(habitStats);
+        // let habitStats: HabitStats = {
+        //   completed: el.completed ? 1 : 0,
+        //   habit: {
+        //     completed: el.completed,
+        //     habitName: el.habitName,
+        //     id: el.id,
+        //     missed: el.missed,
+        //   },
+        //   missed: el.missed ? 1 : 0,
+        //   toDo: 1,
+        // };
+        // this.habits.push(habitStats);
       }
     });
   };
@@ -82,7 +81,7 @@ export default class StatisticsStore {
   };
 
   updateMissedHabits = async (habitIds: string[]) => {
-    await habitService.updateHabitMissed({ habitIds });
+    // await habitService.updateHabitMissed({ habitIds });
   };
 
   // checkMissedHabits = async () => {

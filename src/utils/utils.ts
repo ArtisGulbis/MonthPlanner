@@ -1,4 +1,4 @@
-import { Day } from '../generated/graphql';
+import { Day } from '../models/day';
 import { store } from '../stores/store';
 
 export const saveToStorage = <T>(key: string, data: T) => {

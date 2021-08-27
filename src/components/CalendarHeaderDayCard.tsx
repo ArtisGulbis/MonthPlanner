@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { v4 as uuidv4 } from 'uuid';
 import { Popup } from 'semantic-ui-react';
-import { Day, Habit } from '../generated/graphql';
-import habitService from '../services/habitService/habitService';
+import { v4 as uuidv4 } from 'uuid';
+import { Day } from '../models/day';
+import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
 import { checkAllCompletedHabits, checkCompletion } from '../utils/utils';
 import HabitEntry from './HabitEntry';
@@ -14,39 +14,21 @@ interface Props {
 }
 
 const CalendarHeaderDayCard = ({ day }: Props) => {
-  const {
-    monthStore,
-    userStore,
-    statisticsStore,
-    dayStore: { addHabit, demo },
-  } = useStore();
+  const { monthStore, dayStore, statisticsStore } = useStore();
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'habit',
     drop: async (item: { name: string }) => {
-      if (!demo) {
-        if (userStore.userData?.id) {
-          const res = await habitService.addHabit({
-            dayId: day.id,
-            habitName: item.name,
-            userId: userStore.userData?.id,
-          });
-
-          if (res?.addHabit) {
-            addHabit(day.id, res.addHabit);
-            statisticsStore.addToStats(res.addHabit);
-          }
-        }
-      } else {
-        const habit: Habit = {
-          completed: false,
-          habitName: item.name,
-          id: uuidv4(),
-          missed: false,
-        };
-        addHabit(day.id, habit);
-        statisticsStore.addToStats(habit);
-      }
+      const habit: Habit = {
+        completed: false,
+        habitName: item.name,
+        id: uuidv4(),
+        missed: false,
+        dayId: day.id,
+        userId: '1',
+      };
+      dayStore.addHabit(day.id, habit);
+      statisticsStore.addToStats(habit);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),

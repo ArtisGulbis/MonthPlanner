@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Month } from './entities/Month';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { NewMonthInput } from './dto/new-month.input';
 import { DateTime } from 'luxon';
 
@@ -34,6 +34,11 @@ export class MonthsService {
       where: { user: userId },
       relations: ['days', 'days.habits'],
     });
+    // const month = await getConnection()
+    //   .createQueryBuilder(Month, 'months')
+    //   .where('userId = :userId', { userId })
+    //   .leftJoinAndSelect('days', 'days.habits')
+    //   .getOne();
     month.days.sort((first, second) => first.dayNumber - second.dayNumber);
     if (month) {
       return month;

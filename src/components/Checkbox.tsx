@@ -1,6 +1,5 @@
 import React from 'react';
-import { Habit } from '../generated/graphql';
-import habitService from '../services/habitService/habitService';
+import { Habit } from '../models/habit';
 import { useStore } from '../stores/store';
 
 interface Props {
@@ -13,12 +12,7 @@ const Checkbox = ({ habit, passed, dayId }: Props) => {
   const { dayStore, statisticsStore } = useStore();
 
   const updateHabit = async (state: boolean) => {
-    if (!dayStore.demo) {
-      await habitService.updateHabitCompletion(state, habit.id);
-      dayStore.completeHabit(dayId, habit.id, state);
-    } else {
-      dayStore.completeHabit(dayId, habit.id, state);
-    }
+    dayStore.completeHabit(dayId, habit.id, state);
   };
 
   return (

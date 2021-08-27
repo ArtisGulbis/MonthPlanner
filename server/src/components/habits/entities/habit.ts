@@ -23,9 +23,15 @@ export class Habit {
   @Column()
   missed: boolean;
 
+  @Column()
+  dayId: string;
+
   @ManyToOne(() => Day, (day) => day.habits)
   @JoinColumn()
   day: Day;
+
+  @Column()
+  userId: string;
 
   @ManyToOne(() => User, (user) => user.habits)
   @JoinColumn()
